@@ -35,7 +35,7 @@ public class JwtProvider {
         Claims claims = null;
         try {
             claims = Jwts.parser().setSigningKey(secretKey)
-                    .parseClaimsJwt(jwt)
+                    .parseClaimsJws(jwt)
                     .getBody();
         } catch (Exception e) {
             e.printStackTrace();
