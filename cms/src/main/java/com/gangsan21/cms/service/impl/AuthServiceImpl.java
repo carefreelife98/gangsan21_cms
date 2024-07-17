@@ -1,10 +1,13 @@
 package com.gangsan21.cms.service.impl;
 
 
+import com.gangsan21.cms.dto.request.auth.SignInRequestDto;
 import com.gangsan21.cms.dto.request.auth.SignUpRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
+import com.gangsan21.cms.dto.response.auth.SignInResponseDto;
 import com.gangsan21.cms.dto.response.auth.SignUpResponseDto;
 import com.gangsan21.cms.entity.UserEntity;
+import com.gangsan21.cms.provider.JwtProvider;
 import com.gangsan21.cms.repository.UserRepository;
 import com.gangsan21.cms.service.AuthService;
 import com.gangsan21.cms.util.encryption.StringEncryptorUtil;
@@ -27,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserValidationUtil userValidationUtil;
     private final StringEncryptorUtil stringEncryptorUtil;
+    private final JwtProvider jwtProvider;
 
     @Override
     public ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto) {
@@ -52,5 +56,33 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return SignUpResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super SignInResponseDto> signIn(SignInRequestDto dto) {
+
+        String token = null;
+
+        try {
+
+            String email = dto.getEmail();
+            UserEntity userEntity = userRepository.findByEmail(email);
+
+            if (Objects.isNull(userEntity)) {
+                return SignInResponseDto.signInFailed();
+            }
+
+            // 실제 pw 와 db 의 암호화 된 pw 를 비교
+            boolean isMatched = stringEncryptorUtil.isMatched(dto.getPassword(), userEntity.getPassword());
+            if(! isMatched) return SignInResponseDto.signInFailed();
+
+            token = jwtProvider.create(email);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return SignInResponseDto.success(token);
     }
 }

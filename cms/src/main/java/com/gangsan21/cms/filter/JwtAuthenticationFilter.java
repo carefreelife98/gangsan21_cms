@@ -32,14 +32,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         try {
-// get JWT Bearer Token
+            // get JWT Bearer Token
             String token = parseBearerToken(request);
+
+            // token 이 만료/미발급 되거나 email 정보가 없는 경우 필터링 및 반환
+            if (Objects.isNull(token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             // email 을 활용한 검증 및 email 정보 반환
             String email = jwtProvider.validateJwt(token);
 
-            // token 이 만료/미발급 되거나 email 정보가 없는 경우 필터링 및 반환
-            if (Objects.isNull(token) || Objects.isNull(email)) {
+            if (Objects.isNull(email)) {
                 filterChain.doFilter(request, response);
                 return;
             }

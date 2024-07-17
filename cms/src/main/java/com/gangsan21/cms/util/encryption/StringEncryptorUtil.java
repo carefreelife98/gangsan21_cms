@@ -17,5 +17,8 @@ public class StringEncryptorUtil {
     public String encodeString(String str) {
         return passwordEncoder.encode(str);
     }
+    public boolean isMatched (String origin, String encoded) {
+        return passwordEncoder.matches(origin, encoded);
+    }
 
 }

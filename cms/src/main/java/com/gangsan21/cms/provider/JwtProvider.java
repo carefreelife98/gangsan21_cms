@@ -18,10 +18,11 @@ public class JwtProvider {
 
     // JWT Token 생성
     public String create(String email) {
+        // JWT Token 만료시간 1시
         Date expireDate = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
 
         String jwt = Jwts.builder()
-                .signWith(SignatureAlgorithm.ES256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
