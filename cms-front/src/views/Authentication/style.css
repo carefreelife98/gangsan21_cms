@@ -113,6 +113,14 @@
     line-height: 140%;
 }
 
+.auth-card-page {
+    color: rgba(0, 0, 0, 0.7);
+
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 140%;
+}
+
 .auth-card-bottom {
     display: flex;
     flex-direction: column;
@@ -153,3 +161,39 @@
     cursor: pointer;
 }
 
+.auth-consent-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.auth-check-box {
+    cursor: pointer;
+
+    width: 24px;
+    height: 24px;
+}
+
+.auth-consent-title {
+    color: rgba(0, 0, 0, 0.7);
+
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+.auth-consent-title-error {
+    color: rgba(255, 0, 0, 0.7);
+
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+.auth-consent-link {
+    color: rgba(0, 0, 0, 1);
+
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 140%;
+}
