@@ -1,5 +1,5 @@
 import {Outlet, useLocation} from "react-router-dom";
-import Footer from "../footer";
+import Footer from "../Footer";
 import Header from "../Header";
 import {AUTH_PATH} from "../../constants";
 

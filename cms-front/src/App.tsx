@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
-import Footer from "./layouts/footer";
+import Footer from "./layouts/Footer";
 import {Route, Routes} from "react-router-dom";
 import Main from "./views/Main";
 import Authentication from "./views/Authentication";
