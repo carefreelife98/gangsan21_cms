@@ -13,6 +13,10 @@ import {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from "react";
 import {useCookies} from "react-cookie";
 import {useBoardStore, useLoginUserStore} from "../../stores";
 import * as path from "path";
+import {fileUploadRequest, postBoardRequest} from "../../apis";
+import {PostBoardRequestDto} from "../../apis/request/board";
+import {PostBoardResponseDto} from "../../apis/response/board";
+import {ResponseDto} from "../../apis/response";
 
 //         component: 헤더 레이아웃          //
 export default function Header() {
@@ -147,16 +151,50 @@ export default function Header() {
         // render: 로그인 버튼 컴포넌트 렌더링
         return <div className='black-button' onClick={onSingInButtonClickHandler}>{'로그인'}</div>;
     }
-    // component: 업로드 버튼 컴포넌트
 
+    // component: 업로드 버튼 컴포넌트
     const UploadButton = () => {
 
         // state: 게시물 상태
         const { title, content, boardImageFileList, resetBoard } = useBoardStore();
 
-        // event handler: 업로드 버튼 클리 이벤트 처리 함수
-        const onUploadButtonClickHandler = () => {
+        // function: post board response 처리 함수
+        const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
+            if(!responseBody) return;
+            const {code} = responseBody;
 
+            if (code === 'AF' || code === 'NU') navigate(AUTH_PATH());
+            if (code === 'VF') alert('제목과 내용은 필수 요소입니다.')
+            if (code === 'DBE') alert('데이터 베이스 오류입니다.')
+            if (code !== 'SU') return;
+
+            resetBoard();
+            if (!loginUser) return;
+            const {email} = loginUser;
+            navigate(USER_PATH(email));
+        };
+
+        // event handler: 업로드 버튼 클릭 이벤트 처리 함수
+        const onUploadButtonClickHandler = async () => {
+            const accessToken = cookies.accessToken;
+            if(!accessToken) return;
+
+            const boardImageList: string[] = [];
+
+            // 이미지 업로드 api 를 통해 각 이미지 파일을 업로드 한 후,
+            // 반환 값으로 저장된 url 값을 가져와 boardImageList 배열에 저장.
+            for (const file of boardImageFileList) {
+                const data = new FormData();
+                data.append('file', file);
+
+                const url = await fileUploadRequest(data);
+                if (url) boardImageList.push(url)
+            }
+
+            const requestBody: PostBoardRequestDto = {
+                title, content, boardImageList
+            };
+            postBoardRequest(requestBody, accessToken).then(postBoardResponse);
         };
 
         if(title && content)
