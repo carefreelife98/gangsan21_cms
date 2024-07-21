@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -19,7 +20,7 @@ public class CommentEntity {
     private Integer commentNumber;
 
     private String content;
-    private Date writeDateTime;
+    private LocalDateTime writeDateTime;
     private String userEmail;
     private Integer boardNumber;
 }

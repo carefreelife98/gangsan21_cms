@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -12,6 +13,6 @@ import java.util.Date;
 public class CommentListItem {
     private String nickname;
     private String profileImage;
-    private Date writeDateTime;
+    private LocalDateTime writeDateTime;
     private String content;
 }

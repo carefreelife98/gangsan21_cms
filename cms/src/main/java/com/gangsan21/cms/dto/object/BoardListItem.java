@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -17,7 +18,7 @@ public class BoardListItem {
     private Integer favoriteCount;
     private Integer commentCount;
     private Integer viewCount;
-    private Date writeDateTime;
+    private LocalDateTime writeDateTime;
     private String writerNickName;
     private String writerProfileImage;
 }
