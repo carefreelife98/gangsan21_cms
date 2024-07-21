@@ -1,11 +1,13 @@
 package com.gangsan21.cms.filter;
 
 import com.gangsan21.cms.provider.JwtProvider;
+import com.gangsan21.cms.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.util.StringUtil;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,8 +51,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
+            CustomUserDetails customUserDetails = new CustomUserDetails(email);
+
             // Email 을 활용한 Authentication Token 설정
-            AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.NO_AUTHORITIES);
+            AbstractAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(customUserDetails, null, AuthorityUtils.NO_AUTHORITIES);
 
             // 인증 요청에 대한 세부 정보 설정 (웹 인증 세부 정보)
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -77,7 +82,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         boolean isBearer = authorization.startsWith("Bearer ");
         if (!isBearer) return null;
 
-
-        return authorization.substring(7);
+        return authorization.replace("Bearer ", "");
     }
 }

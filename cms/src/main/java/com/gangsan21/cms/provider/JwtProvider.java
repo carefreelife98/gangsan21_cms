@@ -3,6 +3,7 @@ package com.gangsan21.cms.provider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +11,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtProvider {
 
-    @Value("${secrets.secret-key")
+    @Value("${secrets.secret-key}")
     private String secretKey;
 
     // JWT Token 생성
@@ -35,7 +37,8 @@ public class JwtProvider {
 
         Claims claims = null;
         try {
-            claims = Jwts.parser().setSigningKey(secretKey)
+            claims = Jwts.parser()
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(jwt)
                     .getBody();
         } catch (Exception e) {

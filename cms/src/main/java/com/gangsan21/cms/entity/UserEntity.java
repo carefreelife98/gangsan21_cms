@@ -35,4 +35,17 @@ public class UserEntity {
         this.agreedPersonal = dto.getAgreedPersonal();
     }
 
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", telNumber='" + telNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", addressDetail='" + addressDetail + '\'' +
+                ", profileImage='" + profileImage + '\'' +
+                ", agreedPersonal=" + agreedPersonal +
+                '}';
+    }
 }
