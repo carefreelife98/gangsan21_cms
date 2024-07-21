@@ -1,5 +1,7 @@
 import {create} from "zustand";
 
+// 전역 상태 사용
+
 interface BoardStore {
     title: string;
     content: string;
