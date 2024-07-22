@@ -1,2 +1,2 @@
 # gangsan21_cms
-![Uploading 스크린샷 2024-07-23 오전 2.25.46.png…]()
+![시작 화면](/cms-front/src/assets/image/index_page.png)
