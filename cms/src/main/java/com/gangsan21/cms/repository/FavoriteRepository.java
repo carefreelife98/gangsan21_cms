@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface FavoriteRepository extends JpaRepository<FavoriteEntity, FavoritePk> {
     // FavoritePk 라는 클래스로 복합키 정의.
     // FavoriteEntity 클래스에 @IdClass 어노테이션을 통해 지정되어 있음.
+
+    FavoriteEntity findByBoardNumberAndUserEmail(Integer boardNumber, String userEmail);
 }
