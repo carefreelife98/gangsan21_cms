@@ -3,6 +3,7 @@ package com.gangsan21.cms.service.impl;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
 import com.gangsan21.cms.dto.response.board.GetBoardResponseDto;
+import com.gangsan21.cms.dto.response.board.GetFavoriteListResponseDto;
 import com.gangsan21.cms.dto.response.board.PostBoardResponseDto;
 import com.gangsan21.cms.dto.response.board.PutFavoriteResponseDto;
 import com.gangsan21.cms.entity.BoardEntity;
@@ -13,6 +14,7 @@ import com.gangsan21.cms.repository.FavoriteRepository;
 import com.gangsan21.cms.repository.ImageRepository;
 import com.gangsan21.cms.repository.UserRepository;
 import com.gangsan21.cms.repository.resultSet.GetBoardResultSet;
+import com.gangsan21.cms.repository.resultSet.GetFavoriteListResultSet;
 import com.gangsan21.cms.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +60,30 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return GetBoardResponseDto.success(resultSet, imageEntityList);
+    }
+
+    @Override
+    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(Integer boardNumber, String email) {
+
+        List<GetFavoriteListResultSet> resultSetList;
+
+        try {
+
+            // 유저 자신이 작성한 게시물만 가져옴.
+            boolean existedBoard = boardRepository.existsByBoardNumberAndWriterEmail(boardNumber, email);
+
+            if(!existedBoard){
+                return GetFavoriteListResponseDto.notExistBoard();
+            }
+
+            resultSetList = favoriteRepository.getFavoriteList(boardNumber);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetFavoriteListResponseDto.success(resultSetList);
     }
 
     @Override

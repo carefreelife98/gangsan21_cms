@@ -1,8 +1,10 @@
 package com.gangsan21.cms.controller.board;
 
+import com.gangsan21.cms.dto.object.FavoriteListItem;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
 import com.gangsan21.cms.dto.response.board.GetBoardResponseDto;
+import com.gangsan21.cms.dto.response.board.GetFavoriteListResponseDto;
 import com.gangsan21.cms.dto.response.board.PostBoardResponseDto;
 import com.gangsan21.cms.dto.response.board.PutFavoriteResponseDto;
 import com.gangsan21.cms.security.CustomUserDetails;
@@ -16,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -38,6 +41,23 @@ public class BoardController {
 
         // 로그인 한 유저의 게시물만 가져온다.
         ResponseEntity<? super GetBoardResponseDto> response = boardService.getBoard(boardNumber, principal.getEmail());
+        return response;
+    }
+
+    @GetMapping("/{boardNumber}/favorite-list")
+    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(
+            @PathVariable("boardNumber") Integer boardNumber,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication)) {
+            return ResponseDto.validationFailed();
+        }
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        ResponseEntity<? super GetFavoriteListResponseDto> response = boardService.getFavoriteList(boardNumber, principal.getEmail());
+
         return response;
     }
 
