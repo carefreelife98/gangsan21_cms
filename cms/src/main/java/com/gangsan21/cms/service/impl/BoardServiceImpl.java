@@ -1,31 +1,25 @@
 package com.gangsan21.cms.service.impl;
 
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
+import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
-import com.gangsan21.cms.dto.response.board.GetBoardResponseDto;
-import com.gangsan21.cms.dto.response.board.GetFavoriteListResponseDto;
-import com.gangsan21.cms.dto.response.board.PostBoardResponseDto;
-import com.gangsan21.cms.dto.response.board.PutFavoriteResponseDto;
+import com.gangsan21.cms.dto.response.board.*;
 import com.gangsan21.cms.entity.BoardEntity;
+import com.gangsan21.cms.entity.CommentEntity;
 import com.gangsan21.cms.entity.FavoriteEntity;
 import com.gangsan21.cms.entity.ImageEntity;
-import com.gangsan21.cms.repository.BoardRepository;
-import com.gangsan21.cms.repository.FavoriteRepository;
-import com.gangsan21.cms.repository.ImageRepository;
-import com.gangsan21.cms.repository.UserRepository;
+import com.gangsan21.cms.repository.*;
 import com.gangsan21.cms.repository.resultSet.GetBoardResultSet;
 import com.gangsan21.cms.repository.resultSet.GetFavoriteListResultSet;
 import com.gangsan21.cms.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.PropertyResolver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,6 +29,7 @@ public class BoardServiceImpl implements BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
+    private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
 
     @Override
@@ -50,7 +45,7 @@ public class BoardServiceImpl implements BoardService {
 
             imageEntityList = imageRepository.findByBoardNumber(boardNumber);
 
-            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            BoardEntity boardEntity = boardRepository.findByBoardNumberAndWriterEmail(boardNumber, email);
             boardEntity.increaseViewCount();
             boardRepository.save(boardEntity);
 
@@ -69,9 +64,13 @@ public class BoardServiceImpl implements BoardService {
 
         try {
 
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) {
+                return GetFavoriteListResponseDto.notExistUser();
+            }
+
             // 유저 자신이 작성한 게시물만 가져옴.
             boolean existedBoard = boardRepository.existsByBoardNumberAndWriterEmail(boardNumber, email);
-
             if(!existedBoard){
                 return GetFavoriteListResponseDto.notExistBoard();
             }
@@ -117,6 +116,29 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email) {
+
+        try {
+            boolean existedUser = userRepository.existsByEmail(email);
+            if(!existedUser) return PostCommentResponseDto.notExistUser();
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumberAndWriterEmail(boardNumber, email);
+            if (Objects.isNull(boardEntity)) return PostCommentResponseDto.notExistBoard();
+
+            commentRepository.save(new CommentEntity(dto, boardNumber, email));
+
+            boardEntity.increaseCommentCount();
+            boardRepository.save(boardEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PostCommentResponseDto.success();
+    }
+
+    @Override
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email) {
 
         try {
@@ -124,7 +146,7 @@ public class BoardServiceImpl implements BoardService {
             boolean isExistedUser = userRepository.existsByEmail(email);
             if (!isExistedUser) return PutFavoriteResponseDto.notExistUser();
 
-            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            BoardEntity boardEntity = boardRepository.findByBoardNumberAndWriterEmail(boardNumber ,email);
             if (Objects.isNull(boardEntity)) return PutFavoriteResponseDto.notExistBoard();
 
             FavoriteEntity favoriteEntity = favoriteRepository.findByBoardNumberAndUserEmail(boardNumber, email);

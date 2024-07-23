@@ -2,11 +2,9 @@ package com.gangsan21.cms.controller.board;
 
 import com.gangsan21.cms.dto.object.FavoriteListItem;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
+import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
-import com.gangsan21.cms.dto.response.board.GetBoardResponseDto;
-import com.gangsan21.cms.dto.response.board.GetFavoriteListResponseDto;
-import com.gangsan21.cms.dto.response.board.PostBoardResponseDto;
-import com.gangsan21.cms.dto.response.board.PutFavoriteResponseDto;
+import com.gangsan21.cms.dto.response.board.*;
 import com.gangsan21.cms.security.CustomUserDetails;
 import com.gangsan21.cms.service.BoardService;
 import jakarta.validation.Valid;
@@ -74,6 +72,23 @@ public class BoardController {
 
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, principal.getEmail());
+
+        return response;
+    }
+
+    @PostMapping("/{boardNumber}/comment")
+    public ResponseEntity<? super PostCommentResponseDto> putComment(
+            @RequestBody @Valid PostCommentRequestDto requestBody,
+            @PathVariable("boardNumber") Integer boardNumber,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(Objects.isNull(authentication)) return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        ResponseEntity<? super PostCommentResponseDto> response = boardService.postComment(requestBody, boardNumber, principal.getEmail());
 
         return response;
     }

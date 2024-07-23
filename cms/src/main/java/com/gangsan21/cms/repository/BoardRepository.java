@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
 
-    BoardEntity findByBoardNumber(Integer boardNumber);
+    BoardEntity findByBoardNumberAndWriterEmail(Integer boardNumber, String email);
     Boolean existsByBoardNumberAndWriterEmail(Integer boardNumber, String email);
 
     // native query (JPA)
