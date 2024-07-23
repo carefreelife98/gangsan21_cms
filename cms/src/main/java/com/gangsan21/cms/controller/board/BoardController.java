@@ -59,6 +59,22 @@ public class BoardController {
         return response;
     }
 
+    @GetMapping("/{boardNumber}/comment-list")
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(
+            @PathVariable("boardNumber") Integer boardNumber,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication)) return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        ResponseEntity<? super GetCommentListResponseDto> response = boardService.getCommentList(boardNumber, principal.getEmail());
+
+        return response;
+
+    }
+
     @PostMapping("")
     public ResponseEntity<? super PostBoardResponseDto> postBoard(
             @RequestBody @Valid PostBoardRequestDto requestBody,

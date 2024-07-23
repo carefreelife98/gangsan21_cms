@@ -10,6 +10,7 @@ import com.gangsan21.cms.entity.FavoriteEntity;
 import com.gangsan21.cms.entity.ImageEntity;
 import com.gangsan21.cms.repository.*;
 import com.gangsan21.cms.repository.resultSet.GetBoardResultSet;
+import com.gangsan21.cms.repository.resultSet.GetCommentListResultSet;
 import com.gangsan21.cms.repository.resultSet.GetFavoriteListResultSet;
 import com.gangsan21.cms.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -83,6 +84,30 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return GetFavoriteListResponseDto.success(resultSetList);
+    }
+
+    @Override
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber, String email) {
+
+        List<GetCommentListResultSet> resultSetList = new ArrayList<>();
+
+        try {
+
+            boolean isExistedUser = userRepository.existsByEmail(email);
+            if(!isExistedUser) return GetCommentListResponseDto.validationFailed();
+
+            boolean isExistedBoard = boardRepository.existsByBoardNumberAndWriterEmail(boardNumber, email);
+            if(!isExistedBoard) return GetCommentListResponseDto.notExistBoard();
+
+            resultSetList = commentRepository.getCommentListByBoardNumberAndEmail(boardNumber, email);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetCommentListResponseDto.success(resultSetList);
     }
 
     @Override
