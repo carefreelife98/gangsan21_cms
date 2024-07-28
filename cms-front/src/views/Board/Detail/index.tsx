@@ -5,12 +5,33 @@ import {CommentListItem, FavoriteListItem} from "../../../types/interface";
 import {commentListMock, favoriteListMock} from "../../../mocks";
 import CommentItem from "../../../components/CommentItem";
 import Pagination from "../../../components/Pagination";
+import {useLoginUserStore} from "../../../stores";
+import {useNavigate, useParams} from "react-router-dom";
+
+import defaultProfileImage from 'assets/image/default-profile-image.png';
 
 //          component: 게시물 상세 화면 컴포넌트          //
 export default function BoardDetail() {
 
+    // state: 게시물 번호 Path Variable 상태
+    const {boardNumber} = useParams();
+
+    // state: 로그인 유저 상태
+    const { loginUser } = useLoginUserStore();
+
+    // function: 네비게이트 함수
+    const navigator = useNavigate();
+
     // component: 게시물 상세 상단 컴포넌트
     const BoardDetailTop = () => {
+
+        // state: more 버튼 상태
+        const [showMore, setShowMore] = useState<boolean>(false);
+
+        // event handler: more 버튼 클릭 이벤트 처리
+        const onMoreButtonClickHandler = () => {
+            setShowMore(!showMore);
+        };
 
         // render: 게시물 상세 상단 컴포넌트 렌더링
         return (
@@ -19,28 +40,31 @@ export default function BoardDetail() {
                     <div className='board-detail-title'>{'제목입니다.제목입니다.제목입니다.제목입니다.'}</div>
                     <div className='board-detail-top-sub-box'>
                         <div className='board-detail-write-info-box'>
-                            <div className='board-detail-writer-profile-image'></div>
+                            <div className='board-detail-writer-profile-image'
+                                 style={{backgroundImage: `url(${defaultProfileImage})`}}></div>
                             <div className='board-detail-writer-nickname'>{'CarefreeLife98'}</div>
                             <div className='board-detail-info-divider'>{'\|'}</div>
                             <div className='board-detail-write-date'>{'2024. 07. 28'}</div>
                         </div>
-                        <div className='icon-button'>
+                        <div className='icon-button' onClick={onMoreButtonClickHandler}>
                             <div className='icon more-icon'></div>
                         </div>
-                        <div className='board-detail-more-box'>
-                            <div className='board-detail-update-button'>{'수정'}</div>
-                            <div className='divider'></div>
-                            <div className='board-detail-delete-button'>{'삭제'}</div>
-                        </div>
+                        {showMore &&
+                            <div className='board-detail-more-box'>
+                                <div className='board-detail-update-button'>{'수정'}</div>
+                                <div className='divider'></div>
+                                <div className='board-detail-delete-button'>{'삭제'}</div>
+                            </div>
+                        }
                     </div>
                 </div>
                 <div className='divider'></div>
                 <div className='board-detail-top-main'>
                     <div className='board-detail-main-text'>{'본문입니다.본문입니다.본문입니다.본문입니다.본문입니다.본문입니다.본문입니다.본문입니다.본문입니다.본문입니다.'}</div>
-                    <div className='board-detail-main-image'></div>
+                    <img className='board-detail-main-image' src={'https://carefreelife98.github.io/assets/images/about.jpg'} />
                 </div>
             </div>
-        )
+        );
     };
 
     // 게시물 상세 하단 컴포넌트
@@ -83,7 +107,7 @@ export default function BoardDetail() {
 
                 {/*좋아요 리스트*/}
                 <div className='board-detail-bottom-favorite-box'>
-                    <div className='board-detail-buttom-favorite-container'>
+                    <div className='board-detail-bottom-favorite-container'>
                         <div className='board-detail-bottom-favorite-title'>{'좋아요'} <span className='emphasis'>{12}</span></div>
                         <div className='board-detail-bottom-favorite-contents'>
                             {
@@ -111,7 +135,7 @@ export default function BoardDetail() {
                     <div className='board-detail-bottom-comment-pagination-box'>
                         <Pagination />
                     </div>
-                    <div className='board-detail-bottom-comment-input-container'>
+                    <div className='board-detail-bottom-comment-input-box'>
                         <div className='board-detail-bottom-comment-input-container'>
                             <textarea className='board-detail-bottom-comment-textarea' placeholder='댓글을 작성해주세요.'/>
                             <div className='board-detail-bottom-comment-button-box'>
