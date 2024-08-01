@@ -10,12 +10,19 @@ import {useNavigate, useParams} from "react-router-dom";
 
 import defaultProfileImage from 'assets/image/default-profile-image.png';
 import {BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH} from "../../../constants";
+import {getBoardRequest} from "../../../apis";
+import GetBoardResponseDto from "../../../apis/response/board/get-board.response.dto";
+import {ResponseDto} from "../../../apis/response";
+import {Simulate} from "react-dom/test-utils";
+import reset = Simulate.reset;
+import responseCodeEnum from "../../../types/enum/response-code.enum";
+import {useCookies} from "react-cookie";
 
 //          component: 게시물 상세 화면 컴포넌트          //
 export default function BoardDetail() {
 
     // state: 게시물 번호 Path Variable 상태
-    const {boardNumber} = useParams();
+    const { boardNumber } = useParams();
 
     // state: 로그인 유저 상태
     const { loginUser } = useLoginUserStore();
@@ -23,15 +30,32 @@ export default function BoardDetail() {
     // function: 네비게이트 함수
     const navigator = useNavigate();
 
+    // state: 쿠키 상태
+    const [cookies, setCookies] = useCookies();
+
     // component: 게시물 상세 상단 컴포넌트
     const BoardDetailTop = () => {
 
-
-        // state: more 버튼 상태
+        // state: Board 상태
         const [board, setBoard] = useState<Board | null>(null);
 
         // state: more 버튼 상태
         const [showMore, setShowMore] = useState<boolean>(false);
+
+        // function: getBoardResponse 처리 함수
+        const getBoardResponse = (responseBody: GetBoardResponseDto | ResponseDto | null) => {
+            if (!responseBody) return;
+            const {code} = responseBody;
+            if(code === 'NB') alert('존재하지 않는 게시물 입니다.')
+            if(code === 'DBE') alert('데이터베이스 오류입니다.')
+            if (code !== 'SU') {
+                navigator(MAIN_PATH());
+                return;
+            }
+
+            const board: Board = {...responseBody as GetBoardResponseDto}
+            setBoard(board);
+        };
 
         // event handler: 닉네임 버튼 클릭 이벤트 처리
         const onNickNameClickHandler = () => {
@@ -64,7 +88,18 @@ export default function BoardDetail() {
 
         // effect: 게시물 번호 path variable 이 바뀔 때마다 게시물 불러오기
         useEffect(() => {
-            setBoard(boardMock)
+            const accessToken = cookies.accessToken;
+            if(!accessToken) {
+                console.log('cookie accessToken: ' + accessToken)
+                navigator(MAIN_PATH());
+                return;
+            }
+            if (!boardNumber) {
+                navigator(MAIN_PATH());
+                return;
+            }
+
+            getBoardRequest(boardNumber, accessToken).then(getBoardResponse)
         }, [boardNumber]);
 
         // render: 게시물 상세 상단 컴포넌트 렌더링
@@ -80,7 +115,7 @@ export default function BoardDetail() {
                             </div>
                             <div className='board-detail-writer-nickname' onClick={onNickNameClickHandler}>{board.writerNickName}</div>
                             <div className='board-detail-info-divider'>{'|'}</div>
-                            <div className='board-detail-write-date'>{board.writeDateTime.toDateString()}</div>
+                            <div className='board-detail-write-date'>{new Date(board.writeDateTime).toDateString()}</div>
                         </div>
                         <div className='icon-button' onClick={onMoreButtonClickHandler}>
                             <div className='icon more-icon'></div>

@@ -44,14 +44,14 @@ public class WebSecurityConfig {
                                 .requestMatchers( // 인증 제외 대상 URI
                                         "/",
                                         "/api/v1/auth/**",
-                                        "/api/v1/search/**",
+//                                        "/api/v1/search/**",
                                         "/file/**"
                                 ).permitAll()
-                                .requestMatchers( // 인증 제외 대상 URI
-                                        HttpMethod.GET,
-                                        "/api/v1/board/**",
-                                        "/api/v1/user/*"
-                                ).permitAll()
+//                                .requestMatchers( // 인증 제외 대상 URI
+//                                        HttpMethod.GET,
+//                                        "/api/v1/board/**",
+//                                        "/api/v1/user/*"
+//                                ).permitAll()
                                 // 그 외 URI 접근은 전부 인증 필요.
                                 .anyRequest().authenticated())
                 .exceptionHandling((exception) ->

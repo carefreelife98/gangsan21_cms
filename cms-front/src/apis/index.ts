@@ -3,12 +3,11 @@ import axios from "axios";
 import SignInResponseDto from "./response/auth/sign-in.response.dto";
 import {ResponseDto} from "./response";
 import {Simulate} from "react-dom/test-utils";
-import reset = Simulate.reset;
 import {SignUpResponseDto} from "./response/auth";
-import error = Simulate.error;
 import {GetSignInUserResponseDto} from "./response/user";
 import {PostBoardRequestDto} from "./request/board";
 import {PostBoardResponseDto} from "./response/board";
+import GetBoardResponseDto from "./response/board/get-board.response.dto";
 
 const DOMAIN = 'http://localhost:4000';
 
@@ -52,7 +51,23 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
     return result;
 };
 
+
+const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
+
+export const getBoardRequest = async (boardNumber: number | string, accessToken: string) => {
+    const result = await axios.get(GET_BOARD_URL(boardNumber), authorization(accessToken))
+        .then(response => {
+            const responseBody: GetBoardResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if(!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
 
 export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessToken: string) => {
     const result = await axios.post(POST_BOARD_URL(), requestBody, authorization(accessToken))
