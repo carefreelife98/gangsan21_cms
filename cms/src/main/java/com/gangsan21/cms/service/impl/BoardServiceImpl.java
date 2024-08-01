@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -96,8 +97,7 @@ public class BoardServiceImpl implements BoardService {
             if(!isExistedBoard) return GetCommentListResponseDto.notExistBoard();
 
             resultSetList = commentRepository.getCommentListByBoardNumberAndEmail(boardNumber, email);
-
-
+//            log.info("nicknames: {}", resultSetList.stream().map(GetCommentListResultSet::getNickName).collect(Collectors.joining(",")));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseDto.databaseError();
