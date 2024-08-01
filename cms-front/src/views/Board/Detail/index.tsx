@@ -29,6 +29,7 @@ import {
 
 import dayjs from 'dayjs';
 import {PostCommentRequestDto} from "../../../apis/request/board";
+import {usePagination} from "../../../hooks";
 
 //          component: 게시물 상세 화면 컴포넌트          //
 export default function BoardDetail() {
@@ -198,16 +199,32 @@ export default function BoardDetail() {
         const commentRef = useRef<HTMLTextAreaElement | null>(null)
         // state: 좋아요 리스트 상태
         const [favoriteList, setFavoriteList] = useState<FavoriteListItem[]>([]);
-        // state: 댓글 리스트 상태
-        const [commentList, setCommentList] = useState<CommentListItem[]>([]);
+
+        // state: 페이지네이션 관련 상태
+        const {
+            currentPage, // 현재 페이지
+            setCurrentPage, // 현재 페이지 변경
+
+            currentSection, // 현재 섹션
+            setCurrentSection, // 현재 섹션 변경
+
+            viewList, // 현재 보여줄 리스트
+            viewPageList, // 현재 보여줄 페이지 리스트
+
+            totalSection, // 전체 섹션 정보 (현재 섹션이 마지막 섹션 인경우 다음 섹션 이동 버튼 (>) disabled 시키는 등의 작업 위함.
+            setTotalList // 최종 결과 데이터 가공
+        } = usePagination<CommentListItem>(3);
+
         // state: 좋아요 상태
         const [isFavorite, setFavorite] = useState<boolean>(false);
         // state: 좋아요 상자 보기 상태
         const [showFavorite, setShowFavorite] = useState<boolean>(false);
-        // state: 댓글 상자 보기 상태
-        const [showComment, setShowComment] = useState<boolean>(false);
+        // state: 전체 댓글 개수 상태
+        const [totalCommentCount, setTotalCommentCount] = useState<number>(0);
         // state: 댓글 상태
         const [comment, setComment] = useState<string>('');
+        // state: 댓글 상자 보기 상태
+        const [showComment, setShowComment] = useState<boolean>(false);
 
 
         // function: getFavoriteListResponse 처리 함수
@@ -238,7 +255,8 @@ export default function BoardDetail() {
             if(code !== 'SU') return;
 
             const {commentList} = responseBody as GetCommentListResponseDto;
-            setCommentList(commentList);
+            setTotalList(commentList);
+            setTotalCommentCount(commentList.length);
         };
 
         // function: getFavoriteListResponse 처리 함수
@@ -341,7 +359,7 @@ export default function BoardDetail() {
                         <div className='icon-button'>
                             <div className='icon comment-icon'></div>
                         </div>
-                        <div className='board-detail-bottom-button-text'>{`댓글 ${commentList.length}`}</div>
+                        <div className='board-detail-bottom-button-text'>{`댓글 ${totalCommentCount}`}</div>
                         <div className='icon-button' onClick={onShowCommentClickHandler}>
                             {showComment ?
                                 <div className='icon up-light-icon'></div> : <div className='icon down-light-icon'></div>
@@ -372,10 +390,10 @@ export default function BoardDetail() {
                     <div className='board-detail-bottom-comment-box'>
                         <div className='board-detail-bottom-comment-container'>
                             <div className='board-detail-bottom-commnet-title'>{'댓글'}<span
-                                className='emphasis'>{commentList.length}</span></div>
+                                className='emphasis'>{totalCommentCount}</span></div>
                             <div className='board-detail-bottom-comment-list-container'>
                                 {
-                                    commentList.map(item =>
+                                    viewList.map(item =>
                                         <CommentItem commentListItem={item}/>
                                     )
                                 }
@@ -383,7 +401,14 @@ export default function BoardDetail() {
                         </div>
                         <div className='divider'></div>
                         <div className='board-detail-bottom-comment-pagination-box'>
-                            <Pagination />
+                            <Pagination
+                                currentPage={currentPage}
+                                currentSection={currentSection}
+                                setCurrentPage={setCurrentPage}
+                                setCurrentSection={setCurrentSection}
+                                viewPageList={viewPageList}
+                                totalSection={totalSection}
+                            />
                         </div>
                         {/* 로그인 시에만 댓글 입력 가능 */
                             loginUser !== null &&

@@ -57,8 +57,6 @@ export default function Pagination(props: Props) {
                         <div className='pagination-text' onClick={() => onPageClickHandler(page)}>{page}</div>
                 )
             }
-            <div className='pagination-text-active'>{1}</div>
-            <div className='pagination-text' onClick={() => onPageClickHandler(2)}>{2}</div>
 
             <div className='pagination-divider'>{'\|'}</div>
             <div className='pagination-change-link-box'>
