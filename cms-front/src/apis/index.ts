@@ -6,8 +6,8 @@ import {Simulate} from "react-dom/test-utils";
 import {SignUpResponseDto} from "./response/auth";
 import {GetSignInUserResponseDto} from "./response/user";
 import {PostBoardRequestDto} from "./request/board";
-import {PostBoardResponseDto} from "./response/board";
-import GetBoardResponseDto from "./response/board/get-board.response.dto";
+import {PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto} from "./response/board";
+import error = Simulate.error;
 
 const DOMAIN = 'http://localhost:4000';
 
@@ -53,6 +53,7 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
 
 
 const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
+const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
 
 export const getBoardRequest = async (boardNumber: number | string, accessToken: string) => {
@@ -63,6 +64,20 @@ export const getBoardRequest = async (boardNumber: number | string, accessToken:
         })
         .catch(error => {
             if(!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const increaseViewCountRequest = async (boardNumber: number | string) => {
+    const result = await axios.patch(INCREASE_VIEW_COUNT_URL(boardNumber))
+        .then(response => {
+            const responseBody: IncreaseViewCountResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if (!error.response) return null;
             const responseBody: ResponseDto = error.response.data;
             return responseBody;
         });

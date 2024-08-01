@@ -10,13 +10,14 @@ import {useNavigate, useParams} from "react-router-dom";
 
 import defaultProfileImage from 'assets/image/default-profile-image.png';
 import {BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH} from "../../../constants";
-import {getBoardRequest} from "../../../apis";
+import {getBoardRequest, increaseViewCountRequest} from "../../../apis";
 import GetBoardResponseDto from "../../../apis/response/board/get-board.response.dto";
 import {ResponseDto} from "../../../apis/response";
 import {Simulate} from "react-dom/test-utils";
 import reset = Simulate.reset;
 import responseCodeEnum from "../../../types/enum/response-code.enum";
 import {useCookies} from "react-cookie";
+import {IncreaseViewCountResponseDto} from "../../../apis/response/board";
 
 //          component: 게시물 상세 화면 컴포넌트          //
 export default function BoardDetail() {
@@ -30,11 +31,22 @@ export default function BoardDetail() {
     // function: 네비게이트 함수
     const navigator = useNavigate();
 
+    // function: Increase View Count Response 처리 함수
+    const increaseViewCountResponse = (responseBody: IncreaseViewCountResponseDto | ResponseDto | null) => {
+        if (!responseBody) return;
+        const {code} = responseBody;
+        if (code === 'NB') alert('존재하지 않는 게시물 입니다.')
+        if (code === 'DBE') alert('데이터 베이스 오류입니다.')
+    };
+
     // state: 쿠키 상태
     const [cookies, setCookies] = useCookies();
 
     // component: 게시물 상세 상단 컴포넌트
     const BoardDetailTop = () => {
+
+        // state: 작성자 여부 상태
+        const [isWriter, setWriter] = useState<boolean>(false);
 
         // state: Board 상태
         const [board, setBoard] = useState<Board | null>(null);
@@ -55,6 +67,13 @@ export default function BoardDetail() {
 
             const board: Board = {...responseBody as GetBoardResponseDto}
             setBoard(board);
+
+            if (!loginUser) {
+                setWriter(false);
+                return;
+            }
+            const isWriter = loginUser.email === board.writerEmail;
+            setWriter(isWriter);
         };
 
         // event handler: 닉네임 버튼 클릭 이벤트 처리
@@ -86,7 +105,7 @@ export default function BoardDetail() {
             navigator(MAIN_PATH())
         };
 
-        // effect: 게시물 번호 path variable 이 바뀔 때마다 게시물 불러오기
+        // effect: 게시물 path variable 이 바뀔 때마다 게시물 불러오기
         useEffect(() => {
             const accessToken = cookies.accessToken;
             if(!accessToken) {
@@ -117,9 +136,11 @@ export default function BoardDetail() {
                             <div className='board-detail-info-divider'>{'|'}</div>
                             <div className='board-detail-write-date'>{new Date(board.writeDateTime).toDateString()}</div>
                         </div>
-                        <div className='icon-button' onClick={onMoreButtonClickHandler}>
-                            <div className='icon more-icon'></div>
-                        </div>
+                        {isWriter &&
+                            <div className='icon-button' onClick={onMoreButtonClickHandler}>
+                                <div className='icon more-icon'></div>
+                            </div>
+                        }
                         {showMore &&
                             <div className='board-detail-more-box'>
                                 <div className='board-detail-update-button' onClick={onUpdateButtonClickHandler}>{'수정'}</div>
@@ -262,26 +283,42 @@ export default function BoardDetail() {
                         <div className='board-detail-bottom-comment-pagination-box'>
                             <Pagination/>
                         </div>
-                        <div className='board-detail-bottom-comment-input-box'>
-                            <div className='board-detail-bottom-comment-input-container'>
-                                <textarea ref={commentRef}
-                                          className='board-detail-bottom-comment-textarea'
-                                          placeholder='댓글을 작성해주세요.'
-                                          value={comment}
-                                          onChange={onCommentChangeHandler}/>
-                                <div className='board-detail-bottom-comment-button-box'>
-                                    <div className={comment === '' ? 'disable-button' : 'black-button'}
-                                         onClick={onCommentSubmitButtonClickHandler}>
-                                        {'댓글달기'}
+                        {/* 로그인 시에만 댓글 입력 가능 */
+                            loginUser !== null &&
+                            <div className='board-detail-bottom-comment-input-box'>
+                                <div className='board-detail-bottom-comment-input-container'>
+                                    <textarea ref={commentRef}
+                                              className='board-detail-bottom-comment-textarea'
+                                              placeholder='댓글을 작성해주세요.'
+                                              value={comment}
+                                              onChange={onCommentChangeHandler}/>
+                                    <div className='board-detail-bottom-comment-button-box'>
+                                        <div className={comment === '' ? 'disable-button' : 'black-button'}
+                                             onClick={onCommentSubmitButtonClickHandler}>
+                                            {'댓글달기'}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 }
             </div>
         );
     };
+
+    // effect: 게시물 번호 path variable 이 바뀔 때마다 게시물 조회수 증가
+    let effectFlag = true;
+    useEffect(() => {
+        if (!boardNumber) return;
+        if (effectFlag) {
+            effectFlag = false;
+            return;
+        }
+
+        increaseViewCountRequest(boardNumber).then(increaseViewCountResponse)
+    }, [boardNumber]);
+
     //          render: 게시물 상세 화면 컴포넌트 렌더링          //
     return (
         <div id='board-detail-wrapper'>
