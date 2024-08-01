@@ -383,7 +383,7 @@ export default function BoardDetail() {
                         </div>
                         <div className='divider'></div>
                         <div className='board-detail-bottom-comment-pagination-box'>
-                            <Pagination/>
+                            <Pagination />
                         </div>
                         {/* 로그인 시에만 댓글 입력 가능 */
                             loginUser !== null &&
