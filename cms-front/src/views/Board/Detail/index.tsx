@@ -13,7 +13,7 @@ import {
     getBoardRequest,
     getCommentListRequest,
     getFavoriteListRequest,
-    increaseViewCountRequest,
+    increaseViewCountRequest, postCommentRequest,
     putFavoriteRequest
 } from "../../../apis";
 import GetBoardResponseDto from "../../../apis/response/board/get-board.response.dto";
@@ -22,10 +22,11 @@ import {useCookies} from "react-cookie";
 import {
     GetCommentListResponseDto,
     GetFavoriteListResponseDto,
-    IncreaseViewCountResponseDto, PutFavoriteResponseDto
+    IncreaseViewCountResponseDto, PostCommentResponseDto, PutFavoriteResponseDto
 } from "../../../apis/response/board";
 
 import dayjs from 'dayjs';
+import {PostCommentRequestDto} from "../../../apis/request/board";
 
 //          component: 게시물 상세 화면 컴포넌트          //
 export default function BoardDetail() {
@@ -240,6 +241,25 @@ export default function BoardDetail() {
             getFavoriteListRequest(boardNumber).then(getFavoriteListResponse);
         };
 
+        // function: postCommentResponse 처리 함수
+        const postCommentResponse = (responseBody: PostCommentResponseDto | ResponseDto | null) => {
+            if (!responseBody) return null;
+            const {code} = responseBody;
+
+            if (code === 'VF') alert('잘못된 접근입니다.');
+            if (code === 'NU') alert('존재하지 않는 유저입니다.')
+            if (code === 'NB') alert('존재하지 않는 게시물입니다.')
+            if (code === 'AF') alert('인증에 실패했습니다.')
+            if (code === 'DBE') alert('데이터베이스 오류입니다.')
+            if (code !== 'SU') return;
+
+            // 작성된 기존 댓글 박스 초기화
+            setComment('');
+
+            if(!boardNumber) return;
+            getCommentListRequest(boardNumber).then(getCommentListResponse)
+        };
+
         // event handler: 좋아요 클릭 이벤트 처리
         const onFavoriteClickHandler = () => {
             if(!loginUser || !cookies.accessToken || !boardNumber) return;
@@ -258,7 +278,9 @@ export default function BoardDetail() {
 
         // event handler: 댓글 작성 버튼 클릭 이벤트 처리
         const onCommentSubmitButtonClickHandler = () => {
-            if (!comment) return;
+            if (!comment || !boardNumber || !loginUser || !cookies.accessToken) return;
+            const requestBody: PostCommentRequestDto = {content: comment};
+            postCommentRequest(boardNumber, requestBody, cookies.accessToken).then(postCommentResponse)
         }
 
         // event handler: 댓글 변경 이벤트 처리
