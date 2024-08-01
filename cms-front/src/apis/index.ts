@@ -10,7 +10,11 @@ import {
     PostBoardResponseDto,
     GetBoardResponseDto,
     IncreaseViewCountResponseDto,
-    GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto
+    GetFavoriteListResponseDto,
+    GetCommentListResponseDto,
+    PutFavoriteResponseDto,
+    PostCommentResponseDto,
+    DeleteBoardResponseDto
 } from "./response/board";
 import error = Simulate.error;
 
@@ -58,12 +62,16 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
 
 
 const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
-const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
+const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
+const DELETE_BOARD_UTL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
+
 const GET_FAVORITE_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite-list`;
+const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite`
+
 const GET_COMMENT_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment-list`;
 const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
-const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
-const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite`
+
+const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
 
 export const getBoardRequest = async (boardNumber: number | string, accessToken: string) => {
     const result = await axios.get(GET_BOARD_URL(boardNumber), authorization(accessToken))
@@ -79,10 +87,24 @@ export const getBoardRequest = async (boardNumber: number | string, accessToken:
     return result;
 };
 
-export const increaseViewCountRequest = async (boardNumber: number | string) => {
-    const result = await axios.patch(INCREASE_VIEW_COUNT_URL(boardNumber))
+export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessToken: string) => {
+    const result = await axios.post(POST_BOARD_URL(), requestBody, authorization(accessToken))
         .then(response => {
-            const responseBody: IncreaseViewCountResponseDto = response.data;
+            const responseBody: PostBoardResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if(!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const deleteBoardRequest = async (boardNumber: number | string, accessToken: string) => {
+    const result = await axios.delete(DELETE_BOARD_UTL(boardNumber), authorization(accessToken))
+        .then(response => {
+            const responseBody: DeleteBoardResponseDto = response.data;
             return responseBody;
         })
         .catch(error => {
@@ -107,6 +129,20 @@ export const getFavoriteListRequest = async (boardNumber: number | string) => {
     return result;
 };
 
+export const putFavoriteRequest = async (boardNumber: number | string, accessToken: string) => {
+    const result = axios.put(PUT_FAVORITE_URL(boardNumber), {}, authorization(accessToken))
+        .then(response => {
+            const responseBody: PutFavoriteResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if(!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
 export const getCommentListRequest = async (boardNumber: number | string) => {
     const result = await axios.get(GET_COMMENT_LIST_URL(boardNumber))
         .then(response => {
@@ -114,20 +150,6 @@ export const getCommentListRequest = async (boardNumber: number | string) => {
             return responseBody;
         }).catch(error => {
             if (!error.response) return null;
-            const responseBody: ResponseDto = error.response.data;
-            return responseBody;
-        });
-    return result;
-};
-
-export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessToken: string) => {
-    const result = await axios.post(POST_BOARD_URL(), requestBody, authorization(accessToken))
-        .then(response => {
-            const responseBody: PostBoardResponseDto = response.data;
-            return responseBody;
-        })
-        .catch(error => {
-            if(!error.response) return null;
             const responseBody: ResponseDto = error.response.data;
             return responseBody;
         });
@@ -148,14 +170,14 @@ export const postCommentRequest = async (boardNumber: number | string, requestBo
     return result;
 };
 
-export const putFavoriteRequest = async (boardNumber: number | string, accessToken: string) => {
-    const result = axios.put(PUT_FAVORITE_URL(boardNumber), {}, authorization(accessToken))
+export const increaseViewCountRequest = async (boardNumber: number | string) => {
+    const result = await axios.patch(INCREASE_VIEW_COUNT_URL(boardNumber))
         .then(response => {
-            const responseBody: PutFavoriteResponseDto = response.data;
+            const responseBody: IncreaseViewCountResponseDto = response.data;
             return responseBody;
         })
         .catch(error => {
-            if(!error.response) return null;
+            if (!error.response) return null;
             const responseBody: ResponseDto = error.response.data;
             return responseBody;
         });
