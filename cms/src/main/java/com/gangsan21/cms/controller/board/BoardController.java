@@ -123,4 +123,18 @@ public class BoardController {
         ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardNumber, principal.getEmail());
         return response;
     }
+
+    @PatchMapping("/{boardNumber}/increase-view-count")
+    public ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(
+            @PathVariable("boardNumber") Integer boardNumber
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication))
+            return ResponseDto.validationFailed();
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        ResponseEntity<? super IncreaseViewCountResponseDto> response = boardService.increaseViewCount(boardNumber, principal.getEmail());
+        return response;
+    }
 }
