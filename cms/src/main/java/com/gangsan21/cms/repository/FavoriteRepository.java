@@ -3,6 +3,7 @@ package com.gangsan21.cms.repository;
 import com.gangsan21.cms.entity.FavoriteEntity;
 import com.gangsan21.cms.entity.primaryKey.FavoritePk;
 import com.gangsan21.cms.repository.resultSet.GetFavoriteListResultSet;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,6 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Favori
     )
     List<GetFavoriteListResultSet> getFavoriteList(Integer boardNumber);
 
+    @Transactional
+    void deleteByBoardNumber(Integer boardNumber);
 }

@@ -20,7 +20,7 @@ public class PutFavoriteResponseDto extends ResponseDto {
     }
 
     public static ResponseEntity<ResponseDto> notExistBoard() {
-        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXTSTED_BOARD, ResponseMessage.NOT_EXTSTED_BOARD);
+        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXITSTED_BOARD, ResponseMessage.NOT_EXTSTED_BOARD);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 

@@ -56,57 +56,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(Integer boardNumber, String email) {
-
-        List<GetFavoriteListResultSet> resultSetList;
-
-        try {
-
-            boolean existedUser = userRepository.existsByEmail(email);
-            if (!existedUser) {
-                return GetFavoriteListResponseDto.notExistUser();
-            }
-
-            // 유저 자신이 작성한 게시물만 가져옴.
-            boolean existedBoard = boardRepository.existsByBoardNumberAndWriterEmail(boardNumber, email);
-            if(!existedBoard){
-                return GetFavoriteListResponseDto.notExistBoard();
-            }
-
-            resultSetList = favoriteRepository.getFavoriteList(boardNumber);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-
-        return GetFavoriteListResponseDto.success(resultSetList);
-    }
-
-    @Override
-    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber, String email) {
-
-        List<GetCommentListResultSet> resultSetList = new ArrayList<>();
-
-        try {
-
-            boolean isExistedUser = userRepository.existsByEmail(email);
-            if(!isExistedUser) return GetCommentListResponseDto.validationFailed();
-
-            boolean isExistedBoard = boardRepository.existsByBoardNumberAndWriterEmail(boardNumber, email);
-            if(!isExistedBoard) return GetCommentListResponseDto.notExistBoard();
-
-            resultSetList = commentRepository.getCommentListByBoardNumberAndEmail(boardNumber, email);
-//            log.info("nicknames: {}", resultSetList.stream().map(GetCommentListResultSet::getNickName).collect(Collectors.joining(",")));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-
-        return GetCommentListResponseDto.success(resultSetList);
-    }
-
-    @Override
     public ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email) {
 
         try {
@@ -137,26 +86,60 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email) {
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email) {
 
         try {
+
             boolean existedUser = userRepository.existsByEmail(email);
-            if(!existedUser) return PostCommentResponseDto.notExistUser();
+            if (!existedUser) return DeleteBoardResponseDto.notExistUser();
 
             BoardEntity boardEntity = boardRepository.findByBoardNumberAndWriterEmail(boardNumber, email);
-            if (Objects.isNull(boardEntity)) return PostCommentResponseDto.notExistBoard();
+            if (Objects.isNull(boardEntity)) return DeleteBoardResponseDto.notExistBoard();
 
-            commentRepository.save(new CommentEntity(dto, boardNumber, email));
+            String writerEmail = boardEntity.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if (!isWriter) return DeleteBoardResponseDto.noPermission();
 
-            boardEntity.increaseCommentCount();
-            boardRepository.save(boardEntity);
+            imageRepository.deleteByBoardNumber(boardNumber);
+            commentRepository.deleteByBoardNumber(boardNumber);
+            favoriteRepository.deleteByBoardNumber(boardNumber);
+
+            boardRepository.delete(boardEntity);
 
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseDto.databaseError();
         }
 
-        return PostCommentResponseDto.success();
+        return DeleteBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(Integer boardNumber, String email) {
+
+        List<GetFavoriteListResultSet> resultSetList;
+
+        try {
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) {
+                return GetFavoriteListResponseDto.notExistUser();
+            }
+
+            // 유저 자신이 작성한 게시물만 가져옴.
+            boolean existedBoard = boardRepository.existsByBoardNumberAndWriterEmail(boardNumber, email);
+            if(!existedBoard){
+                return GetFavoriteListResponseDto.notExistBoard();
+            }
+
+            resultSetList = favoriteRepository.getFavoriteList(boardNumber);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetFavoriteListResponseDto.success(resultSetList);
     }
 
     @Override
@@ -188,6 +171,52 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return PutFavoriteResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber, String email) {
+
+        List<GetCommentListResultSet> resultSetList = new ArrayList<>();
+
+        try {
+
+            boolean isExistedUser = userRepository.existsByEmail(email);
+            if(!isExistedUser) return GetCommentListResponseDto.validationFailed();
+
+            boolean isExistedBoard = boardRepository.existsByBoardNumberAndWriterEmail(boardNumber, email);
+            if(!isExistedBoard) return GetCommentListResponseDto.notExistBoard();
+
+            resultSetList = commentRepository.getCommentListByBoardNumberAndEmail(boardNumber, email);
+//            log.info("nicknames: {}", resultSetList.stream().map(GetCommentListResultSet::getNickName).collect(Collectors.joining(",")));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetCommentListResponseDto.success(resultSetList);
+    }
+
+    @Override
+    public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email) {
+
+        try {
+            boolean existedUser = userRepository.existsByEmail(email);
+            if(!existedUser) return PostCommentResponseDto.notExistUser();
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumberAndWriterEmail(boardNumber, email);
+            if (Objects.isNull(boardEntity)) return PostCommentResponseDto.notExistBoard();
+
+            commentRepository.save(new CommentEntity(dto, boardNumber, email));
+
+            boardEntity.increaseCommentCount();
+            boardRepository.save(boardEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PostCommentResponseDto.success();
     }
 
     @Override

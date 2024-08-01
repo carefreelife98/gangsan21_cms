@@ -42,6 +42,37 @@ public class BoardController {
         return response;
     }
 
+    @PostMapping("")
+    public ResponseEntity<? super PostBoardResponseDto> postBoard(
+            @RequestBody @Valid PostBoardRequestDto requestBody,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        // TODO: @AuthenticationPrincipal 동작하지 않아 임시 방편으로 아래와 같이 SecurityContextHolder 에서 직접 꺼내 사용.
+        //  추후 @AuthenticationPrincipal 사용으로 변경 필요
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication))
+            return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, principal.getEmail());
+
+        return response;
+    }
+
+    @DeleteMapping("/{boardNumber}")
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(
+            @PathVariable("boardNumber") Integer boardNumber,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication)) return ResponseDto.validationFailed();
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        ResponseEntity<? super DeleteBoardResponseDto> response = boardService.deleteBoard(boardNumber, principal.getEmail());
+        return response;
+    }
+
     @GetMapping("/{boardNumber}/favorite-list")
     public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(
             @PathVariable("boardNumber") Integer boardNumber,
@@ -56,6 +87,21 @@ public class BoardController {
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         ResponseEntity<? super GetFavoriteListResponseDto> response = boardService.getFavoriteList(boardNumber, principal.getEmail());
 
+        return response;
+    }
+
+    @PutMapping("/{boardNumber}/favorite")
+    public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(
+            @PathVariable("boardNumber") Integer boardNumber,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication))
+            return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardNumber, principal.getEmail());
         return response;
     }
 
@@ -75,23 +121,6 @@ public class BoardController {
 
     }
 
-    @PostMapping("")
-    public ResponseEntity<? super PostBoardResponseDto> postBoard(
-            @RequestBody @Valid PostBoardRequestDto requestBody,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) {
-        // TODO: @AuthenticationPrincipal 동작하지 않아 임시 방편으로 아래와 같이 SecurityContextHolder 에서 직접 꺼내 사용.
-        //  추후 @AuthenticationPrincipal 사용으로 변경 필요
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.isNull(authentication))
-            return ResponseDto.validationFailed();
-
-        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-        ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, principal.getEmail());
-
-        return response;
-    }
-
     @PostMapping("/{boardNumber}/comment")
     public ResponseEntity<? super PostCommentResponseDto> putComment(
             @RequestBody @Valid PostCommentRequestDto requestBody,
@@ -106,21 +135,6 @@ public class BoardController {
 
         ResponseEntity<? super PostCommentResponseDto> response = boardService.postComment(requestBody, boardNumber, principal.getEmail());
 
-        return response;
-    }
-
-    @PutMapping("/{boardNumber}/favorite")
-    public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(
-            @PathVariable("boardNumber") Integer boardNumber,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.isNull(authentication))
-            return ResponseDto.validationFailed();
-
-        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-
-        ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardNumber, principal.getEmail());
         return response;
     }
 

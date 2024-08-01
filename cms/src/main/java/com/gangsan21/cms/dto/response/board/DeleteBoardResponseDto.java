@@ -2,27 +2,20 @@ package com.gangsan21.cms.dto.response.board;
 
 import com.gangsan21.cms.common.ResponseCode;
 import com.gangsan21.cms.common.ResponseMessage;
-import com.gangsan21.cms.dto.object.FavoriteListItem;
 import com.gangsan21.cms.dto.response.ResponseDto;
-import com.gangsan21.cms.repository.resultSet.GetFavoriteListResultSet;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 @Getter
-public class GetFavoriteListResponseDto extends ResponseDto {
+public class DeleteBoardResponseDto extends ResponseDto {
 
-    private List<FavoriteListItem> favoriteList;
-
-    public GetFavoriteListResponseDto(List<GetFavoriteListResultSet> resultSetList) {
+    public DeleteBoardResponseDto() {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
-        this.favoriteList = FavoriteListItem.copyList(resultSetList);
     }
 
-    public static ResponseEntity<GetFavoriteListResponseDto> success(List<GetFavoriteListResultSet> resultSetList) {
-        GetFavoriteListResponseDto result = new GetFavoriteListResponseDto(resultSetList);
+    public static ResponseEntity<DeleteBoardResponseDto> success() {
+        DeleteBoardResponseDto result = new DeleteBoardResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -33,6 +26,11 @@ public class GetFavoriteListResponseDto extends ResponseDto {
 
     public static ResponseEntity<ResponseDto> notExistUser() {
         ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_USER, ResponseMessage.NOT_EXISTED_USER);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
+
+    public static ResponseEntity<ResponseDto> noPermission() {
+        ResponseDto result = new ResponseDto(ResponseCode.NO_PERMISSION, ResponseMessage.NO_PERMISSION);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
     }
 }

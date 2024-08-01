@@ -8,17 +8,16 @@ import org.springframework.http.ResponseEntity;
 
 public interface BoardService {
 
-    ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber, String email);
+    // @Param: Board 내용과 작성자의 Email 주소.
 
-    ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(Integer boardNumber, String email);
+    ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber, String email);
+    ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email);
+    ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email);
 
     ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber, String email);
-
-    // @Param: Board 내용과 작성자의 Email 주소.
-    ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email);
-
     ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email);
 
+    ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(Integer boardNumber, String email);
     ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email);
 
     ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber, String email);

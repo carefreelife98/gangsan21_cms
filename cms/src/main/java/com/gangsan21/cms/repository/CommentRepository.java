@@ -2,6 +2,7 @@ package com.gangsan21.cms.repository;
 
 import com.gangsan21.cms.entity.CommentEntity;
 import com.gangsan21.cms.repository.resultSet.GetCommentListResultSet;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,4 +29,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Integer>
     )
     List<GetCommentListResultSet> getCommentListByBoardNumberAndEmail(Integer boardNumber, String email);
 
+    @Transactional
+    void deleteByBoardNumber(Integer boardNumber);
 }
