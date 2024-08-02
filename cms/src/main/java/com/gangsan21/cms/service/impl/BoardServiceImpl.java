@@ -1,5 +1,6 @@
 package com.gangsan21.cms.service.impl;
 
+import com.gangsan21.cms.dto.request.board.PatchBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
@@ -83,6 +84,43 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return PostBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber, String email) {
+
+        try {
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumberAndWriterEmail(boardNumber, email);
+            if (Objects.isNull(boardEntity)) return PatchBoardResponseDto.notExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return PatchBoardResponseDto.notExistUser();
+
+            String writerEmail = boardEntity.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if(!isWriter) return PatchBoardResponseDto.noPermission();
+
+            // 기존 게시물 제목 및 내용 Update 수행
+            boardEntity.patchBoard(dto);
+            boardRepository.save(boardEntity);
+
+            // 기존 게시물 이미지 제거
+            imageRepository.deleteByBoardNumber(boardNumber);
+
+            // 게시물 이미지 재 저장
+            List<String> boardImageList = dto.getBoardImageList();
+            List<ImageEntity> imageEntityList = new ArrayList<>();
+            boardImageList.forEach(imgUrl -> {
+                imageEntityList.add(new ImageEntity(boardNumber, imgUrl));
+            });
+            imageRepository.saveAll(imageEntityList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return PatchBoardResponseDto.success();
     }
 
     @Override

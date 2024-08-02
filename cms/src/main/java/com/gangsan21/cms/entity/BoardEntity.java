@@ -1,5 +1,6 @@
 package com.gangsan21.cms.entity;
 
+import com.gangsan21.cms.dto.request.board.PatchBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,16 +43,21 @@ public class BoardEntity {
         this.writerEmail = email;
     }
 
+    public void patchBoard(PatchBoardRequestDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+    }
+
     public void increaseViewCount() {
          this.viewCount++;
     }
 
-    public void increaseFavoriteCount() {
-        this.favoriteCount++;
-    }
-
     public void increaseCommentCount() {
         this.commentCount++;
+    }
+
+    public void increaseFavoriteCount() {
+        this.favoriteCount++;
     }
 
     public void decreaseFavoriteCount() {

@@ -1,6 +1,7 @@
 package com.gangsan21.cms.service;
 
 
+import com.gangsan21.cms.dto.request.board.PatchBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.board.*;
@@ -12,6 +13,7 @@ public interface BoardService {
 
     ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber, String email);
     ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email);
+    ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber, String email);
     ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email);
 
     ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber, String email);

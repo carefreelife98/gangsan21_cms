@@ -1,6 +1,7 @@
 package com.gangsan21.cms.controller.board;
 
 import com.gangsan21.cms.dto.object.FavoriteListItem;
+import com.gangsan21.cms.dto.request.board.PatchBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
@@ -56,6 +57,21 @@ public class BoardController {
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, principal.getEmail());
 
+        return response;
+    }
+
+    @PatchMapping("/{boardNumber}")
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(
+            @RequestBody @Valid PatchBoardRequestDto requestBody,
+            @PathVariable("boardNumber") Integer boardNumber,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication))
+            return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        ResponseEntity<? super PatchBoardResponseDto> response = boardService.patchBoard(requestBody, boardNumber, principal.getEmail());
         return response;
     }
 
