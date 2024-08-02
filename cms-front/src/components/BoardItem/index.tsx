@@ -18,11 +18,11 @@ export default function BoardItem({ boardListItem }: Props) {
     const { writeDateTime, writerNickName, writerProfileImage } = boardListItem
 
     //           Function: 네비게이트 함수, `npm i install react-router-dom`           //
-    // const navigator = useNavigate();
+    // const navigate = useNavigate();
 
     //           event handler: 게시물 아이템 클릭 이벤트 처리 함수          //
     const onClickHandler = () => {
-        // navigator(boardNumber);
+        // navigate(boardNumber);
     };
 
     //           component: Board List Item 컴포넌트 렌더링          //

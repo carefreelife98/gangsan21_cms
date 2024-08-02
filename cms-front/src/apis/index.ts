@@ -5,7 +5,7 @@ import {ResponseDto} from "./response";
 import {Simulate} from "react-dom/test-utils";
 import {SignUpResponseDto} from "./response/auth";
 import {GetSignInUserResponseDto} from "./response/user";
-import {PostBoardRequestDto, PostCommentRequestDto} from "./request/board";
+import {PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto} from "./request/board";
 import {
     PostBoardResponseDto,
     GetBoardResponseDto,
@@ -14,9 +14,10 @@ import {
     GetCommentListResponseDto,
     PutFavoriteResponseDto,
     PostCommentResponseDto,
-    DeleteBoardResponseDto
+    DeleteBoardResponseDto, PatchBoardResponseDto
 } from "./response/board";
 import error = Simulate.error;
+import resize = Simulate.resize;
 
 const DOMAIN = 'http://localhost:4000';
 
@@ -63,6 +64,7 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
 
 const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
+const PATCH_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const DELETE_BOARD_UTL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 
 const GET_FAVORITE_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite-list`;
@@ -95,6 +97,20 @@ export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessT
         })
         .catch(error => {
             if(!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const patchBoardRequest = async (boardNumber: number | string, requestBody: PatchBoardRequestDto, accessToken: string) => {
+    const result = await axios.patch(PATCH_BOARD_URL(boardNumber), requestBody, authorization(accessToken))
+        .then(response => {
+            const responseBody: PatchBoardResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if (!error.response) return null;
             const responseBody: ResponseDto = error.response.data;
             return responseBody;
         });
