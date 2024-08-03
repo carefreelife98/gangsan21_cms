@@ -16,7 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -162,6 +167,26 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return GetLatestBoardListResponseDto.success(boardEntityList);
+    }
+
+    @Override
+    public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList(String email) {
+
+        List<BoardListViewEntity> boardListViewEntityList = new ArrayList<>();
+
+        try {
+            // 일주일 전 날짜 구함
+            LocalDateTime lastWeek = LocalDateTime.now().minusWeeks(1);
+
+            boardListViewEntityList = boardListViewRepository.findTop3ByWriterEmailAndWriteDateTimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDateTimeDesc(email, lastWeek);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetTop3BoardListResponseDto.success(boardListViewEntityList);
+
     }
 
     @Override

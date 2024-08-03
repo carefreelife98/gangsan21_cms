@@ -10,6 +10,7 @@ import com.gangsan21.cms.security.CustomUserDetails;
 import com.gangsan21.cms.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -101,6 +102,20 @@ public class BoardController {
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
 
         ResponseEntity<? super GetLatestBoardListResponseDto> response = boardService.getLatestBoardList(principal.getEmail());
+        return response;
+    }
+
+    @GetMapping("/top-3")
+    public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication))
+            return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        ResponseEntity<? super GetTop3BoardListResponseDto> response = boardService.getTop3BoardList(principal.getEmail());
         return response;
     }
 
