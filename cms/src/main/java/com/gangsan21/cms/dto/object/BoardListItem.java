@@ -1,11 +1,14 @@
 package com.gangsan21.cms.dto.object;
 
+import com.gangsan21.cms.entity.BoardListViewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -21,4 +24,26 @@ public class BoardListItem {
     private LocalDateTime writeDateTime;
     private String writerNickName;
     private String writerProfileImage;
+
+    public BoardListItem(BoardListViewEntity boardListViewEntity) {
+        this.boardNumber = boardListViewEntity.getBoardNumber();
+        this.title = boardListViewEntity.getTitle();
+        this.content = boardListViewEntity.getContent();
+        this.boardTitleImage = boardListViewEntity.getTitleImage();
+        this.favoriteCount = boardListViewEntity.getFavoriteCount();
+        this.commentCount = boardListViewEntity.getCommentCount();
+        this.viewCount = boardListViewEntity.getViewCount();
+        this.writeDateTime = boardListViewEntity.getWriteDateTime();
+        this.writerNickName = boardListViewEntity.getWriterNickName();
+        this.writerProfileImage = boardListViewEntity.getWriterProfileImage();
+    }
+
+    public static List<BoardListItem> getList(List<BoardListViewEntity> boardListViewEntityList) {
+        List<BoardListItem> list = new ArrayList<>();
+        boardListViewEntityList.forEach(boardListViewEntity -> {
+            BoardListItem boardListItem = new BoardListItem(boardListViewEntity);
+            list.add(boardListItem);
+        });
+        return list;
+    }
 }

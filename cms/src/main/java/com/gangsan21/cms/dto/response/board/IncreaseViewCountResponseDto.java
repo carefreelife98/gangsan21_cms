@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class IncreaseViewCountResponseDto extends ResponseDto {
-    public IncreaseViewCountResponseDto() {
+    private IncreaseViewCountResponseDto() {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 

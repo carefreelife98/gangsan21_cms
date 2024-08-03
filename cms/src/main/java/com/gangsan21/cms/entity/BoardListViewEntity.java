@@ -17,17 +17,20 @@ import java.util.Date;
 @Table(name = "board_list_view")
 public class BoardListViewEntity {
 
+    // board
     @Id
     private Integer boardNumber;
 
     private String title;
     private String content;
-    private String titleImage;
-    private Integer viewCount;
+    private LocalDateTime writeDateTime;
     private Integer favoriteCount;
     private Integer commentCount;
-    private LocalDateTime writeDateTime;
+    private Integer viewCount;
     private String writerEmail;
+
+    //
+    private String titleImage;
     private String writerNickName;
     private String writerProfileImage;
 }

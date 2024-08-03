@@ -16,7 +16,7 @@ public class GetFavoriteListResponseDto extends ResponseDto {
 
     private List<FavoriteListItem> favoriteList;
 
-    public GetFavoriteListResponseDto(List<GetFavoriteListResultSet> resultSetList) {
+    private GetFavoriteListResponseDto(List<GetFavoriteListResultSet> resultSetList) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
         this.favoriteList = FavoriteListItem.copyList(resultSetList);
     }

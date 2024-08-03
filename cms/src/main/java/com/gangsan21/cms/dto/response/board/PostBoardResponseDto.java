@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 @Getter
 public class PostBoardResponseDto extends ResponseDto {
 
-    public PostBoardResponseDto() {
+    private PostBoardResponseDto() {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 

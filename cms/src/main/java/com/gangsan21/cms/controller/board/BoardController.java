@@ -89,6 +89,21 @@ public class BoardController {
         return response;
     }
 
+    @GetMapping("/latest-list")
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication))
+            return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        ResponseEntity<? super GetLatestBoardListResponseDto> response = boardService.getLatestBoardList(principal.getEmail());
+        return response;
+    }
+
     @GetMapping("/{boardNumber}/favorite-list")
     public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(
             @PathVariable("boardNumber") Integer boardNumber,

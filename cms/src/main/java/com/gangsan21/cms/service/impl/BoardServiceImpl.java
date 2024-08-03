@@ -5,10 +5,7 @@ import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
 import com.gangsan21.cms.dto.response.board.*;
-import com.gangsan21.cms.entity.BoardEntity;
-import com.gangsan21.cms.entity.CommentEntity;
-import com.gangsan21.cms.entity.FavoriteEntity;
-import com.gangsan21.cms.entity.ImageEntity;
+import com.gangsan21.cms.entity.*;
 import com.gangsan21.cms.repository.*;
 import com.gangsan21.cms.repository.resultSet.GetBoardResultSet;
 import com.gangsan21.cms.repository.resultSet.GetCommentListResultSet;
@@ -31,6 +28,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final BoardListViewRepository boardListViewRepository;
     private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
@@ -150,6 +148,20 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return DeleteBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList(String email) {
+        List<BoardListViewEntity> boardEntityList;
+
+        try {
+            boardEntityList = boardListViewRepository.findByWriterEmailOrderByWriteDateTimeDesc(email);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetLatestBoardListResponseDto.success(boardEntityList);
     }
 
     @Override

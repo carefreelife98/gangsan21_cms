@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 @Getter
 public class PatchBoardResponseDto extends ResponseDto {
 
-    public PatchBoardResponseDto() {
+    private PatchBoardResponseDto() {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
