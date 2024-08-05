@@ -73,7 +73,7 @@ export default function Main() {
                     <div className='main-top-container'>
                         <div className='main-top-title'>{'Gang San 21 M&A CMS 에 오신 것을\n환영합니다.'}</div>
                         <div className='main-top-contents-box'>
-                            <div className='main-top-contents-title'>{'주간 TOP 3 업무'}</div>
+                            <div className='main-top-contents-title'>{'주간 TOP 12 업무'}</div>
                             <div className='carousel-box'>
                                 <div className='carousel'>
                                     <button className='carousel-button left' onClick={handlePrevClick}>{"<"}</button>
