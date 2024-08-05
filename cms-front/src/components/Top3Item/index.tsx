@@ -30,8 +30,10 @@ export default function Top3Item({ top3ListItem }: Props) {
     //         component: Top 3 List Item 컴포넌트 렌더링         //
     return (
         <div className='top-3-list-item' onClick={onClickHandler}>
-            <div className='top-3-background-image' style={{backgroundImage: `url(${boardTitleImage})`}}></div>
-            <div className='top-3-list-item-main-box'>
+            {boardTitleImage && (
+                <div className='top-3-background-image' style={{ backgroundImage: `url(${boardTitleImage})` }}></div>
+            )}
+            <div className={`${boardTitleImage ? 'top-3-list-item-main-box' : 'no-background-image'}`}>
                 <div className='top-3-list-item-top'>
                     <div className='top-3-list-item-profile-box'>
                         <div className='top-3-item-profile-image' style={{ backgroundImage: `url(${writerProfileImage ? writerProfileImage : defaultProfileImage})`}}></div>
@@ -43,7 +45,7 @@ export default function Top3Item({ top3ListItem }: Props) {
                 </div>
                 <div className='divider'></div>
                 <div className='top-3-list-item-middle'>
-                    <div className='top-3-list-item-title'>{title}</div>
+                    <div className={`${boardTitleImage ? 'top-3-list-item-title' : 'top-3-list-item-title-no-background-image'}`}>{title}</div>
                     <div className='top-3-list-item-content'>{content}</div>
                 </div>
                 <div className='top-3-list-item-bottom'>
@@ -54,4 +56,5 @@ export default function Top3Item({ top3ListItem }: Props) {
             </div>
         </div>
     );
+
 }
