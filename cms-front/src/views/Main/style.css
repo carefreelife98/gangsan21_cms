@@ -1,0 +1,119 @@
+#main-top-wrapper {
+    padding: 80px 0 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.main-top-container {
+    width: 1200px;
+    min-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 56px;
+}
+
+.main-top-title {
+    color: rgba(0, 0, 0, 1);
+
+    text-align: center;
+    font-family: GimhaeGaya;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 140%;
+    letter-spacing: -0.8px;
+
+    white-space: pre-wrap;
+}
+
+.main-top-contents-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.main-top-contents-title {
+    color: rgba(0, 0, 0, 1);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.main-top-contents {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+#main-bottom-wrapper {
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.main-bottom-container {
+    width: 1200px;
+    min-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.main-bottom-title {
+    color: rgba(0, 0, 0, 1);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.main-bottom-contents-box {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 8fr 4fr;
+    gap: 24px;
+}
+
+.main-bottom-current-contents {
+    grid-column: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.main-bottom-popular-box {
+    grid-column: 2 / 3;
+}
+
+.main-bottom-popular-card {
+    padding: 24px;
+    background-color: rgba(255, 255, 255, 1);
+
+}
+
+.main-bottom-popular-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.main-bottom-popular-card-title {
+    color: rgba(0, 0, 0, 1);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.main-bottom-popular-card-contents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.main-bottom-pagination-box {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+}
