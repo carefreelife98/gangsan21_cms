@@ -37,6 +37,7 @@ public class BoardServiceImpl implements BoardService {
     private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
+    private final SearchLogRepository searchLogRepository;
 
     @Override
     public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber, String email) {
@@ -187,6 +188,36 @@ public class BoardServiceImpl implements BoardService {
 
         return GetTop3BoardListResponseDto.success(boardListViewEntityList);
 
+    }
+
+    @Override
+    public ResponseEntity<? super GetSearchBoardResponseDto> getSearchBoardList(String searchWord, String preSearchWord, String email) {
+
+        List<BoardListViewEntity> boardListViewEntityList;
+
+        try {
+
+            boardListViewEntityList = boardListViewRepository.findByWriterEmailAndTitleContainsOrContentContainsOrderByWriteDateTimeDesc(email, searchWord, preSearchWord);
+
+            SearchLogEntity searchLogEntity = new SearchLogEntity(searchWord, preSearchWord, false);
+            searchLogRepository.save(searchLogEntity);
+
+            // 이전 검색 기록을 한번 타고 나오는지 아니면, 첫 검색인지 (?)
+            // preSearchWord 가 null 이 아니면 첫 번째 검색이 아니라는 뜻.
+            boolean relation = preSearchWord != null;
+
+            // 두번째 검색인 경우
+            if (relation) {
+                // 새로운 검색 엔티티 생성하되, preSearchWord 와 searchWord 순서 변경
+                searchLogEntity = new SearchLogEntity(preSearchWord, searchWord, true);
+                searchLogRepository.save(searchLogEntity);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetSearchBoardResponseDto.success(boardListViewEntityList);
     }
 
     @Override

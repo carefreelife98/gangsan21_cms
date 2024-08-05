@@ -119,6 +119,20 @@ public class BoardController {
         return response;
     }
 
+    @GetMapping(value = {"/search-list/{searchWord}", "/search-list/{searchWord}/{preSearchWord}"})
+    public ResponseEntity<? super GetSearchBoardResponseDto> getSearchBoardList(
+            @PathVariable("searchWord") String searchWord,
+            @PathVariable(value = "preSearchWord", required = false) String preSearchWord,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        ResponseEntity<? super GetSearchBoardResponseDto> response = boardService.getSearchBoardList(searchWord, preSearchWord, principal.getEmail());
+        return response;
+    }
+
     @GetMapping("/{boardNumber}/favorite-list")
     public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(
             @PathVariable("boardNumber") Integer boardNumber,

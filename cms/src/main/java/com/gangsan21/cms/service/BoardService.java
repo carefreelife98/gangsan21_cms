@@ -18,6 +18,7 @@ public interface BoardService {
 
     ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList(String email);
     ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList(String email);
+    ResponseEntity<? super GetSearchBoardResponseDto> getSearchBoardList(String searchWord, String preSearchWord, String email);
 
     ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber, String email);
     ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email);

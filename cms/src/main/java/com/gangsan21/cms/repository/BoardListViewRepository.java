@@ -15,4 +15,6 @@ public interface BoardListViewRepository extends JpaRepository<BoardListViewEnti
     // Top3 가 메서드 명에 있으면, LIMIT 3 와 동일한 역할을 함.
     List<BoardListViewEntity> findTop12ByWriterEmailAndWriteDateTimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDateTimeDesc(String email, LocalDateTime writeDateTime);
 
+    // 검색 리스트 가져오기 (contains == LIKE 문의 역할을 함)
+    List<BoardListViewEntity> findByWriterEmailAndTitleContainsOrContentContainsOrderByWriteDateTimeDesc(String email, String title, String content);
 }
