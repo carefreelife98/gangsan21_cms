@@ -38,7 +38,7 @@ export default function BoardItem({ boardListItem }: Props) {
                     </div>
                     <div className='board-list-item-write-box'>
                         <div className='board-list-item-nickname'>{writerNickName}</div>
-                        <div className='board-list-item-write-date'>{dayjs(writeDateTime).format('YYYY. MM. DD. HH:MM')}</div>
+                        <div className='board-list-item-write-date'>{dayjs(writeDateTime).format('YYYY. MM. DD. HH:mm')}</div>
                     </div>
                 </div>
                 <div className='board-list-item-middle'>

@@ -40,7 +40,7 @@ export default function Top3Item({ top3ListItem }: Props) {
                     </div>
                     <div className='top-3-list-item-write-box'>
                         <div className='top-3-list-item-nickname'>{writerNickName}</div>
-                        <div className='top-3-list-item-write-date'>{dayjs(writeDateTime).format('YYYY. MM. DD. HH:MM')}</div>
+                        <div className='top-3-list-item-write-date'>{dayjs(writeDateTime).format('YYYY. MM. DD. HH:mm')}</div>
                     </div>
                 </div>
                 <div className='divider'></div>
