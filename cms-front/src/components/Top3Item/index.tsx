@@ -4,6 +4,7 @@ import defaultProfileImage from 'assets/image/default-profile-image.png';
 import {BoardListItem} from "../../types/interface";
 import {useNavigate} from "react-router-dom";
 import {BOARD_DETAIL_PATH, BOARD_PATH} from "../../constants";
+import dayjs from 'dayjs';
 
 interface Props {
     top3ListItem: BoardListItem
@@ -36,7 +37,7 @@ export default function Top3Item({ top3ListItem }: Props) {
                     </div>
                     <div className='top-3-list-item-write-box'>
                         <div className='top-3-list-item-nickname'>{writerNickName}</div>
-                        <div className='top-3-list-item-write-date'>{writeDateTime}</div>
+                        <div className='top-3-list-item-write-date'>{dayjs(writeDateTime).format('YYYY. MM. DD. HH:MM')}</div>
                     </div>
                 </div>
                 <div className='top-3-list-item-middle'>

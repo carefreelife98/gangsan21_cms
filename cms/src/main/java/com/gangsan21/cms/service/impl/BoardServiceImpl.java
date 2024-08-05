@@ -176,9 +176,9 @@ public class BoardServiceImpl implements BoardService {
 
         try {
             // 일주일 전 날짜 구함
-            LocalDateTime lastWeek = LocalDateTime.now().minusWeeks(1);
+            LocalDateTime lastWeek = LocalDateTime.now().minusWeeks(4);
 
-            boardListViewEntityList = boardListViewRepository.findTop3ByWriterEmailAndWriteDateTimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDateTimeDesc(email, lastWeek);
+            boardListViewEntityList = boardListViewRepository.findTop12ByWriterEmailAndWriteDateTimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDateTimeDesc(email, lastWeek);
 
         } catch (Exception e) {
             e.printStackTrace();

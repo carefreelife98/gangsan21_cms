@@ -15,37 +15,95 @@
 
 .main-top-title {
     color: rgba(0, 0, 0, 1);
-
     text-align: center;
     font-family: GimhaeGaya;
     font-size: 40px;
     font-weight: 400;
     line-height: 140%;
     letter-spacing: -0.8px;
-
     white-space: pre-wrap;
 }
 
 .main-top-contents-box {
     width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 30px 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 24px;
+
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .main-top-contents-title {
+    margin-top: 24px;
     color: rgba(0, 0, 0, 1);
+    font-family: GimhaeGaya;
     font-size: 24px;
     font-weight: 500;
     line-height: 140%;
 }
 
-.main-top-contents {
+.main-top-contents-rank {
+    /*position: absolute;*/
+    top: 10px;
+    left: 10px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.5); /* Border color */
+    border-radius: 50%; /* Circular shape */
     display: flex;
-    justify-content: space-between;
-    gap: 24px;
+    justify-content: center;
+    align-items: center;
+    background-color: white; /* Background color for better visibility */
+    font-size: 16px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
 }
+
+.carousel-box {
+    width: 97%;
+    margin-bottom: 24px;
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.carousel-inner {
+    display: flex;
+    justify-content: space-around;
+    transition: transform 0.5s ease;
+}
+
+.carousel-item {
+    flex: 0 0 33.33%; /* 100% / 3 items */
+    justify-content: space-around;
+}
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.carousel-button.left {
+    left: 0;
+}
+
+.carousel-button.right {
+    right: 0;
+}
+
 
 #main-bottom-wrapper {
     padding: 40px 0;

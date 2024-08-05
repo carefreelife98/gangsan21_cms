@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import Footer from "./layouts/Footer";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import Main from "./views/Main";
 import Authentication from "./views/Authentication";
 import Search from "./views/Search";
@@ -30,6 +30,8 @@ import {User} from "./types/interface";
 //          component: Application 컴포넌트          //
 function App() {
 
+    const navigate = useNavigate();
+
     // state: 로그인 유저 전역 상태
     const { setLoginUser, resetLoginUser } = useLoginUserStore();
 
@@ -54,6 +56,8 @@ function App() {
         if (!cookies.accessToken) {
             // 로그인 user 값을 null 로 변경
             resetLoginUser();
+            // 로그인 창으로 강제 이동
+            navigate(AUTH_PATH());
             return;
         }
         getSignInUserRequest(cookies.accessToken).then(getSignInUserResponse)
