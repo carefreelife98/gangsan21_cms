@@ -127,6 +127,8 @@ public class BoardController {
     ) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication))
+            return ResponseDto.validationFailed();
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
 
         ResponseEntity<? super GetSearchBoardResponseDto> response = boardService.getSearchBoardList(searchWord, preSearchWord, principal.getEmail());

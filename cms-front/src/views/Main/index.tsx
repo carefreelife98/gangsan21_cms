@@ -2,7 +2,6 @@ import './style.css';
 import Top3Item from "../../components/Top3Item";
 import {useEffect, useState} from "react";
 import {BoardListItem} from "../../types/interface";
-import {latestBoardListMock, top3BoardListMock} from "../../mocks";
 import BoardItem from "../../components/BoardItem";
 import Pagination from "../../components/Pagination";
 import {useNavigate} from "react-router-dom";
@@ -12,9 +11,9 @@ import {GetLatestBoardListResponseDto, GetTop3BoardListResponseDto} from "../../
 import {ResponseDto} from "../../apis/response";
 import {useCookies} from "react-cookie";
 import {usePagination} from "../../hooks";
-import {Simulate} from "react-dom/test-utils";
-import reset = Simulate.reset;
 import {GetPopularListResponseDto} from "../../apis/response/search";
+import Calendar from "../../components/Calendar";
+import calendarItemListMock from "../../mocks/calendar-item-list.mock";
 
 //          component: 메인 화면 컴포넌트          //
 export default function Main() {
@@ -94,6 +93,19 @@ export default function Main() {
             </>
         );
     };
+
+    const MainMiddle = () => {
+
+
+        return (
+            <div id='main-middle-wrapper'>
+                <div className='main-middle-calendar-box'>
+                    <Calendar calenderItemList={calendarItemListMock}/>
+                </div>
+            </div>
+        );
+    };
+
     // component: 메인화면 하단 컴포넌트
     const MainBottom = () => {
 
@@ -180,6 +192,7 @@ export default function Main() {
     return (
         <>
             <MainTop />
+            <MainMiddle/>
             <MainBottom />
         </>
     );

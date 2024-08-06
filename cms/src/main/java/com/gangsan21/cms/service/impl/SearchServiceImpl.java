@@ -1,9 +1,11 @@
 package com.gangsan21.cms.service.impl;
 
 import com.gangsan21.cms.dto.response.ResponseDto;
+import com.gangsan21.cms.dto.response.board.GetRelationListResponseDto;
 import com.gangsan21.cms.dto.response.search.GetPopularListResponseDto;
 import com.gangsan21.cms.repository.SearchLogRepository;
 import com.gangsan21.cms.repository.resultSet.GetPopularListResultSet;
+import com.gangsan21.cms.repository.resultSet.GetRelationListResultSet;
 import com.gangsan21.cms.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +35,22 @@ public class SearchServiceImpl implements SearchService {
         }
 
         return GetPopularListResponseDto.success(resultSetList);
+    }
+
+    @Override
+    public ResponseEntity<? super GetRelationListResponseDto> getRelationList(String searchWord) {
+
+        List<GetRelationListResultSet> resultSetList;
+
+        try {
+
+            resultSetList = searchLogRepository.getRelationList(searchWord);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetRelationListResponseDto.success(resultSetList);
     }
 }
