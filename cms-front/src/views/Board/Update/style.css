@@ -7,8 +7,18 @@
     background-color: rgba(0, 0, 0, 0.05);
 }
 
+.board-update-main-title {
+    display: flex;
+    justify-content: center;
+
+    font-family: TmonMonsori;
+    font-size: 48px;
+    font-weight: 500;
+    color: skyblue;
+}
+
 .board-update-container {
-    padding: 100px 24px;
+    padding: 25px 24px;
     width: 996px;
     min-height: 1952px;
 
@@ -19,6 +29,22 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
+}
+
+.board-update-date-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.board-update-date-desc {
+    font-family: TmonMonsori;
+    font-size: 20px;
+}
+
+.board-update-date {
+    position: relative;
+    display: inline-block;
 }
 
 .board-update-title-box {

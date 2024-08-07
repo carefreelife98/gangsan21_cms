@@ -30,6 +30,7 @@ import {
 import dayjs from 'dayjs';
 import {PostCommentRequestDto} from "../../../apis/request/board";
 import {usePagination} from "../../../hooks";
+import {bo} from "@fullcalendar/core/internal-common";
 
 //          component: 게시물 상세 화면 컴포넌트          //
 export default function BoardDetail() {
@@ -62,6 +63,12 @@ export default function BoardDetail() {
         // state: Board 상태
         const [board, setBoard] = useState<Board | null>(null);
 
+        // state: 업무 시작일 설정 상태
+        const [isStartDtExists, setStartDtExists] = useState<boolean>(false);
+
+        // state: 업무 종료일 설정 상태
+        const [isEndDtExists, setEndDtExists] = useState<boolean>(false);
+
         // state: more 버튼 상태
         const [showMore, setShowMore] = useState<boolean>(false);
 
@@ -92,7 +99,11 @@ export default function BoardDetail() {
                 return;
             }
             const isWriter = loginUser.email === board.writerEmail;
+            const isStartDtExists = !!board.startDt;
+            const isEndDtExists = !!board.endDt;
             setWriter(isWriter);
+            setStartDtExists(isStartDtExists);
+            setEndDtExists(isEndDtExists);
         };
 
         // function: deleteBoardResponse 처리 함수
@@ -161,11 +172,26 @@ export default function BoardDetail() {
                 <div className='board-detail-top-header'>
                     <div className='board-detail-title'>{board.title}</div>
                     <div className='board-detail-top-sub-box'>
+                        <span className={'board-detail-issue-date-desc'}>
+                            업무 기간:
+                            {isStartDtExists &&
+                                <div className='board-detail-issue-date'>
+                                    {dayjs(board.startDt).format('YYYY. MM. DD. HH:mm')}
+                                </div>
+                            }
+                            ~
+                            {isEndDtExists &&
+                                <div className='board-detail-issue-date'>
+                                    {dayjs(board.endDt).format('YYYY. MM. DD. HH:mm')}
+                                </div>
+                            }
+                        </span>
                         <div className='board-detail-write-info-box'>
                             <div className='board-detail-writer-profile-image'
                                  style={{backgroundImage: `url(${board.writerProfileImage ? board.writerProfileImage : defaultProfileImage})`}}>
                             </div>
-                            <div className='board-detail-writer-nickname' onClick={onNickNameClickHandler}>{board.writerNickName}</div>
+                            <div className='board-detail-writer-nickname'
+                                 onClick={onNickNameClickHandler}>{board.writerNickName}</div>
                             <div className='board-detail-info-divider'>{'|'}</div>
                             <div className='board-detail-write-date'>{getWriteDateTimeFormat()}</div>
                         </div>
@@ -176,9 +202,11 @@ export default function BoardDetail() {
                         }
                         {showMore &&
                             <div className='board-detail-more-box'>
-                                <div className='board-detail-update-button' onClick={onUpdateButtonClickHandler}>{'수정'}</div>
+                                <div className='board-detail-update-button'
+                                     onClick={onUpdateButtonClickHandler}>{'수정'}</div>
                                 <div className='divider'></div>
-                                <div className='board-detail-delete-button' onClick={onDeleteButtonClickHandler}>{'삭제'}</div>
+                                <div className='board-detail-delete-button'
+                                     onClick={onDeleteButtonClickHandler}>{'삭제'}</div>
                             </div>
                         }
                     </div>
@@ -186,7 +214,8 @@ export default function BoardDetail() {
                 <div className='divider'></div>
                 <div className='board-detail-top-main'>
                     <div className='board-detail-main-text'>{board.content}</div>
-                    {board.boardImageList.map(image => <img className='board-detail-main-image' src={image} />)}
+                    {board.boardImageList.map((image, index) => <img key={index} className='board-detail-main-image'
+                                                                     src={image} alt={'게시물 상세 이미지'}/>)}
                 </div>
             </div>
         );

@@ -17,6 +17,12 @@ export default function BoardUpdate() {
     // state: 본문 영역 요소 참조 상태
     const contentRef = useRef<HTMLTextAreaElement | null>(null);
 
+    // state: 업무 시작일 설정 요소 참조 상태
+    const startDtRef = useRef<HTMLInputElement | null>(null);
+
+    // state: 업무 종료일 설정 요소 참조 상태
+    const endDtRef = useRef<HTMLInputElement | null>(null);
+
     // state: 이미지 입력 요소 참조 상태
     const imageInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -26,6 +32,8 @@ export default function BoardUpdate() {
     // state: 게시물 상태 (전역: 페이지 상단 헤더의 '로그인' 버튼에서 하단 내용의 상태를 알아야 함.)
     const {title, setTitle} = useBoardStore();
     const {content, setContent} = useBoardStore();
+    const {startDt, setStartDt} = useBoardStore();
+    const {endDt, setEndDt} = useBoardStore();
     const {boardImageFileList, setBoardImageFileList} = useBoardStore();
 
     // state: 로그인 유저 상태
@@ -48,10 +56,12 @@ export default function BoardUpdate() {
             return;
         }
 
-        const {title, content, boardImageList, writerEmail} = responseBody as GetBoardResponseDto;
+        const {title, content, startDt, endDt, boardImageList, writerEmail} = responseBody as GetBoardResponseDto;
 
         setTitle(title);
         setContent(content);
+        setStartDt(startDt);
+        setEndDt(endDt);
         setImageUrls(boardImageList);
         convertUrlsToFile(boardImageList).then(boardImageFileList => setBoardImageFileList(boardImageFileList));
 
@@ -84,6 +94,20 @@ export default function BoardUpdate() {
         if(!contentRef.current) return;
         contentRef.current.style.height = 'auto';
         contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
+    };
+
+    // event handler: 업무 시작일 설정 변경 이벤트 처리
+    const onStartDtChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        const {value} = event.target;
+        setStartDt(value);
+        if(!startDtRef.current) return;
+    };
+
+    // event handler: 업무 종료일 설정 변경 이벤트 처리
+    const onEndDtChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        const {value} = event.target;
+        setEndDt(value);
+        if(!endDtRef.current) return;
     };
 
     // event handler: 이미지 변경 이벤트 처리
@@ -147,7 +171,24 @@ export default function BoardUpdate() {
     return (
         <div id='board-update-wrapper'>
             <div className='board-update-container'>
+                <h2 className='board-update-main-title'>{'업무 수정'}</h2>
                 <div className='board-update-box'>
+                    <div className='board-update-date-box'>
+                        <div className='board-update-date-desc'>{'업무 시작일: '}</div>
+                        <input ref={startDtRef}
+                               className='board-update-date'
+                               type={'datetime-local'}
+                               value={startDt}
+                               onChange={onStartDtChangeHandler}
+                        />
+                        <div className='board-update-date-desc'>{'업무 종료일: '}</div>
+                        <input ref={endDtRef}
+                               className='board-update-date'
+                               type={'datetime-local'}
+                               value={endDt}
+                               onChange={onEndDtChangeHandler}
+                        />
+                    </div>
                     <div className='board-update-title-box'>
                         <textarea ref={titleRef}
                                   className='board-update-title-textarea'
@@ -182,7 +223,8 @@ export default function BoardUpdate() {
                             <div className='board-update-image-box'>
                                 <img className='board-update-image'
                                      src={imageUrl}/>
-                                <div className='icon-button image-close' onClick={() => onImageCloseButtonClickHandler(index)}>
+                                <div className='icon-button image-close'
+                                     onClick={() => onImageCloseButtonClickHandler(index)}>
                                     <div className='icon close-icon'></div>
                                 </div>
                             </div>

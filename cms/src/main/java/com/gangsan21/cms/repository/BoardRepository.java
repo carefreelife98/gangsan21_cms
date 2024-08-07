@@ -16,6 +16,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
                     "B.board_number    AS boardNumber, " +
                     "B.title           AS title, " +
                     "B.content         AS content, " +
+                    "B.start_dt        AS startDt, " +
+                    "B.end_dt          AS endDt, " +
                     "B.write_date_time AS writeDateTime, " +
                     "B.writer_email    AS writerEmail, " +
                     "U.nick_name       AS writerNickName, " +
@@ -26,6 +28,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
                     "WHERE board_number = ?1 " +
                     "AND email = ?2",
             nativeQuery = true
-    ) // WHERE board_number = ?1 : 함수의 첫 번째 매개 변수를 넣겠다.
+    )
+    // WHERE board_number = ?1 : 함수의 첫 번째 매개 변수를 넣겠다.
     GetBoardResultSet getBoard(Integer boardNumber, String email);
+
 }

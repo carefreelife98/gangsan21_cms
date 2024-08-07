@@ -42,8 +42,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber, String email) {
 
-        GetBoardResultSet resultSet = null;
-        List<ImageEntity> imageEntityList = new ArrayList<>();
+        GetBoardResultSet resultSet;
+        List<ImageEntity> imageEntityList;
 
         try {
 
