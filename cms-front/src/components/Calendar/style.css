@@ -1,0 +1,37 @@
+#calender-modal-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.calender-modal-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.calender-modal-form-button-box {
+    display: flex;
+    gap: 32px;
+}
+
+.calender-modal-form-button-submit {
+    width: 80px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px 30px;
+
+    background-color: skyblue;
+}
+
+.calender-modal-form-button-cancel {
+    width: 80px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px 30px;
+
+    background-color: palevioletred;
+}
