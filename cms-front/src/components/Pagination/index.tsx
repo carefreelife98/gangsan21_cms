@@ -50,11 +50,11 @@ export default function Pagination(props: Props) {
             <div className='pagination-divider'>{'\|'}</div>
 
             {
-                viewPageList.map(page =>
+                viewPageList.map((index, page) =>
                     page === currentPage ?
-                        <div className='pagination-text-active'>{page}</div>
+                        <div key={index} className='pagination-text-active'>{page}</div>
                         :
-                        <div className='pagination-text' onClick={() => onPageClickHandler(page)}>{page}</div>
+                        <div key={index} className='pagination-text' onClick={() => onPageClickHandler(page)}>{page}</div>
                 )
             }
 

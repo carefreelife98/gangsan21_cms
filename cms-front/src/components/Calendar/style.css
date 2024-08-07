@@ -1,9 +1,38 @@
+
 #calender-modal-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 1);
     gap: 16px;
+}
+
+.calender-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999
+}
+
+.calender-modal-content {
+    position: relative;
+    width: 650px;
+    height: 870px;
+    overflow-y: auto;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000
 }
 
 .calender-modal-form-wrapper {
@@ -16,6 +45,8 @@
 .calender-modal-form-button-box {
     display: flex;
     gap: 32px;
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 .calender-modal-form-button-submit {
@@ -27,6 +58,11 @@
     background-color: skyblue;
 }
 
+.calender-modal-form-button-submit:hover {
+    background-color: rgba(135, 206, 235, 0.7);
+    cursor: pointer;
+}
+
 .calender-modal-form-button-cancel {
     width: 80px;
     height: 40px;
@@ -34,4 +70,9 @@
     border-radius: 30px 30px;
 
     background-color: palevioletred;
+}
+
+.calender-modal-form-button-cancel:hover {
+    background-color: rgba(219, 112, 147, 0.7);
+    cursor: pointer;
 }

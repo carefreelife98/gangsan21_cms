@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,6 +21,10 @@ public class PostBoardRequestDto {
 
     @NotBlank
     private String content;
+
+    private LocalDateTime startDt;
+
+    private LocalDateTime endDt;
 
     @NotNull // 해당 필드는 필수적으로 존재하나, 빈 배열은 올 수 있도록 허용.
     private List<String> boardImageList;

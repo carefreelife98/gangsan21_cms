@@ -23,6 +23,8 @@ public class BoardListViewEntity {
 
     private String title;
     private String content;
+    private LocalDateTime startDt;
+    private LocalDateTime endDt;
     private LocalDateTime writeDateTime;
     private Integer favoriteCount;
     private Integer commentCount;

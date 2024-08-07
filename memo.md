@@ -73,3 +73,18 @@ DB 에 Data 가 굉장히 많은 경우 (전체 데이터가 많을 때) 에는 
   - Pagination 은 상태를 사용하기 위해 Hook 함수를 써야 함.
   - React 의 Hook 함수 (useEffect, useState ...) 는 사용 위치가 컴포넌트 위치 / Custom Hook 내부에서만 사용 가능. (Hook 내부에서 Hook 사용 가능)
   - 그래서 일반 함수에서는 useState / useEffect 를 사용할 수 없기 때문에 Custom Hook 을 만들어 Pagination 모듈을 만드는 것에 사용한다.
+
+
+
+
+# Temp Memos
+```js
+<input className='board-list-item-start-date'
+       title={'업무 시작일'}
+       type={'datetime-local'}
+/>
+<input className='board-list-item-end-date'
+       title={'업무 종료일'}
+       type={'datetime-local'}
+/>
+```

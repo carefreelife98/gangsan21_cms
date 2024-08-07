@@ -163,14 +163,14 @@ export default function Main() {
                     <div className='main-bottom-title'>{'최신 게시물'}</div>
                     <div className='main-bottom-contents-box'>
                         <div className='main-bottom-current-contents'>
-                            {viewList.map(boardListItem => <BoardItem boardListItem={boardListItem}/>)}
+                            {viewList.map((boardListItem, index) => <BoardItem key={index} boardListItem={boardListItem}/>)}
                         </div>
                         <div className='main-bottom-popular-box'>
                             <div className='main-bottom-popular-card'>
                                 <div className='main-bottom-popular-card-container'>
                                     <div className='main-bottom-popular-card-title'>{'인기 검색어'}</div>
                                     <div className='main-bottom-popular-card-contents'>
-                                        {popularWordList.map(word => <div className='word-badge' onClick={() => onPopularWordClickHandler(word)}>{word}</div>)}
+                                        {popularWordList.map((word, index) => <div key={index} className='word-badge' onClick={() => onPopularWordClickHandler(word)}>{word}</div>)}
                                     </div>
                                 </div>
                             </div>

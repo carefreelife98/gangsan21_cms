@@ -10,6 +10,10 @@ public interface GetBoardResultSet {
 
     String getContent();
 
+    LocalDateTime getStartDt();
+
+    LocalDateTime getEndDt();
+
     LocalDateTime getWriteDateTime();
 
     String getWriterEmail();

@@ -12,7 +12,6 @@ import {
 import {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from "react";
 import {useCookies} from "react-cookie";
 import {useBoardStore, useLoginUserStore} from "../../stores";
-import * as path from "path";
 import {fileUploadRequest, patchBoardRequest, postBoardRequest} from "../../apis";
 import {PatchBoardRequestDto, PostBoardRequestDto} from "../../apis/request/board";
 import {PatchBoardResponseDto, PostBoardResponseDto} from "../../apis/response/board";
@@ -158,7 +157,7 @@ export default function Header() {
         // state: 게시물 번호 path variable 상태
         const {boardNumber} = useParams();
         // state: 게시물 상태
-        const { title, content, boardImageFileList, resetBoard } = useBoardStore();
+        const { title, content, startDt, endDt, boardImageFileList, resetBoard } = useBoardStore();
 
         // function: post board response 처리 함수
         const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
@@ -211,13 +210,13 @@ export default function Header() {
             const isBoardWritePage = pathname === BOARD_PATH() + '/' + BOARD_WRITE_PATH();
             if (isBoardWritePage) {
                 const requestBody: PostBoardRequestDto = {
-                    title, content, boardImageList
+                    title, content, startDt, endDt, boardImageList
                 };
                 postBoardRequest(requestBody, accessToken).then(postBoardResponse);
             } else {
                 if(!boardNumber) return;
                 const requestBody: PatchBoardRequestDto = {
-                    title, content, boardImageList
+                    title, content, startDt, endDt, boardImageList
                 };
                 patchBoardRequest(boardNumber, requestBody, accessToken).then(patchBoardResponse);
             }

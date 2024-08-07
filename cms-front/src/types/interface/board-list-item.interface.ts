@@ -2,6 +2,8 @@ export default interface BoardListItem {
     boardNumber: number;
     title: string;
     content: string;
+    startDt: string;
+    endDt: string;
     boardTitleImage: string | null;
     favoriteCount: number;
     commentCount: number;

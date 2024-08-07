@@ -60,49 +60,23 @@ export default function Calendar({ calenderItemList }: Props) {
                 locale='ko'
             />
             <Modal
+                className='calender-modal-content'
+                overlayClassName='calender-modal-overlay'
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="Selected Date Modal"
-                style={{
-                    overlay: {
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 9999
-                    },
-                    content: {
-                        position: 'relative',
-                        width: '600px',
-                        height: '900px',
-                        overflowY: 'auto',  // 수직 스크롤을 활성화
-                        margin: 'auto',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        zIndex: 10000
-                    }
-                }}
             >
-                <form id={'calender-modal-form'} onSubmit={handleModalSubmit}>
-                    <div className={'divider'}></div>
-                    <h1>새로운 일정 등록</h1>
+                <form id={'calender-modal-form'} onSubmit={handleModalSubmit} >
                     <div className={'calender-modal-form-wrapper'}>
                         <CalendarMiniBoard />
                         <div className='divider'/>
+                        <div className={'calender-modal-form-button-box'}>
+                            <button className={'calender-modal-form-button-submit'} form={'calender-modal-form'} type="submit">{'등록'}</button>
+                            <button className={'calender-modal-form-button-cancel'} form={'calender-modal-form'} type="button" onClick={closeModal}>{'취소'}</button>
+                        </div>
                     </div>
-                    <input title={'시작일'} type={'date'} value={selectedDate.start}/>
-                    <input title={'종료일'} type={'datetime-local'} value={selectedDate.end}/>
-                    <div className={'calender-modal-form-button-box'}>
-                        <button className={'calender-modal-form-button-submit'} form={'calender-modal-form'} type="submit">{'등록'}</button>
-                        <button className={'calender-modal-form-button-cancel'} form={'calender-modal-form'} type="button" onClick={closeModal}>{'취소'}</button>
-                    </div>
+                    {/*<input title={'시작일'} type={'date'} value={selectedDate.start}/>*/}
+                    {/*<input title={'종료일'} type={'datetime-local'} value={selectedDate.end}/>*/}
                 </form>
             </Modal>
         </>

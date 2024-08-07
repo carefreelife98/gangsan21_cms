@@ -20,6 +20,8 @@ public class GetBoardResponseDto extends ResponseDto {
     private Integer boardNumber;
     private String title;
     private String content;
+    private LocalDateTime startDt;
+    private LocalDateTime endDt;
     private List<String> boardImageList;
     private LocalDateTime writeDateTime;
     private String writerEmail;
@@ -38,6 +40,8 @@ public class GetBoardResponseDto extends ResponseDto {
         this.boardNumber = resultSet.getBoardNumber();
         this.title = resultSet.getTitle();
         this.content = resultSet.getContent();
+        this.startDt = resultSet.getStartDt();
+        this.endDt = resultSet.getEndDt();
         this.boardImageList = boardImageList;
         this.writeDateTime = resultSet.getWriteDateTime();
         this.writerEmail = resultSet.getWriterEmail();

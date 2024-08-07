@@ -24,6 +24,13 @@ public class BoardEntity {
 
     private String title;
     private String content;
+
+    @Column(columnDefinition = "업무 시작 설정일")
+    private LocalDateTime startDt;
+
+    @Column(columnDefinition = "업무 종료 설정일")
+    private LocalDateTime endDt;
+
     private LocalDateTime writeDateTime;
     private Integer favoriteCount;
     private Integer commentCount;
@@ -36,6 +43,8 @@ public class BoardEntity {
 
         this.title = dto.getTitle();
         this.content = dto.getContent();
+        this.startDt = dto.getStartDt();
+        this.endDt = dto.getEndDt();
         this.writeDateTime = writeDateTime;
         this.favoriteCount = 0;
         this.commentCount = 0;
@@ -46,6 +55,8 @@ public class BoardEntity {
     public void patchBoard(PatchBoardRequestDto dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
+        this.startDt = dto.getStartDt();
+        this.endDt = dto.getEndDt();
     }
 
     public void increaseViewCount() {

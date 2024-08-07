@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,10 @@ public class PatchBoardRequestDto {
 
     @NotBlank
     private String content;
+
+    private LocalDateTime startDt;
+
+    private LocalDateTime endDt;
 
     @NotNull
     private List<String> boardImageList;
