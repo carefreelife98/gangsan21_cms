@@ -8,17 +8,43 @@
 }
 
 .board-write-container {
-    padding: 100px 24px;
+    padding: 25px 24px;
     width: 996px;
     min-height: 1952px;
 
     background-color: rgba(255, 255, 255, 1);
 }
 
+.board-write-main-title {
+    display: flex;
+    justify-content: center;
+
+    font-family: TmonMonsori;
+    font-size: 48px;
+    font-weight: 500;
+    color: skyblue;
+}
+
 .board-write-box {
     display: flex;
     flex-direction: column;
     gap: 40px;
+}
+
+.board-write-date-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.board-write-date-desc {
+    font-family: TmonMonsori;
+    font-size: 20px;
+}
+
+.board-write-date {
+    position: relative;
+    display: inline-block;
 }
 
 .board-write-title-box {

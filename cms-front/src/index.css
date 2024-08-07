@@ -27,3 +27,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+input[type="datetime-local"] {
+  appearance: none;
+  border: 2px solid #4CAF50;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  color: #4CAF50;
+  background-color: #fff;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="datetime-local"]:focus {
+  border-color: #45a049;
+  box-shadow: 0 0 10px rgba(69, 160, 73, 0.2);
+  outline: none;
+}
+
+input[type="datetime-local"]:hover {
+  border-color: #3e8e41;
+}
