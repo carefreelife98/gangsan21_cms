@@ -224,8 +224,8 @@ export default function Header() {
         };
 
         if(title && content)
-        // render: 업로드 버튼 컴포넌트 렌더링
-        return <div className='black-button' onClick={onUploadButtonClickHandler}>{'업로드'}</div>;
+            // render: 업로드 버튼 컴포넌트 렌더링
+            return <div className='black-button' onClick={onUploadButtonClickHandler}>{'업로드'}</div>;
 
         // render: 업로드 불가 버튼 컴포넌트 렌더링
         return <div className='disable-button' >{'업로드'}</div>;

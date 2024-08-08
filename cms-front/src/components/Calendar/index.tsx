@@ -10,6 +10,14 @@ import Modal from 'react-modal';
 import CalendarMiniBoard from "./CalendarMiniBoardItem/CalendarMiniBoardItem";
 
 import './style.css'
+import {useCookies} from "react-cookie";
+import {AUTH_PATH, BOARD_PATH, BOARD_WRITE_PATH, MAIN_PATH, USER_PATH} from "../../constants";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useBoardStore, useLoginUserStore} from "../../stores";
+import {fileUploadRequest, patchBoardRequest, postBoardRequest} from "../../apis";
+import {PatchBoardRequestDto, PostBoardRequestDto} from "../../apis/request/board";
+import {ResponseDto} from "../../apis/response";
+import {PostBoardResponseDto} from "../../apis/response/board";
 
 
 interface Props {
@@ -19,11 +27,62 @@ interface Props {
 Modal.setAppElement('#root');
 
 export default function Calendar({ calenderItemList }: Props) {
+
+    // state: 쿠키 상태
+    const [cookies, setCookies] = useCookies();
+    // state: 로그인 유저 상태
+    const {loginUser, setLoginUser, resetLoginUser} = useLoginUserStore();
+    // state: 게시물 상태
+    const {title, content, startDt, endDt, boardImageFileList, resetBoard} = useBoardStore();
+    // state: 모달 open 상태
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    // state: 캘린더 내에서 마우스 클릭 / 드래그 이벤트를 통한 날짜 선택 상태
     const [selectedDate, setSelectedDate] = useState<{ start: string; end: string }>({ start: '', end: '' });
 
-    const handleModalSubmit = () => {
+    // function: 네비게이트 함수
+    const navigate = useNavigate();
 
+    // function: post board response 처리 함수
+    const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
+        if(!responseBody) return;
+        const {code} = responseBody;
+
+        if (code === 'AF' || code === 'NU') navigate(AUTH_PATH());
+        if (code === 'VF') alert('제목과 내용은 필수 요소입니다.')
+        if (code === 'DBE') alert('데이터 베이스 오류입니다.')
+        if (code !== 'SU') return;
+
+        resetBoard();
+        if (!loginUser) return;
+        navigate(MAIN_PATH());
+    };
+
+    // event handler: 업로드 버튼 클릭 이벤트 처리 함수
+    const handleModalSubmit = async () => {
+        const accessToken = cookies.accessToken;
+        if(!accessToken) {
+            alert('로그인 시간이 만료 되었습니다. 다시 로그인 해주세요.')
+            navigate(MAIN_PATH());
+            return;
+        }
+
+        const boardImageList: string[] = [];
+
+        // 이미지 업로드 api 를 통해 각 이미지 파일을 업로드 한 후,
+        // 반환 값으로 저장된 url 값을 가져와 boardImageList 배열에 저장.
+        for (const file of boardImageFileList) {
+            const data = new FormData();
+            data.append('file', file);
+
+            const url = await fileUploadRequest(data);
+            if (url) boardImageList.push(url)
+        }
+
+        const requestBody: PostBoardRequestDto = {
+            title, content, startDt, endDt, boardImageList
+        };
+        console.log('requestBody: ' + title + content + startDt + endDt + boardImageList);
+        postBoardRequest(requestBody, accessToken).then(postBoardResponse);
     };
 
     // event handler: 캘린더 내 날짜 선택/드래그 선택 시 업무 추가 모달 오픈
@@ -68,15 +127,13 @@ export default function Calendar({ calenderItemList }: Props) {
             >
                 <form id={'calender-modal-form'} onSubmit={handleModalSubmit} >
                     <div className={'calender-modal-form-wrapper'}>
-                        <CalendarMiniBoard />
+                        <CalendarMiniBoard startDtByCal={selectedDate.start} endDtByCal={selectedDate.end}/>
                         <div className='divider'/>
                         <div className={'calender-modal-form-button-box'}>
                             <button className={'calender-modal-form-button-submit'} form={'calender-modal-form'} type="submit">{'등록'}</button>
                             <button className={'calender-modal-form-button-cancel'} form={'calender-modal-form'} type="button" onClick={closeModal}>{'취소'}</button>
                         </div>
                     </div>
-                    {/*<input title={'시작일'} type={'date'} value={selectedDate.start}/>*/}
-                    {/*<input title={'종료일'} type={'datetime-local'} value={selectedDate.end}/>*/}
                 </form>
             </Modal>
         </>

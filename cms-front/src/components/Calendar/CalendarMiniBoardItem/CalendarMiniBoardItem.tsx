@@ -4,13 +4,26 @@ import {useNavigate} from "react-router-dom";
 import {useCookies} from "react-cookie";
 import {MAIN_PATH} from "../../../constants";
 import './style.css'
+import dayjs from "dayjs";
 
-export default function CalendarMiniBoard() {
+interface CalendarMiniBoardProps {
+    startDtByCal: string;
+    endDtByCal: string;
+}
+
+export default function CalendarMiniBoard({ startDtByCal, endDtByCal }: CalendarMiniBoardProps) {
+    // alert('start: ' + startDtByCal + ' end: ' + endDtByCal);
     // state: 제목 영역 요소 참조 상태
     const titleRef = useRef<HTMLTextAreaElement | null>(null);
 
     // state: 본문 영역 요소 참조 상태
     const contentRef = useRef<HTMLTextAreaElement | null>(null);
+
+    // state: 업무 시작일 설정 요소 참조 상태
+    const startDtRef = useRef<HTMLInputElement | null>(null);
+
+    // state: 업무 종료일 설정 요소 참조 상태
+    const endDtRef = useRef<HTMLInputElement | null>(null);
 
     // state: 이미지 입력 요소 참조 상태
     const imageInputRef = useRef<HTMLInputElement | null>(null);
@@ -18,6 +31,8 @@ export default function CalendarMiniBoard() {
     // state: 게시물 상태 (전역: 페이지 상단 헤더의 '로그인' 버튼에서 하단 내용의 상태를 알아야 함.)
     const {title, setTitle} = useBoardStore();
     const {content, setContent} = useBoardStore();
+    const {startDt, setStartDt} = useBoardStore();
+    const {endDt, setEndDt} = useBoardStore();
     const {boardImageFileList, setBoardImageFileList} = useBoardStore();
     const {resetBoard} = useBoardStore();
 
@@ -46,6 +61,20 @@ export default function CalendarMiniBoard() {
         if(!contentRef.current) return;
         contentRef.current.style.height = 'auto';
         contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
+    };
+
+    // event handler: 업무 시작일 설정 변경 이벤트 처리
+    const onStartDtChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        const {value} = event.target;
+        setStartDt(dayjs(value).format('YYYY-MM-DDTHH:mm'));
+        if(!startDtRef.current) return;
+    };
+
+    // event handler: 업무 종료일 설정 변경 이벤트 처리
+    const onEndDtChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        const {value} = event.target;
+        setEndDt(dayjs(value).format('YYYY-MM-DDTHH:mm'));
+        if(!endDtRef.current) return;
     };
 
     // event handler: 이미지 변경 이벤트 처리
@@ -102,13 +131,32 @@ export default function CalendarMiniBoard() {
             return;
         }
         resetBoard();
+        setStartDt(dayjs(startDtByCal).format('YYYY-MM-DDTHH:mm'))
+        setEndDt(dayjs(endDtByCal).subtract(1, 'day').format('YYYY-MM-DDT23:59'))
     }, []);
 
     //          render: 게시물 작성 화면 렌더정          //
     return (
         <div id='mini-board-write-wrapper'>
             <div className='mini-board-write-container'>
+                <h2 className='mini-board-write-main-title'>{'간편 업무 등록'}</h2>
                 <div className='mini-board-write-box'>
+                    <div className='mini-board-write-date-box'>
+                        <div className='mini-board-write-date-desc'>{'업무 시작일: '}</div>
+                        <input ref={startDtRef}
+                               className='mini-board-write-date'
+                               type={'datetime-local'}
+                               value={startDt}
+                               onChange={onStartDtChangeHandler}
+                        />
+                        <div className='mini-board-write-date-desc'>{'업무 종료일: '}</div>
+                        <input ref={endDtRef}
+                               className='mini-board-write-date'
+                               type={'datetime-local'}
+                               value={endDt}
+                               onChange={onEndDtChangeHandler}
+                        />
+                    </div>
                     <div className='mini-board-write-title-box'>
                         <textarea ref={titleRef}
                                   className='mini-board-write-title-textarea'
@@ -140,10 +188,11 @@ export default function CalendarMiniBoard() {
                     </div>
                     <div className='mini-board-write-images-box'>
                         {imageUrls.map((imageUrl, index) =>
-                            <div className='mini-board-write-image-box'>
+                            <div key={index} className='mini-board-write-image-box'>
                                 <img className='mini-board-write-image'
                                      src={imageUrl}/>
-                                <div className='icon-button image-close' onClick={() => onImageCloseButtonClickHandler(index)}>
+                                <div className='icon-button image-close'
+                                     onClick={() => onImageCloseButtonClickHandler(index)}>
                                     <div className='icon close-icon'></div>
                                 </div>
                             </div>
