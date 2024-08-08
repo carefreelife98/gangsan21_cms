@@ -126,6 +126,7 @@ export default function BoardWrite() {
             return;
         }
         resetBoard();
+        setStartDt(dayjs().format('YYYY-MM-DD') + "T00:00")
         setEndDt(dayjs().format('YYYY-MM-DD') + "T23:59")
     }, []);
 
@@ -183,7 +184,7 @@ export default function BoardWrite() {
                     </div>
                     <div className='board-write-images-box'>
                         {imageUrls.map((imageUrl, index) =>
-                            <div className='board-write-image-box'>
+                            <div key={index} className='board-write-image-box'>
                                 <img className='board-write-image'
                                      alt={'업무 게시물 이미지'}
                                      src={imageUrl}/>

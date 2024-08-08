@@ -11,11 +11,11 @@ import CalendarMiniBoard from "./CalendarMiniBoardItem/CalendarMiniBoardItem";
 
 import './style.css'
 import {useCookies} from "react-cookie";
-import {AUTH_PATH, BOARD_PATH, BOARD_WRITE_PATH, MAIN_PATH, USER_PATH} from "../../constants";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {AUTH_PATH, MAIN_PATH, USER_PATH} from "../../constants";
+import {useNavigate} from "react-router-dom";
 import {useBoardStore, useLoginUserStore} from "../../stores";
-import {fileUploadRequest, patchBoardRequest, postBoardRequest} from "../../apis";
-import {PatchBoardRequestDto, PostBoardRequestDto} from "../../apis/request/board";
+import {fileUploadRequest, postBoardRequest} from "../../apis";
+import {PostBoardRequestDto} from "../../apis/request/board";
 import {ResponseDto} from "../../apis/response";
 import {PostBoardResponseDto} from "../../apis/response/board";
 
@@ -32,8 +32,6 @@ export default function Calendar({ calenderItemList }: Props) {
     const [cookies, setCookies] = useCookies();
     // state: 로그인 유저 상태
     const {loginUser, setLoginUser, resetLoginUser} = useLoginUserStore();
-    // state: 게시물 상태
-    const {title, content, startDt, endDt, boardImageFileList, resetBoard} = useBoardStore();
     // state: 모달 open 상태
     const [modalIsOpen, setModalIsOpen] = useState(false);
     // state: 캘린더 내에서 마우스 클릭 / 드래그 이벤트를 통한 날짜 선택 상태
@@ -42,47 +40,56 @@ export default function Calendar({ calenderItemList }: Props) {
     // function: 네비게이트 함수
     const navigate = useNavigate();
 
-    // function: post board response 처리 함수
-    const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
-        if(!responseBody) return;
-        const {code} = responseBody;
+    // component: 업로드 버튼 컴포넌트
+    const UploadButton = () => {
 
-        if (code === 'AF' || code === 'NU') navigate(AUTH_PATH());
-        if (code === 'VF') alert('제목과 내용은 필수 요소입니다.')
-        if (code === 'DBE') alert('데이터 베이스 오류입니다.')
-        if (code !== 'SU') return;
+        // state: 게시물 상태
+        const {title, content, startDt, endDt, boardImageFileList, resetBoard} = useBoardStore();
 
-        resetBoard();
-        if (!loginUser) return;
-        navigate(MAIN_PATH());
-    };
+        // function: post board response 처리 함수
+        const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
+            if (!responseBody) return;
+            const {code} = responseBody;
 
-    // event handler: 업로드 버튼 클릭 이벤트 처리 함수
-    const handleModalSubmit = async () => {
-        const accessToken = cookies.accessToken;
-        if(!accessToken) {
-            alert('로그인 시간이 만료 되었습니다. 다시 로그인 해주세요.')
+            if (code === 'AF' || code === 'NU') navigate(AUTH_PATH());
+            if (code === 'VF') alert('제목과 내용은 필수 요소입니다.')
+            if (code === 'DBE') alert('데이터 베이스 오류입니다.')
+            if (code !== 'SU') return;
+
+            resetBoard();
+            if (!loginUser) return;
             navigate(MAIN_PATH());
-            return;
-        }
-
-        const boardImageList: string[] = [];
-
-        // 이미지 업로드 api 를 통해 각 이미지 파일을 업로드 한 후,
-        // 반환 값으로 저장된 url 값을 가져와 boardImageList 배열에 저장.
-        for (const file of boardImageFileList) {
-            const data = new FormData();
-            data.append('file', file);
-
-            const url = await fileUploadRequest(data);
-            if (url) boardImageList.push(url)
-        }
-
-        const requestBody: PostBoardRequestDto = {
-            title, content, startDt, endDt, boardImageList
         };
-        console.log('requestBody: ' + title + content + startDt + endDt + boardImageList);
-        postBoardRequest(requestBody, accessToken).then(postBoardResponse);
+
+        // event handler: 업로드 버튼 클릭 이벤트 처리 함수
+        const onUploadButtonClickHandler = async () => {
+            const accessToken = cookies.accessToken;
+            if (!accessToken) return;
+
+            const boardImageList: string[] = [];
+
+            // 이미지 업로드 api 를 통해 각 이미지 파일을 업로드 한 후,
+            // 반환 값으로 저장된 url 값을 가져와 boardImageList 배열에 저장.
+            for (const file of boardImageFileList) {
+                const data = new FormData();
+                data.append('file', file);
+
+                const url = await fileUploadRequest(data);
+                if (url) boardImageList.push(url)
+            }
+
+            // 게시물 작성 상태인지 확인 (경로를 통해)
+            const requestBody: PostBoardRequestDto = {
+                title, content, startDt, endDt, boardImageList
+            };
+            postBoardRequest(requestBody, accessToken).then(postBoardResponse);
+        };
+
+        if(title && content)
+            // render: 업로드 버튼 컴포넌트 렌더링
+            return <div className='black-button' onClick={onUploadButtonClickHandler}>{'업로드'}</div>;
+        // render: 업로드 불가 버튼 컴포넌트 렌더링
+        return <div className='disable-button' >{'업로드'}</div>;
     };
 
     // event handler: 캘린더 내 날짜 선택/드래그 선택 시 업무 추가 모달 오픈
@@ -125,12 +132,12 @@ export default function Calendar({ calenderItemList }: Props) {
                 onRequestClose={closeModal}
                 contentLabel="Selected Date Modal"
             >
-                <form id={'calender-modal-form'} onSubmit={handleModalSubmit} >
+                <form id={'calender-modal-form'} >
                     <div className={'calender-modal-form-wrapper'}>
                         <CalendarMiniBoard startDtByCal={selectedDate.start} endDtByCal={selectedDate.end}/>
                         <div className='divider'/>
                         <div className={'calender-modal-form-button-box'}>
-                            <button className={'calender-modal-form-button-submit'} form={'calender-modal-form'} type="submit">{'등록'}</button>
+                            <UploadButton />
                             <button className={'calender-modal-form-button-cancel'} form={'calender-modal-form'} type="button" onClick={closeModal}>{'취소'}</button>
                         </div>
                     </div>
