@@ -80,8 +80,8 @@ const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/
 
 const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
 
-export const getCalendarItemListRequest = async () => {
-    const result = await axios.get(GET_CALENDAR_ITEM_LIST_URL())
+export const getCalendarItemListRequest = async (accessToken: string) => {
+    const result = await axios.get(GET_CALENDAR_ITEM_LIST_URL(), authorization(accessToken))
         .then(response => {
             const responseBody: GetCalendarItemListResponseDto = response.data;
             return responseBody;

@@ -6,7 +6,12 @@ import BoardItem from "../../components/BoardItem";
 import Pagination from "../../components/Pagination";
 import {useNavigate} from "react-router-dom";
 import {AUTH_PATH, SEARCH_PATH} from "../../constants";
-import {getLatestBoardListRequest, getPopularListRequest, getTop3BoardListRequest} from "../../apis";
+import {
+    getCalendarItemListRequest,
+    getLatestBoardListRequest,
+    getPopularListRequest,
+    getTop3BoardListRequest
+} from "../../apis";
 import {GetLatestBoardListResponseDto, GetTop3BoardListResponseDto} from "../../apis/response/board";
 import {ResponseDto} from "../../apis/response";
 import {useCookies} from "react-cookie";
@@ -14,6 +19,8 @@ import {usePagination} from "../../hooks";
 import {GetPopularListResponseDto} from "../../apis/response/search";
 import Calendar from "../../components/Calendar";
 import calendarItemListMock from "../../mocks/calendar-item-list.mock";
+import CalendarItem from "../../types/interface/calendar-item.interface";
+import {GetCalendarItemListResponseDto} from "../../apis/response/calendar";
 
 //          component: 메인 화면 컴포넌트          //
 export default function Main() {
@@ -96,10 +103,29 @@ export default function Main() {
 
     const MainMiddle = () => {
 
+        const [calendarItemList, setCalendarItemList] = useState<CalendarItem[]>([])
+
+        const getCalendarItemListResponse = (responseBody: GetCalendarItemListResponseDto | ResponseDto | null) => {
+            if (!responseBody) return;
+            const {code} = responseBody;
+            if (code === 'DBE') alert('데이터 베이스 오류입니다.')
+            if (code !== 'SU') return;
+
+            const {calendarItemList} = responseBody as GetCalendarItemListResponseDto;
+            setCalendarItemList(calendarItemList);
+        }
+
+        useEffect(() => {
+            // 로그인 되어 있지 않은 경우 로그인 페이지로 강제 이동.
+            if (!cookies.accessToken) navigate(AUTH_PATH());
+            getCalendarItemListRequest(cookies.accessToken).then(getCalendarItemListResponse)
+
+        }, []);
+
         return (
             <div id='main-middle-wrapper'>
                 <div className='main-middle-calendar-box'>
-                    <Calendar calenderItemList={calendarItemListMock}/>
+                    <Calendar calenderItemList={calendarItemList}/>
                 </div>
             </div>
         );

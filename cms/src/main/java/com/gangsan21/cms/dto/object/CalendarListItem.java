@@ -1,8 +1,10 @@
 package com.gangsan21.cms.dto.object;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gangsan21.cms.entity.BoardListViewEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,7 +28,8 @@ public class CalendarListItem {
         this.textColor = textColor;
     }
 
-    private static class CalendarItem {
+    @Getter
+    public static class CalendarItem {
         String title;
         LocalDateTime start;
         LocalDateTime end;

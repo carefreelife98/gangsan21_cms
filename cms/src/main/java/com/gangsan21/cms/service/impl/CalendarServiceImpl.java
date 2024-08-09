@@ -22,7 +22,7 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public ResponseEntity<? super GetCalendarItemListResponseDto> getCalendarItemList(String email) {
 
-        List<BoardListViewEntity> boardEntityList;
+        List<List<BoardListViewEntity>> boardEntitiesList = new ArrayList<>();
 
         //TODO: type 구분 필요. (추가 컬럼..)
         String color = "grey";
@@ -30,15 +30,17 @@ public class CalendarServiceImpl implements CalendarService {
 
         try {
             // 작성자(Email) 의 모든 게시물을 불러온다.
-            boardEntityList = boardListViewRepository.findAllByWriterEmail(email);
+            List<BoardListViewEntity> boardEntityList = boardListViewRepository.findAllByWriterEmail(email);
 
-            //TODO: type 구분 필요. (추가 컬럼..)
+            //TODO: type 별로 구분하여 리스트 추가 필요. (추가 컬럼..)
+            boardEntitiesList.add(boardEntityList);
+
 
         } catch (Exception e) {
             e.printStackTrace();
             return GetCalendarItemListResponseDto.databaseError();
         }
 
-        return GetCalendarItemListResponseDto.success(boardEntityList, color, textColor);
+        return GetCalendarItemListResponseDto.success(boardEntitiesList, color, textColor);
     }
 }
