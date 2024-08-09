@@ -5,6 +5,7 @@ import {useCookies} from "react-cookie";
 import {MAIN_PATH} from "../../../constants";
 import './style.css'
 import dayjs from "dayjs";
+import TinyMceEditor from "../../Editor";
 
 interface CalendarMiniBoardProps {
     startDtByCal: string;
@@ -168,11 +169,8 @@ export default function CalendarMiniBoard({ startDtByCal, endDtByCal }: Calendar
                     </div>
                     <div className='divider'></div>
                     <div className='mini-board-write-content-box'>
-                        <textarea ref={contentRef}
-                                  className='mini-board-write-content-textarea'
-                                  placeholder='본문을 작성해주세요.'
-                                  value={content}
-                                  onChange={onContentChangeHandler}
+                        <TinyMceEditor content={content}
+                                       setContent={setContent}
                         />
                         <div className='icon-button' onClick={onImageUploadButtonClickHandler}>
                             <div className='icon image-box-light-icon'></div>

@@ -174,12 +174,6 @@ export default function BoardWrite() {
                             content={content}
                             setContent={setContent}
                         />
-                        {/*<textarea ref={contentRef}*/}
-                        {/*          className='board-write-content-textarea'*/}
-                        {/*          placeholder='본문을 작성해주세요.'*/}
-                        {/*          value={content}*/}
-                        {/*          onChange={onContentChangeHandler}*/}
-                        {/*/>*/}
                         <div className='icon-button' onClick={onImageUploadButtonClickHandler}>
                             <div className='icon image-box-light-icon'></div>
                         </div>
