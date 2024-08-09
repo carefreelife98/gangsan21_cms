@@ -16,7 +16,7 @@ interface Props {
 export default function Top3Item({ top3ListItem }: Props) {
 
     //         Properties:         //
-    const { boardNumber, title, content, boardTitleImage } = top3ListItem;
+    const { boardNumber, title, content, startDt, endDt, boardTitleImage } = top3ListItem;
     const { favoriteCount, commentCount, viewCount} = top3ListItem;
     const { writeDateTime, writerNickName, writerProfileImage} = top3ListItem;
 
@@ -44,7 +44,7 @@ export default function Top3Item({ top3ListItem }: Props) {
                         <div className='top-3-list-item-write-date'>{dayjs(writeDateTime).format('YYYY. MM. DD. HH:mm')}</div>
                     </div>
                 </div>
-                <div className='divider'></div>
+                <div className='top-3-list-item-date'>업무 기간: {dayjs(startDt).format('YY. MM. DD')} ~ {dayjs(endDt).format('YY. MM. DD')}</div>
                 <div className='top-3-list-item-middle'>
                     <div className={`${boardTitleImage ? 'top-3-list-item-title' : 'top-3-list-item-title-no-background-image'}`}>{title}</div>
                     <div className='top-3-list-item-content' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
