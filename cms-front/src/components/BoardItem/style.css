@@ -89,6 +89,14 @@
     line-height: 140%;
 }
 
+.board-list-item-date {
+    color: rgba(0, 0, 0, 0.4);
+
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 140%;
+}
+
 .board-list-item-bottom {
 
 }

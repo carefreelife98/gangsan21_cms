@@ -43,10 +43,9 @@ export default function BoardItem({ boardListItem }: Props) {
                     </div>
                 </div>
                 <div className='board-list-item-middle'>
-                    {startDt || endDt &&
+                    {(startDt || endDt) &&
                         <div className='board-list-item-date-box'>
-                            <div className='board-list-item-start-date' title={'업무 시작일'}>업무 시작일: {dayjs(startDt).format('YYYY. MM. DD. HH:mm')}</div>
-                            <div className='board-list-item-end-date' title={'업무 종료일'}>업무 종료일: {dayjs(endDt).format('YYYY. MM. DD. HH:mm')}</div>
+                            <div className='board-list-item-date'>업무 기간: {dayjs(startDt).format('YY. MM. DD')} ~ {dayjs(endDt).format('YY. MM. DD')}</div>
                         </div>
                     }
                     <div className='board-list-item-title'>{title}</div>
