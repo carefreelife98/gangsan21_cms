@@ -96,7 +96,6 @@ export default function Main() {
 
     const MainMiddle = () => {
 
-
         return (
             <div id='main-middle-wrapper'>
                 <div className='main-middle-calendar-box'>

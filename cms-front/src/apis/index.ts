@@ -19,6 +19,7 @@ import {
 import error = Simulate.error;
 import resize = Simulate.resize;
 import {GetPopularListResponseDto} from "./response/search";
+import {GetCalendarItemListResponseDto} from "./response/calendar";
 
 const DOMAIN = 'http://localhost:4000';
 
@@ -62,6 +63,7 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
     return result;
 };
 
+const GET_CALENDAR_ITEM_LIST_URL = () => `${API_DOMAIN}/calendar`;
 
 const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
@@ -77,6 +79,20 @@ const GET_COMMENT_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/bo
 const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
 
 const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
+
+export const getCalendarItemListRequest = async () => {
+    const result = await axios.get(GET_CALENDAR_ITEM_LIST_URL())
+        .then(response => {
+            const responseBody: GetCalendarItemListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
 
 export const getBoardRequest = async (boardNumber: number | string, accessToken: string) => {
     const result = await axios.get(GET_BOARD_URL(boardNumber), authorization(accessToken))

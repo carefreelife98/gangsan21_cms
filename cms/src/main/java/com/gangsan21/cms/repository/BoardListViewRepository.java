@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface BoardListViewRepository extends JpaRepository<BoardListViewEntity, Integer> {
 
+    List<BoardListViewEntity> findAllByWriterEmail(String email);
+
     List<BoardListViewEntity> findByWriterEmailOrderByWriteDateTimeDesc(String email);
 
     // Top3 가 메서드 명에 있으면, LIMIT 3 와 동일한 역할을 함.

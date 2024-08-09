@@ -4,10 +4,8 @@ import com.gangsan21.cms.common.ResponseCode;
 import com.gangsan21.cms.common.ResponseMessage;
 import com.gangsan21.cms.dto.object.BoardListItem;
 import com.gangsan21.cms.dto.response.ResponseDto;
-import com.gangsan21.cms.entity.BoardEntity;
 import com.gangsan21.cms.entity.BoardListViewEntity;
 import lombok.Getter;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
