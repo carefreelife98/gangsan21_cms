@@ -1,13 +1,10 @@
 package com.gangsan21.cms.dto.object;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gangsan21.cms.entity.BoardListViewEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
