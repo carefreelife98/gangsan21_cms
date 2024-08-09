@@ -215,8 +215,8 @@ export default function BoardDetail() {
                 <div className='divider'></div>
                 <div className='board-detail-top-main'>
                     <div className='board-detail-main-text' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(board.content) }} />
-                    {board.boardImageList.map((image, index) => <img key={index} className='board-detail-main-image'
-                                                                     src={image} alt={'게시물 상세 이미지'}/>)}
+                    {board.boardImageList.map((image, index) =>
+                        <img key={index} className='board-detail-main-image' src={image} alt={'게시물 상세 이미지'}/>)}
                 </div>
             </div>
         );

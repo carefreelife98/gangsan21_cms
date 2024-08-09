@@ -5,6 +5,7 @@ import {BoardListItem} from "../../types/interface";
 import {useNavigate} from "react-router-dom";
 import {BOARD_DETAIL_PATH, BOARD_PATH} from "../../constants";
 import dayjs from 'dayjs';
+import DOMPurify from "isomorphic-dompurify";
 
 interface Props {
     top3ListItem: BoardListItem
@@ -46,7 +47,7 @@ export default function Top3Item({ top3ListItem }: Props) {
                 <div className='divider'></div>
                 <div className='top-3-list-item-middle'>
                     <div className={`${boardTitleImage ? 'top-3-list-item-title' : 'top-3-list-item-title-no-background-image'}`}>{title}</div>
-                    <div className='top-3-list-item-content'>{content}</div>
+                    <div className='top-3-list-item-content' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
                 </div>
                 <div className='top-3-list-item-bottom'>
                     <div className='top-3-list-item-counts'>

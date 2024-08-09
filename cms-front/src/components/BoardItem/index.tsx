@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import defaultProfileImage from 'assets/image/default-profile-image.png'
 import {BOARD_DETAIL_PATH, BOARD_PATH} from "../../constants";
 import dayjs from "dayjs";
+import DOMPurify from "isomorphic-dompurify";
 
 interface Props {
     boardListItem: BoardListItem
@@ -49,7 +50,7 @@ export default function BoardItem({ boardListItem }: Props) {
                         </div>
                     }
                     <div className='board-list-item-title'>{title}</div>
-                    <div className='board-list-item-content'>{content}</div>
+                    <div className='board-list-item-content' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
                 </div>
                 <div className='board-list-item-bottom'>
                     <div className='board-list-item-counts'>
