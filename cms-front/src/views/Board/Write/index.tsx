@@ -5,6 +5,8 @@ import {useNavigate} from "react-router-dom";
 import {MAIN_PATH} from "../../../constants";
 import {useCookies} from "react-cookie";
 import dayjs from "dayjs";
+import BundledEditor from "../../../components/Editor";
+import TinyMceEditor from "../../../components/Editor";
 
 //          component: 게시물 작성 화면 컴포넌트          //
 export default function BoardWrite() {
@@ -12,7 +14,7 @@ export default function BoardWrite() {
     const titleRef = useRef<HTMLTextAreaElement | null>(null);
 
     // state: 본문 영역 요소 참조 상태
-    const contentRef = useRef<HTMLTextAreaElement | null>(null);
+    // const contentRef = useRef<HTMLTextAreaElement | null>(null);
 
     // state: 업무 시작일 설정 요소 참조 상태
     const startDtRef = useRef<HTMLInputElement | null>(null);
@@ -49,13 +51,17 @@ export default function BoardWrite() {
         titleRef.current.style.height = `${titleRef.current.scrollHeight}px`;
     };
 
-    // event handler: 내용 변경 이벤트 처리
-    const onContentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        const {value} = event.target;
-        setContent(value);
-        if(!contentRef.current) return;
-        contentRef.current.style.height = 'auto';
-        contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
+    // // event handler: 내용 변경 이벤트 처리
+    // const onContentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    //     const {value} = event.target;
+    //     setContent(value);
+    //     if(!contentRef.current) return;
+    //     contentRef.current.style.height = 'auto';
+    //     contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
+    // };
+
+    const handleEditorChange = (content: any, editor: any) => {
+        setContent(content)
     };
 
     // event handler: 업무 시작일 설정 변경 이벤트 처리
@@ -164,12 +170,16 @@ export default function BoardWrite() {
                     </div>
                     <div className='divider'></div>
                     <div className='board-write-content-box'>
-                        <textarea ref={contentRef}
-                                  className='board-write-content-textarea'
-                                  placeholder='본문을 작성해주세요.'
-                                  value={content}
-                                  onChange={onContentChangeHandler}
+                        <TinyMceEditor
+                            content={content}
+                            setContent={setContent}
                         />
+                        {/*<textarea ref={contentRef}*/}
+                        {/*          className='board-write-content-textarea'*/}
+                        {/*          placeholder='본문을 작성해주세요.'*/}
+                        {/*          value={content}*/}
+                        {/*          onChange={onContentChangeHandler}*/}
+                        {/*/>*/}
                         <div className='icon-button' onClick={onImageUploadButtonClickHandler}>
                             <div className='icon image-box-light-icon'></div>
                         </div>

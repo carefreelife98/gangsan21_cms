@@ -6,6 +6,7 @@ import CommentItem from "../../../components/CommentItem";
 import Pagination from "../../../components/Pagination";
 import {useLoginUserStore} from "../../../stores";
 import {useNavigate, useParams} from "react-router-dom";
+import DOMPurify from 'isomorphic-dompurify';
 
 import defaultProfileImage from 'assets/image/default-profile-image.png';
 import {BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH} from "../../../constants";
@@ -213,7 +214,7 @@ export default function BoardDetail() {
                 </div>
                 <div className='divider'></div>
                 <div className='board-detail-top-main'>
-                    <div className='board-detail-main-text'>{board.content}</div>
+                    <div className='board-detail-main-text' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(board.content) }} />
                     {board.boardImageList.map((image, index) => <img key={index} className='board-detail-main-image'
                                                                      src={image} alt={'게시물 상세 이미지'}/>)}
                 </div>
