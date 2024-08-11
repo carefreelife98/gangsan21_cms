@@ -11,7 +11,7 @@ import CalendarMiniBoard from "./CalendarMiniBoardItem/CalendarMiniBoardItem";
 
 import './style.css'
 import {useCookies} from "react-cookie";
-import {AUTH_PATH, MAIN_PATH, USER_PATH} from "../../constants";
+import {AUTH_PATH, MAIN_PATH} from "../../constants";
 import {useNavigate} from "react-router-dom";
 import {useBoardStore, useLoginUserStore} from "../../stores";
 import {fileUploadRequest, postBoardRequest} from "../../apis";
