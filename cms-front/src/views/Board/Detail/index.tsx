@@ -31,7 +31,6 @@ import {
 import dayjs from 'dayjs';
 import {PostCommentRequestDto} from "../../../apis/request/board";
 import {usePagination} from "../../../hooks";
-import {bo} from "@fullcalendar/core/internal-common";
 
 //          component: 게시물 상세 화면 컴포넌트          //
 export default function BoardDetail() {
