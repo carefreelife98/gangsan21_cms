@@ -1,0 +1,83 @@
+#user-top-wrapper {
+    padding: 40px 0 45px;
+    display: flex;
+    justify-content: center;
+}
+
+.user-top-container {
+    width: 1200px;
+    min-width: 1200px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.user-top-my-profile-image-box {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(217, 217, 217, 1);
+    cursor: pointer;
+}
+
+.user-top-profile-image {
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+}
+
+.user-top-profile-image-box {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(217, 217, 217, 1);
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+}
+
+.user-top-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.user-top-info-nickname-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-top-info-nickname-input {
+    border: 3px solid rgba(0, 0, 0, 0.5);
+    display: inline-block;
+    outline: none;
+    background: none;
+    padding: 0;
+    color: rgba(0, 0, 0, 1);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.user-top-info-nickname {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.user-top-info-email {
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
