@@ -6,6 +6,7 @@ import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
 import com.gangsan21.cms.dto.response.board.*;
+import com.gangsan21.cms.dto.response.user.GetUserBoardListResponseDto;
 import com.gangsan21.cms.security.CustomUserDetails;
 import com.gangsan21.cms.service.BoardService;
 import jakarta.validation.Valid;
@@ -132,6 +133,22 @@ public class BoardController {
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
 
         ResponseEntity<? super GetSearchBoardResponseDto> response = boardService.getSearchBoardList(searchWord, preSearchWord, principal.getEmail());
+        return response;
+    }
+
+    @GetMapping("/user-board-list/{email}")
+    public ResponseEntity<? super GetUserBoardListResponseDto> getUserBoardList(
+            @PathVariable("email") String email
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(Objects.isNull(authentication)) return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        if(!Objects.equals(email, principal.getEmail())){
+            return ResponseDto.validationFailed();
+        }
+
+        ResponseEntity<? super GetUserBoardListResponseDto> response = boardService.getUserBoardList(email);
         return response;
     }
 

@@ -5,6 +5,7 @@ import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
 import com.gangsan21.cms.dto.response.board.*;
+import com.gangsan21.cms.dto.response.user.GetUserBoardListResponseDto;
 import com.gangsan21.cms.entity.*;
 import com.gangsan21.cms.repository.*;
 import com.gangsan21.cms.repository.resultSet.GetBoardResultSet;
@@ -218,6 +219,26 @@ public class BoardServiceImpl implements BoardService {
             return ResponseDto.databaseError();
         }
         return GetSearchBoardResponseDto.success(boardListViewEntityList);
+    }
+
+    @Override
+    public ResponseEntity<? super GetUserBoardListResponseDto> getUserBoardList(String email) {
+
+        List<BoardListViewEntity> boardListViewEntityList;
+
+        try {
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if(!existedUser) return GetUserBoardListResponseDto.notExistUser();
+
+            boardListViewEntityList = boardListViewRepository.findByWriterEmailOrderByWriteDateTimeDesc(email);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetUserBoardListResponseDto.success(boardListViewEntityList);
     }
 
     @Override

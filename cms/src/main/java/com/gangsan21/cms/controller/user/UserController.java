@@ -41,8 +41,10 @@ public class UserController {
     @GetMapping("/{email}")
     public ResponseEntity<? super GetUserResponseDto> getUser(@PathVariable String email) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication)) return ResponseDto.validationFailed();
+
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-        if (Objects.isNull(principal)) return ResponseDto.validationFailed();
+        if(!principal.getEmail().equals(email)) return ResponseDto.validationFailed();
 
         ResponseEntity<? super GetUserResponseDto> response = userService.getUser(email);
         return response;

@@ -5,6 +5,7 @@ import com.gangsan21.cms.dto.request.board.PatchBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
 import com.gangsan21.cms.dto.response.board.*;
+import com.gangsan21.cms.dto.response.user.GetUserBoardListResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface BoardService {
@@ -19,6 +20,7 @@ public interface BoardService {
     ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList(String email);
     ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList(String email);
     ResponseEntity<? super GetSearchBoardResponseDto> getSearchBoardList(String searchWord, String preSearchWord, String email);
+    ResponseEntity<? super GetUserBoardListResponseDto> getUserBoardList(String email);
 
     ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber, String email);
     ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email);
