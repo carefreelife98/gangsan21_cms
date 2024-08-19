@@ -1,21 +1,32 @@
 import './style.css';
 import {ChangeEvent, useEffect, useRef, useState} from "react";
 import defaultProfileImage from 'assets/image/default-profile-image.png';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+import {BoardListItem} from "../../types/interface";
+import {latestBoardListMock} from "../../mocks";
+import BoardItem from "../../components/BoardItem";
+import {BOARD_PATH, BOARD_WRITE_PATH, USER_PATH} from "../../constants";
+import {el} from "@fullcalendar/core/internal-common";
+import {useLoginUserStore} from "../../stores";
 
 // component: 유저 화면 컴포넌트
 export default function User() {
 
-    // state:
+    // state: userEmail path variable 상태
     const {userEmail} = useParams();
+    // state: 마이페이지 여부 상태
+    const [isMyPage, setIsMyPage] = useState<boolean>(true);
+    // state: 로그인 유저 상태
+    const {loginUser} = useLoginUserStore();
+
+    // function: 네비게이트 함수
+    const navigate = useNavigate();
 
     // component: 유저 화면 상단 컴포넌트
     const UserTop = () => {
 
         // state: 이미지 파일 input 참조 상태
         const imageInputRef = useRef<HTMLInputElement | null>(null);
-        // state: 마이페이지 여부 상태
-        const [isMyPage, setIsMyPage] = useState<boolean>(true);
         // state: 닉네임 변경 여부 상태
         const [isChangeNickName, setIsChangeNickName] = useState<boolean>(false);
         // state: 닉네임 상태
@@ -109,9 +120,64 @@ export default function User() {
     // component: 유저 화면 하단 컴포넌트
     const UserBottom = () => {
 
+        // state: 게시물 개수 상태
+        const [count, setCount] = useState<number>(2);
+        // state: 게시물 리스트 상태 (임시)
+        const [userBoardList, setUserBoardList] = useState<BoardListItem[]>([]);
+
+        // event handler: 사이드 카드 클릭 이벤트 처리
+        const onSideCardClickHandler = () => {
+            if (isMyPage) navigate(BOARD_PATH() + '/' + BOARD_WRITE_PATH());
+            else if (loginUser) navigate(USER_PATH(loginUser.email));
+        }
+
+        // effect: userEmail path variable 이 변경될 때마다 실행할 함수.
+        useEffect(() => {
+            setUserBoardList(latestBoardListMock)
+        }, [userEmail]);
+
         // render: 유저 하단 화면 렌더링
         return (
-            <div></div>
+            <div id='user-bottom-wrapper'>
+                <div className='user-bottom-container'>
+                    {isMyPage ?
+                        <div className='user-bottom-title'>{'내 게시물 '}<span className='emphasis'>{count}</span></div>
+                        :
+                        <div className='user-bottom-title'>{'게시물 '}</div>
+                    }
+                    <div className='user-bottom-contents-box'>
+                        {count === 0 ?
+                            <div className='user-bottom-contents-nothing'>{'게시물이 없습니다.'}</div>
+                            :
+                            <div className='user-bottom-contents'>
+                                {userBoardList.map((boardListItem, index) => <BoardItem key={index} boardListItem={boardListItem} />)}
+                            </div>
+                        }
+                        <div className='user-bottom-side-box'>
+                            <div className='user-bottom-side-card' onClick={onSideCardClickHandler}>
+                                <div className='user-bottom-side-container'>
+                                    {isMyPage ?
+                                        <>
+                                            <div className='icon-box'>
+                                                <div className='icon edit-icon'></div>
+                                            </div>
+                                            <div className='user-bottom-side-text'>{'업무 추가하기'}</div>
+                                        </>
+                                        :
+                                        <>
+                                            <div className='user-bottom-side-text'>{'내 업무로 가기'}</div>
+                                            <div className='icon-box'>
+                                                <div className='icon arrow-right-icon'></div>
+                                            </div>
+                                        </>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='user-bottom-pagination-box'></div>
+                </div>
+            </div>
         );
     };
 
