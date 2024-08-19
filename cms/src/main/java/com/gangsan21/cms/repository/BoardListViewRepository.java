@@ -2,6 +2,7 @@ package com.gangsan21.cms.repository;
 
 import com.gangsan21.cms.entity.BoardListViewEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -19,4 +20,13 @@ public interface BoardListViewRepository extends JpaRepository<BoardListViewEnti
 
     // 검색 리스트 가져오기 (contains == LIKE 문의 역할을 함)
     List<BoardListViewEntity> findByWriterEmailAndTitleContainsOrContentContainsOrderByWriteDateTimeDesc(String email, String title, String content);
+
+    @Query(value =
+            "SELECT * " +
+            "FROM board_list_view " +
+            "WHERE start_dt BETWEEN CURDATE() - INTERVAL 14 DAY AND CURDATE() + INTERVAL 14 DAY " +
+            "ORDER BY start_dt;",
+            nativeQuery = true
+    )
+    List<BoardListViewEntity> find2WeeksBoardList();
 }

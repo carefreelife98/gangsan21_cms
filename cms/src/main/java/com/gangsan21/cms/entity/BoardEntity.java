@@ -25,10 +25,10 @@ public class BoardEntity {
     private String title;
     private String content;
 
-    @Column(columnDefinition = "업무 시작 설정일")
+    @Column
     private LocalDateTime startDt;
 
-    @Column(columnDefinition = "업무 종료 설정일")
+    @Column
     private LocalDateTime endDt;
 
     private LocalDateTime writeDateTime;

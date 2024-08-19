@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
-import Footer from "./layouts/Footer";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import Main from "./views/Main";
 import Authentication from "./views/Authentication";

@@ -20,6 +20,7 @@ public class FileServiceImpl implements FileService {
 
 //    @Value("{image-file.path")
     private String filePath;
+
     @Value("${image-file.url}")
     private String fileUrl;
 

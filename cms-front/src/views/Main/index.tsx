@@ -18,7 +18,6 @@ import {useCookies} from "react-cookie";
 import {usePagination} from "../../hooks";
 import {GetPopularListResponseDto} from "../../apis/response/search";
 import Calendar from "../../components/Calendar";
-import calendarItemListMock from "../../mocks/calendar-item-list.mock";
 import CalendarItem from "../../types/interface/calendar-item.interface";
 import {GetCalendarItemListResponseDto} from "../../apis/response/calendar";
 

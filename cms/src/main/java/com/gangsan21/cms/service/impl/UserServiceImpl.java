@@ -2,6 +2,7 @@ package com.gangsan21.cms.service.impl;
 
 import com.gangsan21.cms.dto.response.ResponseDto;
 import com.gangsan21.cms.dto.response.user.GetSignInUserResponseDto;
+import com.gangsan21.cms.dto.response.user.GetUserResponseDto;
 import com.gangsan21.cms.entity.UserEntity;
 import com.gangsan21.cms.repository.UserRepository;
 import com.gangsan21.cms.service.UserService;
@@ -35,5 +36,23 @@ public class UserServiceImpl implements UserService {
         }
 
         return GetSignInUserResponseDto.success(userEntity);
+    }
+
+    @Override
+    public ResponseEntity<? super GetUserResponseDto> getUser(String email) {
+
+        UserEntity userEntity;
+
+        try {
+
+            userEntity = userRepository.findByEmail(email);
+            if (Objects.isNull(userEntity)) return GetUserResponseDto.notExistUser();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetUserResponseDto.success(userEntity);
     }
 }

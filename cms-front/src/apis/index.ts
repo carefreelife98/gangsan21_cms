@@ -2,7 +2,6 @@ import {SignInRequestDto, SignUpRequestDto} from "./request/auth";
 import axios from "axios";
 import SignInResponseDto from "./response/auth/sign-in.response.dto";
 import {ResponseDto} from "./response";
-import {Simulate} from "react-dom/test-utils";
 import {SignUpResponseDto} from "./response/auth";
 import {GetSignInUserResponseDto} from "./response/user";
 import {PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto} from "./request/board";
@@ -20,11 +19,8 @@ import {
     GetTop3BoardListResponseDto,
     GetSearchBoardListResponseDto
 } from "./response/board";
-import error = Simulate.error;
-import resize = Simulate.resize;
 import {GetPopularListResponseDto, GetRelationListResponseDto} from "./response/search";
 import {GetCalendarItemListResponseDto} from "./response/calendar";
-import {ex} from "@fullcalendar/core/internal-common";
 
 const DOMAIN = 'http://localhost:4000';
 
