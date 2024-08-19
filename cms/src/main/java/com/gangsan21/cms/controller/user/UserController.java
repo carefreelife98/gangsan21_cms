@@ -1,20 +1,22 @@
 package com.gangsan21.cms.controller.user;
 
+import com.gangsan21.cms.dto.request.user.PatchNickNameRequestDto;
+import com.gangsan21.cms.dto.request.user.PatchProfileImageRequestDto;
 import com.gangsan21.cms.dto.response.ResponseDto;
 import com.gangsan21.cms.dto.response.user.GetSignInUserResponseDto;
 import com.gangsan21.cms.dto.response.user.GetUserResponseDto;
+import com.gangsan21.cms.dto.response.user.PatchNickNameResponseDto;
+import com.gangsan21.cms.dto.response.user.PatchProfileImageResponseDto;
 import com.gangsan21.cms.security.CustomUserDetails;
 import com.gangsan21.cms.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -47,6 +49,34 @@ public class UserController {
         if(!principal.getEmail().equals(email)) return ResponseDto.validationFailed();
 
         ResponseEntity<? super GetUserResponseDto> response = userService.getUser(email);
+        return response;
+    }
+
+    @PatchMapping("/nickname")
+    public ResponseEntity<? super PatchNickNameResponseDto> updateNickname(
+            @RequestBody @Valid PatchNickNameRequestDto requestBody,
+            @AuthenticationPrincipal String email
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(Objects.isNull(authentication)) return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        ResponseEntity<? super PatchNickNameResponseDto> response = userService.patchNickName(requestBody, principal.getEmail());
+        return response;
+    }
+
+    @PatchMapping("/profile-image")
+    public ResponseEntity<? super PatchProfileImageResponseDto> updateProfileImage(
+            @RequestBody @Valid PatchProfileImageRequestDto requestBody,
+            @AuthenticationPrincipal String email
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(Objects.isNull(authentication)) return ResponseDto.validationFailed();
+
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        ResponseEntity<? super PatchProfileImageResponseDto> response = userService.patchProfileImage(requestBody, principal.getEmail());
+
         return response;
     }
 }

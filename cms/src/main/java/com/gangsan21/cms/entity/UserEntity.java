@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -18,10 +19,14 @@ public class UserEntity {
     @Id
     private String email;
     private String password;
+
+    @Setter
     private String nickName;
     private String telNumber;
     private String address;
     private String addressDetail;
+
+    @Setter
     private String profileImage;
     private boolean agreedPersonal;
 
@@ -48,4 +53,5 @@ public class UserEntity {
                 ", agreedPersonal=" + agreedPersonal +
                 '}';
     }
+
 }
