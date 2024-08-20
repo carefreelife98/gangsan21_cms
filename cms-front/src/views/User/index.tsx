@@ -6,7 +6,6 @@ import {BoardListItem} from "../../types/interface";
 import {latestBoardListMock} from "../../mocks";
 import BoardItem from "../../components/BoardItem";
 import {BOARD_PATH, BOARD_WRITE_PATH, USER_PATH} from "../../constants";
-import {el} from "@fullcalendar/core/internal-common";
 import {useLoginUserStore} from "../../stores";
 
 // component: 유저 화면 컴포넌트
