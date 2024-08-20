@@ -1,4 +1,6 @@
 import { Editor } from '@tinymce/tinymce-react';
+import './style.css';
+
 // TinyMCE so the global var exists
 import 'tinymce/tinymce';
 // DOM model
