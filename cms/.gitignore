@@ -38,4 +38,5 @@ out/
 
 ### Secrets ###
 *.yml
+cms/src/main/resources/application.yml
 *.sql

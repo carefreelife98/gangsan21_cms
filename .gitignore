@@ -2,6 +2,7 @@
 ### Example user template
 .DS_Store
 *.yml
+cms/src/main/resources/application.yml
 *.sql
 
 
