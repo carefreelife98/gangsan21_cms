@@ -7,7 +7,6 @@ import com.gangsan21.cms.dto.response.auth.SignUpResponseDto;
 import com.gangsan21.cms.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
