@@ -27,7 +27,7 @@ import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/fullscreen';
 import 'tinymce/plugins/help';
 import 'tinymce/plugins/help/js/i18n/keynav/en';
-import 'tinymce/plugins/image';
+// import 'tinymce/plugins/image';
 import 'tinymce/plugins/importcss';
 import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/link';
@@ -71,7 +71,8 @@ export default function TinyMceEditor({content, setContent}: State) {
             // initialValue={'본문을 작성해주세요.'}
             onEditorChange={handleEditorChange}
             init={{
-                height: 500,
+                height: 600,
+                width: "100%",
                 menubar: false,
                 placeholder: '본문을 작성해주세요.',
                 paste_data_images: true,
@@ -79,12 +80,12 @@ export default function TinyMceEditor({content, setContent}: State) {
                 plugins: [
                     'lists',
                     'link',
-                    'image',
+                    // 'image',
                     'charmap',
                     'preview',
                     'searchreplace',
                     'fullscreen',
-                    'media',
+                    // 'media',
                     'table',
                     'code',
                     'help',

@@ -132,6 +132,9 @@
 
 .user-bottom-side-box {
     grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .user-bottom-side-card {

@@ -9,7 +9,8 @@
 
 .board-write-container {
     padding: 25px 24px;
-    width: 996px;
+    /*width: 996px;*/
+    width: 90%;
     min-height: 1952px;
 
     background-color: rgba(255, 255, 255, 1);

@@ -20,6 +20,7 @@ import {PatchNicknameRequestDto, PatchProfileImageRequestDto} from "../../apis/r
 import {usePagination} from "../../hooks";
 import {GetUserBoardListResponseDto} from "../../apis/response/board";
 import Pagination from "../../components/Pagination";
+import Modal from "react-modal";
 
 // component: 유저 화면 컴포넌트
 export default function User() {
@@ -32,6 +33,8 @@ export default function User() {
     const {loginUser} = useLoginUserStore();
     // state: 쿠키 상태
     const [cookies, setCookies] = useCookies();
+    // state: 설정 모달 상태
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     // function: 네비게이트 함수
     const navigate = useNavigate();
@@ -202,6 +205,27 @@ export default function User() {
         );
     };
 
+    // component: 유저 화면 중간 컴포넌트 (설정 모달)
+    const UserMiddle = () => {
+
+        return (
+            <div id='user-bottom-wrapper'>
+                <div className='user-bottom-container'>
+                    {isModalOpen &&
+                        <>
+                            <Modal isOpen={isModalOpen}
+                                   onAfterClose={() => setIsModalOpen(false)}
+                                   shouldCloseOnEsc={false}
+                            >
+                                <button type={'button'} onClick={() => setIsModalOpen(false)}>{'닫기'}</button>
+                            </Modal>
+                        </>
+                    }
+                </div>
+            </div>
+        );
+    };
+
     // component: 유저 화면 하단 컴포넌트
     const UserBottom = () => {
 
@@ -234,9 +258,14 @@ export default function User() {
         };
 
         // event handler: 사이드 카드 클릭 이벤트 처리
-        const onSideCardClickHandler = () => {
+        const onBoardWriteCardClickHandler = () => {
             if (isMyPage) navigate(BOARD_PATH() + '/' + BOARD_WRITE_PATH());
             else if (loginUser) navigate(USER_PATH(loginUser.email));
+        }
+
+        // event handler: 사이드 카드 클릭 이벤트 처리
+        const onSettingCardClickHandler = () => {
+            setIsModalOpen(true);
         }
 
         // effect: userEmail path variable 이 변경될 때마다 실행할 함수.
@@ -265,7 +294,7 @@ export default function User() {
                             </div>
                         }
                         <div className='user-bottom-side-box'>
-                            <div className='user-bottom-side-card' onClick={onSideCardClickHandler}>
+                            <div className='user-bottom-side-card' onClick={onBoardWriteCardClickHandler}>
                                 <div className='user-bottom-side-container'>
                                     {isMyPage ?
                                         <>
@@ -282,6 +311,14 @@ export default function User() {
                                             </div>
                                         </>
                                     }
+                                </div>
+                            </div>
+                            <div className='user-bottom-side-card' onClick={onSettingCardClickHandler}>
+                                <div className='user-bottom-side-container'>
+                                    <div className='icon-box'>
+                                        <div className='icon edit-icon'></div>
+                                    </div>
+                                    <div className='user-bottom-side-text'>{'알람 설정하기'}</div>
                                 </div>
                             </div>
                         </div>
@@ -305,6 +342,9 @@ export default function User() {
     return (
         <>
             <UserTop />
+            {isModalOpen &&
+                <UserMiddle />
+            }
             <UserBottom />
         </>
     );
