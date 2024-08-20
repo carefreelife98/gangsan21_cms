@@ -1,7 +1,7 @@
 ### Example user template template
 ### Example user template
 .DS_Store
-*.yml
+**/application.yml
 cms/src/main/resources/application.yml
 *.sql
 
