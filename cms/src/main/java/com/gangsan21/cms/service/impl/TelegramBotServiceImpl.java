@@ -5,21 +5,15 @@ import com.gangsan21.cms.repository.BoardListViewRepository;
 import com.gangsan21.cms.service.TelegramBotService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,7 +38,6 @@ public class TelegramBotServiceImpl implements TelegramBotService {
 
     @Override
     public void sendMessage(String message) {
-//        String message = "Hello from Spring Boot!";
         String url = String.format("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s", botToken, chatId, message);
 
         Mono<String> responseMono = webClient.get()

@@ -7,9 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @NoArgsConstructor
@@ -22,7 +20,10 @@ public class BoardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer boardNumber;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column
