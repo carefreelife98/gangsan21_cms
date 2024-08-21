@@ -21,6 +21,7 @@ import {usePagination} from "../../hooks";
 import {GetUserBoardListResponseDto} from "../../apis/response/board";
 import Pagination from "../../components/Pagination";
 import Modal from "react-modal";
+import Setting from "../../components/Setting";
 
 // component: 유저 화면 컴포넌트
 export default function User() {
@@ -34,7 +35,7 @@ export default function User() {
     // state: 쿠키 상태
     const [cookies, setCookies] = useCookies();
     // state: 설정 모달 상태
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isSettingModalOpen, setIsSettingModalOpen] = useState<boolean>(false);
 
     // function: 네비게이트 함수
     const navigate = useNavigate();
@@ -211,13 +212,14 @@ export default function User() {
         return (
             <div id='user-bottom-wrapper'>
                 <div className='user-bottom-container'>
-                    {isModalOpen &&
+                    {isSettingModalOpen &&
                         <>
-                            <Modal isOpen={isModalOpen}
-                                   onAfterClose={() => setIsModalOpen(false)}
+                            <Modal isOpen={isSettingModalOpen}
+                                   onAfterClose={() => setIsSettingModalOpen(false)}
                                    shouldCloseOnEsc={false}
                             >
-                                <button type={'button'} onClick={() => setIsModalOpen(false)}>{'닫기'}</button>
+                                <Setting />
+                                <button type={'button'} onClick={() => setIsSettingModalOpen(false)}>{'닫기'}</button>
                             </Modal>
                         </>
                     }
@@ -265,7 +267,7 @@ export default function User() {
 
         // event handler: 사이드 카드 클릭 이벤트 처리
         const onSettingCardClickHandler = () => {
-            setIsModalOpen(true);
+            setIsSettingModalOpen(true);
         }
 
         // effect: userEmail path variable 이 변경될 때마다 실행할 함수.
@@ -342,7 +344,7 @@ export default function User() {
     return (
         <>
             <UserTop />
-            {isModalOpen &&
+            {isSettingModalOpen &&
                 <UserMiddle />
             }
             <UserBottom />

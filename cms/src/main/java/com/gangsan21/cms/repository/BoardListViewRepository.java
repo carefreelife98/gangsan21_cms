@@ -25,8 +25,9 @@ public interface BoardListViewRepository extends JpaRepository<BoardListViewEnti
             "SELECT * " +
             "FROM board_list_view " +
             "WHERE start_dt BETWEEN CURDATE() - INTERVAL 14 DAY AND CURDATE() + INTERVAL 14 DAY " +
+            "AND writer_email = ?1 " +
             "ORDER BY start_dt;",
             nativeQuery = true
     )
-    List<BoardListViewEntity> find2WeeksBoardList();
+    List<BoardListViewEntity> find2WeeksBoardListByEmail(String email);
 }
