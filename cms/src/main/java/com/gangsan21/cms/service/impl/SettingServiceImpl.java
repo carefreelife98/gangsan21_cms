@@ -23,7 +23,17 @@ public class SettingServiceImpl implements SettingService {
     @Override
     public ResponseEntity<? super GetSettingResponseDto> getSetting(String email) {
         if (Objects.isNull(email)) return ResponseDto.validationFailed();
-        SettingEntity setting = settingRepository.findByUserEmail(email);
+
+        SettingEntity setting;
+
+        try {
+            setting = settingRepository.findByUserEmail(email);
+            if (Objects.isNull(setting)) return GetSettingResponseDto.notExistUser();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
 
         return GetSettingResponseDto.success(setting);
     }

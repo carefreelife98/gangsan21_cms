@@ -138,7 +138,7 @@ export default function Calendar({ calenderItemList }: Props) {
                         <div className='divider'/>
                         <div className={'calender-modal-form-button-box'}>
                             <UploadButton />
-                            <button className={'calender-modal-form-button-cancel'} form={'calender-modal-form'} type="button" onClick={closeModal}>{'취소'}</button>
+                            <button className={'button-cancel'} form={'calender-modal-form'} type="button" onClick={closeModal}>{'취소'}</button>
                         </div>
                     </div>
                 </form>

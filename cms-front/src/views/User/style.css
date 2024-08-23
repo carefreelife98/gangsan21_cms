@@ -81,6 +81,27 @@
     line-height: 140%;
 }
 
+#user-middle-modal-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+}
+
+.user-middle-modal-contents-container {
+    /* 9:1 비율 */
+    flex: 12;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.user-middle-modal-button-box {
+    /* 9:1 비율 */
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
 #user-bottom-wrapper {
     padding: 40px 0;
     min-height: 880px;

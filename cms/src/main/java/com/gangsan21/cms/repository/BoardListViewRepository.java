@@ -24,7 +24,7 @@ public interface BoardListViewRepository extends JpaRepository<BoardListViewEnti
     @Query(value =
             "SELECT * " +
             "FROM board_list_view " +
-            "WHERE start_dt BETWEEN CURDATE() - INTERVAL 14 DAY AND CURDATE() + INTERVAL 14 DAY " +
+            "WHERE start_dt BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() + INTERVAL 7 DAY " +
             "AND writer_email = ?1 " +
             "ORDER BY start_dt;",
             nativeQuery = true

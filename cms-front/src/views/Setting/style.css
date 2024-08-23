@@ -1,0 +1,8 @@
+.setting-radio-group-box {
+    padding: 10px 0 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: scroll;
+}

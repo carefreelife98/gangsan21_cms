@@ -27,6 +27,10 @@ import {
 import {GetPopularListResponseDto, GetRelationListResponseDto} from "./response/search";
 import {GetCalendarItemListResponseDto} from "./response/calendar";
 import {PatchNicknameRequestDto, PatchProfileImageRequestDto} from "./request/user";
+import {GetSettingResponseDto} from "./response/setting";
+import {PatchSettingRequestDto} from "./request/setting";
+import PatchSettingResponseDto from "./response/setting/patch-setting.response.dto";
+import {er} from "@fullcalendar/core/internal-common";
 
 const DOMAIN = 'http://localhost:4000';
 
@@ -71,6 +75,7 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
 };
 
 const GET_CALENDAR_ITEM_LIST_URL = () => `${API_DOMAIN}/calendar`;
+const SETTING_URL = () => `${API_DOMAIN}/setting`
 
 const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
@@ -101,6 +106,33 @@ export const getCalendarItemListRequest = async (accessToken: string) => {
             return responseBody;
         });
     return result;
+};
+
+export const getSettingRequest = async (accessToken: string) => {
+    const result = await axios.get(SETTING_URL(), authorization(accessToken))
+        .then(response => {
+            const responseBody: GetSettingResponseDto = response.data;
+            return responseBody;
+        }).catch(error => {
+            if(!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const patchSettingRequest = async (requestBody: PatchSettingRequestDto, accessToken: string) => {
+    const result = await axios.patch(SETTING_URL(), requestBody, authorization(accessToken))
+        .then(response => {
+            const responseBody: PatchSettingResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if(!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result
 };
 
 export const getBoardRequest = async (boardNumber: number | string, accessToken: string) => {

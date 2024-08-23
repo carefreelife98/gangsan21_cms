@@ -21,7 +21,7 @@ import {usePagination} from "../../hooks";
 import {GetUserBoardListResponseDto} from "../../apis/response/board";
 import Pagination from "../../components/Pagination";
 import Modal from "react-modal";
-import Setting from "../../components/Setting";
+import UserSetting from "../Setting";
 
 // component: 유저 화면 컴포넌트
 export default function User() {
@@ -210,16 +210,24 @@ export default function User() {
     const UserMiddle = () => {
 
         return (
-            <div id='user-bottom-wrapper'>
-                <div className='user-bottom-container'>
+            <div id='user-middle-wrapper'>
+                <div className='user-middle-container'>
                     {isSettingModalOpen &&
                         <>
                             <Modal isOpen={isSettingModalOpen}
                                    onAfterClose={() => setIsSettingModalOpen(false)}
                                    shouldCloseOnEsc={false}
                             >
-                                <Setting />
-                                <button type={'button'} onClick={() => setIsSettingModalOpen(false)}>{'닫기'}</button>
+                                <div id='user-middle-modal-wrapper'>
+                                    <div className='user-middle-modal-contents-container'>
+                                        <UserSetting />
+                                    </div>
+                                    <div className='divider'></div>
+                                    <div className='user-middle-modal-button-box'>
+                                        <button className='button-submit' type='button' onClick={() => setIsSettingModalOpen(false)}>{'완료'}</button>
+                                        <button className='button-cancel' type='button' onClick={() => setIsSettingModalOpen(false)}>{'닫기'}</button>
+                                    </div>
+                                </div>
                             </Modal>
                         </>
                     }
@@ -320,7 +328,7 @@ export default function User() {
                                     <div className='icon-box'>
                                         <div className='icon edit-icon'></div>
                                     </div>
-                                    <div className='user-bottom-side-text'>{'알람 설정하기'}</div>
+                                    <div className='user-bottom-side-text'>{'개인 설정'}</div>
                                 </div>
                             </div>
                         </div>

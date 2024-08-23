@@ -77,14 +77,14 @@
     cursor: pointer;
 }
 
-.calender-modal-form-button-cancel {
-    width: 80px;
-    height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    border-radius: 30px 30px;
+/*.calender-modal-form-button-cancel {*/
+/*    width: 80px;*/
+/*    height: 40px;*/
+/*    border: 3px solid rgba(255, 255, 255, 0.2);*/
+/*    border-radius: 30px 30px;*/
 
-    background-color: palevioletred;
-}
+/*    background-color: palevioletred;*/
+/*}*/
 
 .calender-modal-form-button-cancel:hover {
     background-color: rgba(219, 112, 147, 0.7);
