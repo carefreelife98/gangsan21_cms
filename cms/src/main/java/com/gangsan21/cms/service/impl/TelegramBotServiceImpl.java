@@ -62,51 +62,69 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                     LocalDateTime endDt = boardListViewEntity.getEndDt();
                     String res = checkDate(startDt, endDt);
                     switch (res) {
-                        case "TODAY":
+                        case "LW_TD_NW":
+                            lastWeekBoardList.add(boardListViewEntity);
                             todayBoardList.add(boardListViewEntity);
+                            nextWeekBoardList.add(boardListViewEntity);
                             return;
+
                         case "LW":
                             lastWeekBoardList.add(boardListViewEntity);
                             return;
-                        case "NW": nextWeekBoardList.add(boardListViewEntity);
+
+                        case "LW_TD":
+                            lastWeekBoardList.add(boardListViewEntity);
+                            todayBoardList.add(boardListViewEntity);
+                            return;
+
+                        case "TD":
+                            todayBoardList.add(boardListViewEntity);
+                            return;
+
+                        case "TD_NW":
+                            todayBoardList.add(boardListViewEntity);
+                            nextWeekBoardList.add(boardListViewEntity);
+                            return;
+
+                        case "NW":
+                            nextWeekBoardList.add(boardListViewEntity);
                     }
                 });
 
                 StringBuilder sb = new StringBuilder();
-
+                sb.append("[강산 21 업무 알림]\n");
+                sb.append("\n------------------------------------\n");
                 sb.append("금일 업무: ").append("\n");
                 todayBoardList.forEach(boardListViewEntity -> {
                     LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
                     LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
                     String title = boardListViewEntity.getTitle();
-                    String content = boardListViewEntity.getContent();
+                    Integer boardNumber = boardListViewEntity.getBoardNumber();
                     sb.append("업무 기간: ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                    sb.append("제목: ").append(title).append("\n");
-//                    sb.append("내용: ").append(content).append("\n\n");
+                    sb.append("제목: ").append(title + " https://localhost:4000/board/detail/" + boardNumber).append("\n");
+//                    sb.append("제목: ").append(title + " https://carefreelife98.github.io").append("\n");
                 });
 
-                sb.append("\n------------------------------------------\n");
+                sb.append("\n------------------------------------\n");
                 sb.append("지난주 업무: ").append("\n");
                 lastWeekBoardList.forEach(boardListViewEntity -> {
                     LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
                     LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
                     String title = boardListViewEntity.getTitle();
-                    String content = boardListViewEntity.getContent();
+                    Integer boardNumber = boardListViewEntity.getBoardNumber();
                     sb.append("업무 기간: ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                    sb.append("제목: ").append(title).append("\n");
-//                    sb.append("내용: ").append(content).append("\n\n");
+                    sb.append("제목: ").append(title + " https://localhost:4000/board/detail/" + boardNumber).append("\n");
                 });
 
-                sb.append("\n------------------------------------------\n");
+                sb.append("\n------------------------------------\n");
                 sb.append("차주 업무: ").append("\n");
                 nextWeekBoardList.forEach(boardListViewEntity -> {
                     LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
                     LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
                     String title = boardListViewEntity.getTitle();
-                    String content = boardListViewEntity.getContent();
+                    Integer boardNumber = boardListViewEntity.getBoardNumber();
                     sb.append("업무 기간: ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                    sb.append("제목: ").append(title).append("\n");
-//                    sb.append("내용: ").append(content).append("\n\n");
+                    sb.append("제목: ").append(title + " https://localhost:4000/board/detail/" + boardNumber).append("\n");
                 });
 
                 sendMessage(sb.toString());
@@ -119,7 +137,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     }
 
     public static String checkDate(LocalDateTime startDateTimeToCheck, LocalDateTime endDateTimeToCheck) {
-        LocalDate today = LocalDateTime.now().toLocalDate();
+        LocalDate today = LocalDate.now();
         LocalDate dateToCheckStart = startDateTimeToCheck.toLocalDate();
         LocalDate dateToCheckEnd = endDateTimeToCheck.toLocalDate();
 
@@ -133,12 +151,21 @@ public class TelegramBotServiceImpl implements TelegramBotService {
         LocalDate startOfNextWeek = startOfWeek.plusWeeks(1);
         LocalDate endOfNextWeek = endOfWeek.plusWeeks(1);
 
-        // 날짜 범위 확인
-        if ((dateToCheckStart.isEqual(today) || dateToCheckStart.isBefore(today)) && (dateToCheckEnd.isEqual(today) || dateToCheckEnd.isAfter(today))) {
-            return "TODAY";
-        } else if (dateToCheckEnd.isAfter(startOfLastWeek) && dateToCheckStart.isBefore(endOfLastWeek.plusDays(1))) {
+        boolean inLastWeek = (dateToCheckStart.isBefore(endOfLastWeek.plusDays(1)) && dateToCheckEnd.isAfter(startOfLastWeek.minusDays(1)));
+        boolean inThisWeek = (dateToCheckStart.isBefore(endOfWeek.plusDays(1)) && dateToCheckEnd.isAfter(startOfWeek.minusDays(1)));
+        boolean inNextWeek = (dateToCheckStart.isBefore(endOfNextWeek.plusDays(1)) && dateToCheckEnd.isAfter(startOfNextWeek.minusDays(1)));
+
+        if (inLastWeek && inThisWeek && inNextWeek) {
+            return "LW_TD_NW";
+        } else if (inLastWeek && inThisWeek) {
+            return "LW_TD";
+        } else if (inThisWeek && inNextWeek) {
+            return "TD_NW";
+        } else if (inLastWeek) {
             return "LW";
-        } else if (dateToCheckStart.isAfter(startOfNextWeek.minusDays(1)) && dateToCheckEnd.isBefore(endOfNextWeek.plusDays(1))) {
+        } else if (inThisWeek) {
+            return "TD";
+        } else if (inNextWeek) {
             return "NW";
         } else {
             return "ERR";

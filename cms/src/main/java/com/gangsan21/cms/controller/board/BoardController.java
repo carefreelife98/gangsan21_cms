@@ -1,6 +1,5 @@
 package com.gangsan21.cms.controller.board;
 
-import com.gangsan21.cms.dto.object.FavoriteListItem;
 import com.gangsan21.cms.dto.request.board.PatchBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostBoardRequestDto;
 import com.gangsan21.cms.dto.request.board.PostCommentRequestDto;
@@ -11,15 +10,12 @@ import com.gangsan21.cms.security.CustomUserDetails;
 import com.gangsan21.cms.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
 
 @RestController
