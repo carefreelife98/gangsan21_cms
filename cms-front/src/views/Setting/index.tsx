@@ -38,9 +38,6 @@ export default function UserSetting() {
     const [setting, setSetting] = useState<Setting | null>(null);
     // state: 로딩 상태
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    // 페이지 초기 진입 여부
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
-
 
     // function: 네비게이트 함수
     const navigate = useNavigate();
@@ -113,7 +110,7 @@ export default function UserSetting() {
             <div className="setting-container">
                 <div className="setting-radio-group-box">
                     {isLoading ?
-                        <div>{'로딩 중...'}</div>
+                        <div className='loading'>{'로딩 중...'}</div>
                         :
                         <RadioGroup
                             initSetting={setting}
