@@ -32,7 +32,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
 
     @Override
     public void sendMessage(String message) {
-        String url = String.format("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s", botToken, chatId, message);
+        String url = String.format("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=markdown", botToken, chatId, message);
 
         Mono<String> responseMono = webClient.get()
                 .uri(url)
@@ -46,7 +46,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     }
 
     @Override
-    public void checkAndSendAlarm(String userEmail) {
+    public void checkAndSendAlarm(String userEmail, String requestUrl) {
         try {
             // 오늘을 기준으로, 전주 및 다음주에 업무시작일이 설정된 업무 리스트 추출. (총 14일)
             List<BoardListViewEntity> weeklyBoardList = boardListViewRepository.find2WeeksBoardListByEmail(userEmail);
@@ -92,39 +92,39 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 });
 
                 StringBuilder sb = new StringBuilder();
-                sb.append("[강산 21 업무 알림]\n");
+                sb.append("*[강산 21 업무 알림]*\n");
                 sb.append("\n------------------------------------\n");
-                sb.append("금일 업무: ").append("\n");
+                sb.append("*금주 업무:* ").append("\n");
                 todayBoardList.forEach(boardListViewEntity -> {
                     LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
                     LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
                     String title = boardListViewEntity.getTitle();
                     Integer boardNumber = boardListViewEntity.getBoardNumber();
-                    sb.append("업무 기간: ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                    sb.append("제목: ").append(title + " https://localhost:4000/board/detail/" + boardNumber).append("\n");
-//                    sb.append("제목: ").append(title + " https://carefreelife98.github.io").append("\n");
+                    sb.append("`업무:` ").append("[" + title + "]" + "(" + requestUrl + "/board/detail/"  + boardNumber + ")").append("\n");
+                    sb.append("`업무 기간:` ").append(startDt).append(" ~ ").append(endDt).append("\n");
+//                    sb.append("제목: ").append("[" + title + "]" + "(https://carefreelife98.github.io)").append("\n");
                 });
 
                 sb.append("\n------------------------------------\n");
-                sb.append("지난주 업무: ").append("\n");
+                sb.append("*지난주 업무:* ").append("\n");
                 lastWeekBoardList.forEach(boardListViewEntity -> {
                     LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
                     LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
                     String title = boardListViewEntity.getTitle();
                     Integer boardNumber = boardListViewEntity.getBoardNumber();
-                    sb.append("업무 기간: ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                    sb.append("제목: ").append(title + " https://localhost:4000/board/detail/" + boardNumber).append("\n");
+                    sb.append("`업무:` ").append("[" + title + "]" + "(" + requestUrl + "/board/detail/"  + boardNumber + ")").append("\n");
+                    sb.append("`업무 기간:` ").append(startDt).append(" ~ ").append(endDt).append("\n");
                 });
 
                 sb.append("\n------------------------------------\n");
-                sb.append("차주 업무: ").append("\n");
+                sb.append("*차주 업무:* ").append("\n");
                 nextWeekBoardList.forEach(boardListViewEntity -> {
                     LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
                     LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
                     String title = boardListViewEntity.getTitle();
                     Integer boardNumber = boardListViewEntity.getBoardNumber();
-                    sb.append("업무 기간: ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                    sb.append("제목: ").append(title + " https://localhost:4000/board/detail/" + boardNumber).append("\n");
+                    sb.append("`업무:` ").append("[" + title + "]" + "(" + requestUrl + "/board/detail/"  + boardNumber + ")").append("\n");
+                    sb.append("`업무 기간:` ").append(startDt).append(" ~ ").append(endDt).append("\n");
                 });
 
                 sendMessage(sb.toString());

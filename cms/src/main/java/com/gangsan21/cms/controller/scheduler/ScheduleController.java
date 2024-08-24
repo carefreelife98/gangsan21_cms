@@ -1,6 +1,7 @@
 package com.gangsan21.cms.controller.scheduler;
 
 import com.gangsan21.cms.service.SchedulerService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +15,9 @@ public class ScheduleController {
     private final SchedulerService schedulerService;
 
     @PostMapping("/on")
-    public void on() {
-        schedulerService.startScheduler();
+    public void on(HttpServletRequest request) {
+        String host = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        schedulerService.startScheduler(host);
     }
 
     @PostMapping("/off")

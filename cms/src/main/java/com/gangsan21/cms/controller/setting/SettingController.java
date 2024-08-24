@@ -7,6 +7,7 @@ import com.gangsan21.cms.dto.response.setting.PatchSettingResponseDto;
 import com.gangsan21.cms.security.CustomUserDetails;
 import com.gangsan21.cms.service.SchedulerService;
 import com.gangsan21.cms.service.SettingService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ public class SettingController {
 
     @PatchMapping("")
     public ResponseEntity<? super PatchSettingResponseDto> updateSetting(
+            HttpServletRequest request,
             @RequestBody @Valid PatchSettingRequestDto patchAlarmDto
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -44,7 +46,7 @@ public class SettingController {
 
         settingService.saveSetting(userDetails.getEmail(), patchAlarmDto.getCron());
         schedulerService.stopScheduler();
-        schedulerService.startScheduler();
+        schedulerService.startScheduler(request.getRequestURL().toString());
 
         return PatchSettingResponseDto.success();
     }

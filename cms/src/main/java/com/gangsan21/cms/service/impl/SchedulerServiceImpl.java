@@ -19,6 +19,7 @@ import java.util.Objects;
 public class SchedulerServiceImpl implements SchedulerService, Runnable{
 
     private ThreadPoolTaskScheduler taskScheduler;
+    private String REQUEST_URL; // telegram bot service 에서 업무 알림 메시지 내 URL 처리용.
 
     @Value("${secrets.scheduler-email}")
     private String USER_EMAIL;
@@ -26,7 +27,9 @@ public class SchedulerServiceImpl implements SchedulerService, Runnable{
     private final SettingRepository settingRepository;
 
     @Override
-    public void startScheduler() {
+    public void startScheduler(String requestUrl) {
+        this.REQUEST_URL = requestUrl;
+
         taskScheduler = new ThreadPoolTaskScheduler() {
             @Override
             public void destroy() {
@@ -73,7 +76,7 @@ public class SchedulerServiceImpl implements SchedulerService, Runnable{
     @Override
     public void run() {
         log.info("Scheduled Task Start :: TelegramBotServiceImpl");
-        telegramBotService.checkAndSendAlarm(USER_EMAIL);
+        telegramBotService.checkAndSendAlarm(USER_EMAIL, REQUEST_URL);
         log.info("Scheduled Task End :: TelegramBotServiceImpl");
     }
 }
