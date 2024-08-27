@@ -1,9 +1,7 @@
 package com.gangsan21.cms.entity;
 
 import com.gangsan21.cms.dto.request.auth.SignUpRequestDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

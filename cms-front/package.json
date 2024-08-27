@@ -30,7 +30,7 @@
     "zustand": "^4.5.4"
   },
   "scripts": {
-    "start": "HOST=0.0.0.0 react-scripts start",
+    "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -55,6 +55,5 @@
   },
   "devDependencies": {
     "ajv": "^7.2.4"
-  },
-  "proxy": "http://localhost:4000"
+  }
 }

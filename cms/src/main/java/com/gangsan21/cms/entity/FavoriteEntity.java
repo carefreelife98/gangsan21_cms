@@ -1,10 +1,7 @@
 package com.gangsan21.cms.entity;
 
 import com.gangsan21.cms.entity.primaryKey.FavoritePk;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
