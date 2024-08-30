@@ -31,11 +31,10 @@ import {GetSettingResponseDto} from "./response/setting";
 import {PatchSettingRequestDto} from "./request/setting";
 import PatchSettingResponseDto from "./response/setting/patch-setting.response.dto";
 
-const DOMAIN = 'http://localhost:4000';
-// const DOMAIN = `http://43.201.51.14:4000;
+// const DOMAIN = 'http://localhost:4000';
+const DOMAIN = "http://43.201.51.14:4000";
 
 const API_DOMAIN = `${DOMAIN}/api/v1`;
-// const API_DOMAIN = `${DOMAIN}/api/v1`; // 운영 환경 API
 
 const authorization = (accessToken: string) => {
     return { headers: {Authorization: `Bearer ${accessToken}`} };
