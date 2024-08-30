@@ -3,13 +3,15 @@ package com.gangsan21.cms.service.impl;
 import com.gangsan21.cms.entity.BoardListViewEntity;
 import com.gangsan21.cms.repository.BoardListViewRepository;
 import com.gangsan21.cms.service.BotService;
+import com.slack.api.Slack;
+import com.slack.api.methods.SlackApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,31 +20,37 @@ import static com.gangsan21.cms.util.validation.DateValidationUtil.checkDate;
 
 @Slf4j
 @Service
+@Primary
 @RequiredArgsConstructor
-public class TelegramBotServiceImpl implements BotService {
+public class SlackBotServiceImpl implements BotService {
 
-    @Value("${telegram.bot.token}")
+    @Value("${slack.bot.token}")
     private String botToken;
 
-    @Value("${telegram.chat.id}")
-    private String chatId;
+    @Value("${slack.channel.id}")
+    private String CHANNEL_ID;
 
-    private final WebClient webClient;
     private final BoardListViewRepository boardListViewRepository;
 
+    // slack sdk 사용.
     @Override
     public void sendMessage(String message) {
-        String url = String.format("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=markdown", botToken, chatId, message);
+        // you can get this instance via ctx.client() in a Bolt app
+        var client = Slack.getInstance().methods();
+        try {
 
-        Mono<String> responseMono = webClient.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(String.class);
+            // Call the chat.postMessage method using the built-in WebClient
+            var result = client.chatPostMessage(r -> r
+                            // The token you used to initialize your app
+                            .token(botToken)
+                            .channel(CHANNEL_ID)
+                            .text(message)
+                    // You could also use a blocks[] array to send richer content
+            );
 
-        responseMono.subscribe(
-                response -> log.info("[Scheduler] Telegram Bot API Call Succeed"),
-                error -> error.printStackTrace()
-        );
+        } catch (IOException | SlackApiException e) {
+            log.error("Slack Bot API error: {}", e.getMessage(), e);
+        }
     }
 
     @Override
@@ -92,39 +100,43 @@ public class TelegramBotServiceImpl implements BotService {
                 });
 
                 StringBuilder sb = new StringBuilder();
+                sb.append("======================================\n");
                 sb.append("*[강산 21 업무 알림]*\n");
-                sb.append("\n------------------------------------\n");
+                sb.append("======================================\n");
                 sb.append("*금주 업무:* ").append("\n");
-                todayBoardList.forEach(boardListViewEntity -> {
-//                    LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
-//                    LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
-                    String title = boardListViewEntity.getTitle();
-                    Integer boardNumber = boardListViewEntity.getBoardNumber();
-                    sb.append("`업무:` ").append("[" + title + "]" + "(" + requestUrl + "/board/detail/"  + boardNumber + ")").append("\n");
-//                    sb.append("`업무 기간:` ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                });
-
+                if (todayBoardList.isEmpty()) {
+                    sb.append(">등록된 금주 업무가 없습니다.");
+                } else {
+                    todayBoardList.forEach(boardListViewEntity -> {
+                        String title = boardListViewEntity.getTitle();
+                        Integer boardNumber = boardListViewEntity.getBoardNumber();
+                        sb.append("* `업무:` ").append("<" + requestUrl + "/board/detail/" + boardNumber + "|" + title + ">").append("\n");
+                    });
+                }
                 sb.append("\n------------------------------------\n");
                 sb.append("*지난주 업무:* ").append("\n");
-                lastWeekBoardList.forEach(boardListViewEntity -> {
-//                    LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
-//                    LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
-                    String title = boardListViewEntity.getTitle();
-                    Integer boardNumber = boardListViewEntity.getBoardNumber();
-                    sb.append("`업무:` ").append("[" + title + "]" + "(" + requestUrl + "/board/detail/"  + boardNumber + ")").append("\n");
-//                    sb.append("`업무 기간:` ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                });
+                if (lastWeekBoardList.isEmpty()) {
+                    sb.append(">등록된 지난주 업무가 없습니다.");
+                } else {
+                    lastWeekBoardList.forEach(boardListViewEntity -> {
+                        String title = boardListViewEntity.getTitle();
+                        Integer boardNumber = boardListViewEntity.getBoardNumber();
+                        sb.append("* `업무:` ").append("<" + requestUrl + "/board/detail/" + boardNumber + "|" + title + ">").append("\n");
+                    });
+                }
 
                 sb.append("\n------------------------------------\n");
                 sb.append("*차주 업무:* ").append("\n");
-                nextWeekBoardList.forEach(boardListViewEntity -> {
-//                    LocalDate startDt = boardListViewEntity.getStartDt().toLocalDate();
-//                    LocalDate endDt = boardListViewEntity.getEndDt().toLocalDate();
-                    String title = boardListViewEntity.getTitle();
-                    Integer boardNumber = boardListViewEntity.getBoardNumber();
-                    sb.append("`업무:` ").append("[" + title + "]" + "(" + requestUrl + "/board/detail/"  + boardNumber + ")").append("\n");
-//                    sb.append("`업무 기간:` ").append(startDt).append(" ~ ").append(endDt).append("\n");
-                });
+                if (nextWeekBoardList.isEmpty()) {
+                    sb.append(">등록된 차주 업무가 없습니다.");
+                } else {
+                    nextWeekBoardList.forEach(boardListViewEntity -> {
+                        String title = boardListViewEntity.getTitle();
+                        Integer boardNumber = boardListViewEntity.getBoardNumber();
+                        sb.append("* `업무:` ").append("<" + requestUrl + "/board/detail/"  + boardNumber + "|" + title + ">").append("\n");
+                    });
+                }
+                sb.append("\n------------------------------------\n\n\n");
 
                 sendMessage(sb.toString());
                 sb.setLength(0);

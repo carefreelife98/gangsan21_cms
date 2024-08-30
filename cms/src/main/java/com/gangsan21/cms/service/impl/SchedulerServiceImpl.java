@@ -2,10 +2,11 @@ package com.gangsan21.cms.service.impl;
 
 import com.gangsan21.cms.entity.SettingEntity;
 import com.gangsan21.cms.repository.SettingRepository;
+import com.gangsan21.cms.service.BotService;
 import com.gangsan21.cms.service.SchedulerService;
-import com.gangsan21.cms.service.TelegramBotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
@@ -19,16 +20,22 @@ import java.util.Objects;
 public class SchedulerServiceImpl implements SchedulerService, Runnable{
 
     private ThreadPoolTaskScheduler taskScheduler;
-    private String REQUEST_URL; // telegram bot service 에서 업무 알림 메시지 내 URL 처리용.
+//    private String REQUEST_DOMAIN;
+    private String REQUEST_DOMAIN;
 
     @Value("${secrets.scheduler-email}")
     private String USER_EMAIL;
-    private final TelegramBotService telegramBotService;
+
+    // SlackBotServiceImpl 에 @Primary 적용하여 Telegram service 빈 주입 보다 우선하도록 함.
+    //    private final BotService telegramBotService;
+    @Qualifier("slackBotServiceImpl")
+    private final BotService slackBotService;
+
     private final SettingRepository settingRepository;
 
     @Override
     public void startScheduler(String requestUrl) {
-        this.REQUEST_URL = requestUrl;
+        this.REQUEST_DOMAIN = requestUrl;
 
         taskScheduler = new ThreadPoolTaskScheduler() {
             @Override
@@ -57,7 +64,7 @@ public class SchedulerServiceImpl implements SchedulerService, Runnable{
             return;
         }
 
-        log.info("Start Telegram Bot Scheduling ::: cron: {}", cronExpression);
+        log.info("Start Slack Bot Scheduling ::: cron: {}", cronExpression);
         taskScheduler.schedule(this::run, new CronTrigger(cronExpression));
     }
 
@@ -75,8 +82,9 @@ public class SchedulerServiceImpl implements SchedulerService, Runnable{
 
     @Override
     public void run() {
-        log.info("Scheduled Task Start :: TelegramBotServiceImpl");
-        telegramBotService.checkAndSendAlarm(USER_EMAIL, REQUEST_URL);
-        log.info("Scheduled Task End :: TelegramBotServiceImpl");
+        log.info("Scheduled Task Start :: Slack Bot");
+        log.info(slackBotService.getClass().toString());
+        slackBotService.checkAndSendAlarm(USER_EMAIL, REQUEST_DOMAIN);
+        log.info("Scheduled Task End :: Slack Bot");
     }
 }
