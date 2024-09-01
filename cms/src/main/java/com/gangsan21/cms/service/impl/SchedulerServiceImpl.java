@@ -35,6 +35,7 @@ public class SchedulerServiceImpl implements SchedulerService, Runnable{
     @Override
     public void startScheduler(String requestUrl) {
         this.REQUEST_DOMAIN = requestUrl;
+        log.info("scheduler start");
 
         taskScheduler = new ThreadPoolTaskScheduler() {
             @Override
@@ -82,8 +83,7 @@ public class SchedulerServiceImpl implements SchedulerService, Runnable{
     @Override
     public void run() {
         log.info("Scheduled Task Start :: Slack Bot");
-        log.info(slackBotService.getClass().toString());
-        slackBotService.checkAndSendAlarm(USER_EMAIL, REQUEST_DOMAIN);
+        slackBotService.checkAndSendAlarmBySuccess(USER_EMAIL, REQUEST_DOMAIN);
         log.info("Scheduled Task End :: Slack Bot");
     }
 }

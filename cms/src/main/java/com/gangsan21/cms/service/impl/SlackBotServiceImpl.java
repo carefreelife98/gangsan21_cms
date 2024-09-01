@@ -54,7 +54,7 @@ public class SlackBotServiceImpl implements BotService {
     }
 
     @Override
-    public void checkAndSendAlarm(String userEmail, String requestUrl) {
+    public void checkAndSendAlarmByWeek(String userEmail, String requestUrl) {
         try {
             // 오늘을 기준으로, 전주 및 다음주에 업무시작일이 설정된 업무 리스트 추출. (총 14일)
             List<BoardListViewEntity> weeklyBoardList = boardListViewRepository.find2WeeksBoardListByEmail(userEmail);
@@ -100,9 +100,7 @@ public class SlackBotServiceImpl implements BotService {
                 });
 
                 StringBuilder sb = new StringBuilder();
-                sb.append("======================================\n");
                 sb.append("*[강산 21 업무 알림]*\n");
-                sb.append("======================================\n");
                 sb.append("*금주 업무:* ").append("\n");
                 if (todayBoardList.isEmpty()) {
                     sb.append(">등록된 금주 업무가 없습니다.");
@@ -142,6 +140,34 @@ public class SlackBotServiceImpl implements BotService {
                 sb.setLength(0);
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void checkAndSendAlarmBySuccess(String userEmail, String requestUrl) {
+        try {
+            List<BoardListViewEntity> toDoList = boardListViewRepository.findByWriterEmailAndIsSucceedFalse(userEmail);
+            StringBuilder sb = new StringBuilder();
+            sb.append("*[강산 21 업무 알림]*\n");
+            if (toDoList.isEmpty()) {
+                sb.append("-----------------------------\n");
+                sb.append(">*모든 업무가 해결 상태입니다! 고생 많으셨습니다!!*\n");
+                sb.append("-----------------------------\n");
+                sendMessage(sb.toString());
+            } else {
+                sb.append("-------------------------------------\n");
+                sb.append("*아직 해결되지 않은 업무 리스트입니다.*\n");
+                sb.append("-------------------------------------\n");
+                toDoList.forEach(boardListViewEntity -> {
+                    String title = boardListViewEntity.getTitle();
+                    Integer boardNumber = boardListViewEntity.getBoardNumber();
+                    sb.append("* `업무:` ").append("<" + requestUrl + "/board/detail/" + boardNumber + "|" + title + ">").append("\n");
+                });
+                sb.append("-------------------------------------\n");
+            }
+            sendMessage(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

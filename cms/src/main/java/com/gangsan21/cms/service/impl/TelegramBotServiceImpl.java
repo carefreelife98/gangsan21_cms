@@ -46,7 +46,7 @@ public class TelegramBotServiceImpl implements BotService {
     }
 
     @Override
-    public void checkAndSendAlarm(String userEmail, String requestUrl) {
+    public void checkAndSendAlarmByWeek(String userEmail, String requestUrl) {
         try {
             // 오늘을 기준으로, 전주 및 다음주에 업무시작일이 설정된 업무 리스트 추출. (총 14일)
             List<BoardListViewEntity> weeklyBoardList = boardListViewRepository.find2WeeksBoardListByEmail(userEmail);
@@ -133,5 +133,10 @@ public class TelegramBotServiceImpl implements BotService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void checkAndSendAlarmBySuccess(String userEmail, String requestUrl) {
+
     }
 }

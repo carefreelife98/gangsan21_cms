@@ -30,4 +30,7 @@ public interface BoardListViewRepository extends JpaRepository<BoardListViewEnti
             nativeQuery = true
     )
     List<BoardListViewEntity> find2WeeksBoardListByEmail(String email);
+
+    // 해결되지 않은 업무를 전부 조회.
+    List<BoardListViewEntity> findByWriterEmailAndIsSucceedFalse(String email);
 }
