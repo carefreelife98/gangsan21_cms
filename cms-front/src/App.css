@@ -67,6 +67,80 @@
     background-color: rgba(0, 0, 0, 0.85);
 }
 
+.blue-button {
+    border-radius: 46px;
+    width: 95px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: skyblue;
+
+    color: rgba(255, 255, 255, 1);
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+
+    cursor: pointer;
+}
+
+.blue-button:hover {
+    background-color: rgba(135, 206, 235, 0.7);
+}
+
+.red-button {
+    border: 1px solid rgba(219, 112, 147, 0.9);
+    border-radius: 46px;
+    width: 95px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: palevioletred;
+
+    color: rgba(255, 255, 255, 1);
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+
+    cursor: pointer;
+}
+
+.red-button:hover {
+    background-color: rgba(219, 112, 147, 0.7);
+}
+
+.normal-button {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 46px;
+    width: 95px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    color: rgba(255, 255, 255, 1);
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+
+    cursor: pointer;
+}
+
+.normal-button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
 .black-large-full-button {
     border-radius: 46px;
 

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -17,6 +16,7 @@ public class BoardListItem {
     private Integer boardNumber;
     private String title;
     private String content;
+    private Boolean isSucceed;
     private LocalDateTime startDt;
     private LocalDateTime endDt;
     private String boardTitleImage;
@@ -31,6 +31,7 @@ public class BoardListItem {
         this.boardNumber = boardListViewEntity.getBoardNumber();
         this.title = boardListViewEntity.getTitle();
         this.content = boardListViewEntity.getContent();
+        this.isSucceed = boardListViewEntity.getIsSucceed();
         this.startDt = boardListViewEntity.getStartDt();
         this.endDt = boardListViewEntity.getEndDt();
         this.boardTitleImage = boardListViewEntity.getTitleImage();

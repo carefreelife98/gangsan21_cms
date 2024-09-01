@@ -17,15 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -174,7 +169,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList(String email) {
 
-        List<BoardListViewEntity> boardListViewEntityList = new ArrayList<>();
+        List<BoardListViewEntity> boardListViewEntityList;
 
         try {
             // 일주일 전 날짜 구함
@@ -362,6 +357,26 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return IncreaseViewCountResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PatchSuccessBoardResponseDto> patchSuccessBoard(Integer boardNumber, String email) {
+
+        try {
+            // boardNumber & email 기준 해당 업무를 찾아 isSucceed 플래그 toggle 설정 후 저장.
+            BoardEntity targetEntity = boardRepository.findByBoardNumberAndWriterEmail(boardNumber, email);
+
+            if(Objects.isNull(targetEntity)) return PatchSuccessBoardResponseDto.notExistBoard();
+
+            targetEntity.succeedStatusToggle();
+            boardRepository.save(targetEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PatchSuccessBoardResponseDto.success();
     }
 }
 

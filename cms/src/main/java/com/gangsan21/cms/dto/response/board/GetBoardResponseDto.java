@@ -9,7 +9,6 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,7 @@ public class GetBoardResponseDto extends ResponseDto {
     private Integer boardNumber;
     private String title;
     private String content;
+    private Boolean isSucceed;
     private LocalDateTime startDt;
     private LocalDateTime endDt;
     private List<String> boardImageList;
@@ -40,6 +40,7 @@ public class GetBoardResponseDto extends ResponseDto {
         this.boardNumber = resultSet.getBoardNumber();
         this.title = resultSet.getTitle();
         this.content = resultSet.getContent();
+        this.isSucceed = resultSet.getIsSucceed();
         this.startDt = resultSet.getStartDt();
         this.endDt = resultSet.getEndDt();
         this.boardImageList = boardImageList;

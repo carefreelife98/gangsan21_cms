@@ -15,7 +15,7 @@ import {useCookies} from "react-cookie";
 import {AUTH_PATH, MAIN_PATH} from "../../constants";
 import {useNavigate} from "react-router-dom";
 import {useBoardStore, useLoginUserStore} from "../../stores";
-import {fileUploadRequest, postBoardRequest} from "../../apis";
+import {fileUploadRequest, getBoardRequest, postBoardRequest} from "../../apis";
 import {PostBoardRequestDto} from "../../apis/request/board";
 import {ResponseDto} from "../../apis/response";
 import {PostBoardResponseDto} from "../../apis/response/board";
@@ -117,9 +117,26 @@ export default function Calendar({ calenderItemList }: Props) {
             });
         });
         setBoardDetailModalIsOpen(true);
+    };
 
-        // 해당 업무 상세 페이지 이동 로직 fade out.
-        // if (info.event.url) {window.open(info.event.url);}
+    const onSuccessButtonClickHandler = () => {
+        if(selectedEvent === null) {
+            alert('선택된 업무가 존재하지 않습니다. 새로고침 후 다시 시도해주세요.');
+            return;
+        }
+        //TODO: "업무 완료" API 추가 및 연동
+        const boardId = selectedEvent.id;
+
+    };
+
+    const onDetailButtonClickHandler = () => {
+        if (selectedEvent) {
+            if (selectedEvent.url) {
+                window.open(selectedEvent.url);
+            } else {
+                alert('선택한 업무가 데이터베이스에 존재하지 않습니다.');
+            }
+        }
     };
 
     const closeWriteModal = () => {
@@ -134,7 +151,6 @@ export default function Calendar({ calenderItemList }: Props) {
         <>
             <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, googleCalendarPlugin]}
-                // googleCalendarApiKey={process.env.REACT_APP_GOOGLE_API_KEY}
                 timeZone={'local'}
                 initialView='dayGridMonth'
                 headerToolbar={
@@ -160,6 +176,11 @@ export default function Calendar({ calenderItemList }: Props) {
                 <form id='calender-detail-modal-form'>
                     <div className='calender-detail-modal-form-wrapper'>
                         <CalendarMiniViewItem boardItem={selectedEvent}/>
+                        <div className={'calender-write-modal-form-button-box'}>
+                            <div className='blue-button' onClick={onSuccessButtonClickHandler}>{'해결'}</div>
+                            <div className='normal-button' onClick={onDetailButtonClickHandler}>{'업무 상세 보기'}</div>
+                            <button className={'red-button'} form={'calender-detail-modal-form'} type="button" onClick={closeDetailModal}>{'취소'}</button>
+                        </div>
                     </div>
                 </form>
             </Modal>

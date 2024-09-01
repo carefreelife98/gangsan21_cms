@@ -1,6 +1,5 @@
 package com.gangsan21.cms.repository.resultSet;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public interface GetBoardResultSet {
@@ -9,6 +8,8 @@ public interface GetBoardResultSet {
     String getTitle();
 
     String getContent();
+
+    Boolean getIsSucceed();
 
     LocalDateTime getStartDt();
 

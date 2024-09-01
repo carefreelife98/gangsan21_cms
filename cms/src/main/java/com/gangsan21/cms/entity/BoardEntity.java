@@ -32,6 +32,8 @@ public class BoardEntity {
     @Column
     private LocalDateTime endDt;
 
+    private Boolean isSucceed;
+
     private LocalDateTime writeDateTime;
     private Integer favoriteCount;
     private Integer commentCount;
@@ -51,6 +53,7 @@ public class BoardEntity {
         this.commentCount = 0;
         this.viewCount = 0;
         this.writerEmail = email;
+        this.isSucceed = false;
     }
 
     public void patchBoard(PatchBoardRequestDto dto) {
@@ -58,6 +61,10 @@ public class BoardEntity {
         this.content = dto.getContent();
         this.startDt = dto.getStartDt();
         this.endDt = dto.getEndDt();
+    }
+
+    public void succeedStatusToggle() {
+        this.isSucceed = !this.isSucceed;
     }
 
     public void increaseViewCount() {

@@ -6,13 +6,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Immutable;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Immutable // view 이므로 수정 불가.
 @Entity(name = "board_list_view")
 @Table(name = "board_list_view")
 public class BoardListViewEntity {
@@ -23,6 +24,7 @@ public class BoardListViewEntity {
 
     private String title;
     private String content;
+    private Boolean isSucceed;
     private LocalDateTime startDt;
     private LocalDateTime endDt;
     private LocalDateTime writeDateTime;

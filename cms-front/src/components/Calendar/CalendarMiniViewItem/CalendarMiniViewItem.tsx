@@ -1,8 +1,7 @@
 import CalenderEvent from "../../../types/interface/calender-event.interface";
 import dayjs from "dayjs";
-import defaultProfileImage from "../../../assets/image/default-profile-image.png";
-import DOMPurify from "isomorphic-dompurify";
 import {useEffect, useState} from "react";
+import './style.css';
 
 interface Props {
     boardItem: CalenderEvent | null;
@@ -26,8 +25,10 @@ export default function CalendarMiniViewItem({boardItem}: Props) {
 
     if(!boardItem) return <></>
     return (
-        <div id='board-detail-top'>
+        <div id='mini-board-detail-top'>
             <div className='board-detail-top-header'>
+                <h1 className='board-detail-header'>{'간편 업무 조회'}</h1>
+                <div className='divider'></div>
                 <div className='board-detail-title'>{boardItem.title}</div>
                 <div className='board-detail-top-sub-box'>
                     <span className={'board-detail-issue-date-desc'}>
@@ -45,10 +46,6 @@ export default function CalendarMiniViewItem({boardItem}: Props) {
                         }
                     </span>
                 </div>
-            </div>
-            <div className='divider'></div>
-            <div className='board-detail-top-main'>
-                {/*<div className='board-detail-main-text' dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(boardItem.content)}}/>*/}
             </div>
         </div>
     );

@@ -137,10 +137,10 @@ public class BoardController {
             @PathVariable("email") String email
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(Objects.isNull(authentication)) return ResponseDto.validationFailed();
+        if (Objects.isNull(authentication)) return ResponseDto.validationFailed();
 
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-        if(!Objects.equals(email, principal.getEmail())){
+        if (!Objects.equals(email, principal.getEmail())) {
             return ResponseDto.validationFailed();
         }
 
@@ -204,7 +204,7 @@ public class BoardController {
     ) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(Objects.isNull(authentication)) return ResponseDto.validationFailed();
+        if (Objects.isNull(authentication)) return ResponseDto.validationFailed();
 
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
 
@@ -219,11 +219,21 @@ public class BoardController {
     ) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.isNull(authentication))
-            return ResponseDto.validationFailed();
+        if (Objects.isNull(authentication)) return ResponseDto.validationFailed();
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
 
         ResponseEntity<? super IncreaseViewCountResponseDto> response = boardService.increaseViewCount(boardNumber, principal.getEmail());
         return response;
+    }
+
+    @PatchMapping("/{boardNumber}/success")
+    public ResponseEntity<? super PatchSuccessBoardResponseDto> patchSuccessBoard(
+            @PathVariable("boardNumber") Integer boardNumber
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(Objects.isNull(authentication)) return ResponseDto.validationFailed();
+        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+
+        return boardService.patchSuccessBoard(boardNumber, principal.getEmail());
     }
 }
