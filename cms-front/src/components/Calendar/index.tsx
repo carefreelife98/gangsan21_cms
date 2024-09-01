@@ -15,10 +15,10 @@ import {useCookies} from "react-cookie";
 import {AUTH_PATH, MAIN_PATH} from "../../constants";
 import {useNavigate} from "react-router-dom";
 import {useBoardStore, useLoginUserStore} from "../../stores";
-import {fileUploadRequest, getBoardRequest, postBoardRequest} from "../../apis";
+import {fileUploadRequest, getBoardRequest, patchBoardSuccessToggleRequest, postBoardRequest} from "../../apis";
 import {PostBoardRequestDto} from "../../apis/request/board";
 import {ResponseDto} from "../../apis/response";
-import {PostBoardResponseDto} from "../../apis/response/board";
+import {PatchBoardSuccessToggleResponseDto, PostBoardResponseDto} from "../../apis/response/board";
 import CalendarMiniViewItem from "./CalendarMiniViewItem/CalendarMiniViewItem";
 import CalenderEvent from "../../types/interface/calender-event.interface";
 
@@ -45,6 +45,21 @@ export default function Calendar({ calenderItemList }: Props) {
 
     // function: 네비게이트 함수
     const navigate = useNavigate();
+
+    // function: patchBoardSuccessToggleResponse 처리 함수
+    const patchBoardSuccessToggleResponse = (responseBody: PatchBoardSuccessToggleResponseDto | ResponseDto | null) => {
+        if (!responseBody) return;
+        const {code} = responseBody;
+        if(code === 'NB') alert('존재하지 않는 게시물 입니다.');
+        if(code === 'DBE') alert('데이터베이스 오류입니다.');
+        if (code !== 'SU') return;
+        if (code === 'SU') {
+            alert(`해당 업무의 상태가 ${selectedEvent?.isSucceed ? '\"진행중\"' : '\"해결\"'} 으로 변경되었습니다.`);
+            window.location.reload();
+            return;
+        }
+        return;
+    };
 
     // component: 업로드 버튼 컴포넌트
     const UploadButton = () => {
@@ -119,14 +134,15 @@ export default function Calendar({ calenderItemList }: Props) {
         setBoardDetailModalIsOpen(true);
     };
 
-    const onSuccessButtonClickHandler = () => {
+    // event handler: 업무 해결 상태 버튼 클릭 핸들러
+    const onSuccessToggleButtonClickHandler = () => {
         if(selectedEvent === null) {
             alert('선택된 업무가 존재하지 않습니다. 새로고침 후 다시 시도해주세요.');
             return;
         }
         //TODO: "업무 완료" API 추가 및 연동
         const boardId = selectedEvent.id;
-
+        patchBoardSuccessToggleRequest(boardId, cookies.accessToken).then(patchBoardSuccessToggleResponse);
     };
 
     const onDetailButtonClickHandler = () => {
@@ -177,9 +193,13 @@ export default function Calendar({ calenderItemList }: Props) {
                     <div className='calender-detail-modal-form-wrapper'>
                         <CalendarMiniViewItem boardItem={selectedEvent}/>
                         <div className={'calender-write-modal-form-button-box'}>
-                            <div className='blue-button' onClick={onSuccessButtonClickHandler}>{'해결'}</div>
+                            {selectedEvent?.isSucceed ?
+                                <div className='red-button' onClick={onSuccessToggleButtonClickHandler}>{'미해결'}</div>
+                                :
+                                <div className='blue-button' onClick={onSuccessToggleButtonClickHandler}>{'해결'}</div>
+                            }
                             <div className='normal-button' onClick={onDetailButtonClickHandler}>{'업무 상세 보기'}</div>
-                            <button className={'red-button'} form={'calender-detail-modal-form'} type="button" onClick={closeDetailModal}>{'취소'}</button>
+                            <button className={'normal-button'} form={'calender-detail-modal-form'} type="button" onClick={closeDetailModal}>{'취소'}</button>
                         </div>
                     </div>
                 </form>

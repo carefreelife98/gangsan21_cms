@@ -2,6 +2,7 @@ export default interface BoardListItem {
     boardNumber: number;
     title: string;
     content: string;
+    isSucceed: boolean;
     startDt: string;
     endDt: string;
     boardTitleImage: string | null;

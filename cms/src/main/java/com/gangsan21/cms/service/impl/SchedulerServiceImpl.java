@@ -20,7 +20,6 @@ import java.util.Objects;
 public class SchedulerServiceImpl implements SchedulerService, Runnable{
 
     private ThreadPoolTaskScheduler taskScheduler;
-//    private String REQUEST_DOMAIN;
     private String REQUEST_DOMAIN;
 
     @Value("${secrets.scheduler-email}")

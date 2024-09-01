@@ -1,6 +1,6 @@
 import './style.css';
 import FavoriteItem from "../../../components/FavoriteItem";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import {Board, CommentListItem, FavoriteListItem} from "../../../types/interface";
 import CommentItem from "../../../components/CommentItem";
 import Pagination from "../../../components/Pagination";
@@ -186,6 +186,14 @@ export default function BoardDetail() {
                                 </div>
                             }
                         </span>
+                        <div className='board-detail-is-succeed'>상태:
+                            {
+                                board.isSucceed ?
+                                    <span className='board-success'>{'해결'}</span>
+                                    :
+                                    <span className='board-unsuccess'>{'진행 중'}</span>
+                            }
+                        </div>
                         <div className='board-detail-write-info-box'>
                             <div className='board-detail-writer-profile-image'
                                  style={{backgroundImage: `url(${board.writerProfileImage ? board.writerProfileImage : defaultProfileImage})`}}>
@@ -213,7 +221,8 @@ export default function BoardDetail() {
                 </div>
                 <div className='divider'></div>
                 <div className='board-detail-top-main'>
-                    <div className='board-detail-main-text' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(board.content) }} />
+                    <div className='board-detail-main-text'
+                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(board.content)}}/>
                     {board.boardImageList.map((image, index) =>
                         <img key={index} className='board-detail-main-image' src={image} alt={'게시물 상세 이미지'}/>)}
                 </div>

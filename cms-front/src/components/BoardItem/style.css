@@ -73,6 +73,12 @@
     gap: 5px;
 }
 
+.board-list-item-util-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .board-list-item-title {
     color: rgba(0, 0, 0, 1);
 

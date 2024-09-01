@@ -1,3 +1,21 @@
+.board-success {
+    padding: 5px;
+    border-radius: 25px 25px;
+    font-family: GimhaeGaya;
+    font-weight: 700;
+    color: rgba(76, 175, 80, 1);
+    background-color: rgba(232, 245, 233, 1);
+}
+
+.board-unsuccess {
+    padding: 5px;
+    border-radius: 25px 25px;
+    font-family: GimhaeGaya;
+    font-weight: 700;
+    color: rgba(244, 67, 54, 1);
+    background-color: rgba(255, 235, 238, 1);
+}
+
 .loading {
     width: 50%;
     height: 50%;

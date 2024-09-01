@@ -1,22 +1,22 @@
-#mini-board-detail-top {
-    height: 90%;
-    width: 100%;
+#mini-calendar-board-detail-top {
+    height: 98%;
+    width: 98%;
+    border: 3px solid rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     gap: 40px;
 }
 
-.board-detail-top-header {
+.calendar-board-detail-top-header {
     height: 100%;
     width: 100%;
     align-items: center;
-    /*justify-content: ;*/
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.board-detail-header {
+.calendar-board-detail-header {
     width: 90%;
     display: flex;
     align-items: center;
@@ -26,11 +26,11 @@
     font-family: GimhaeGaya;
 }
 
-.board-detail-title {
+.calendar-board-detail-title {
     padding: 0 30px 0 30px;
     color: rgba(0, 0, 0, 1);
 
-    height: 60%;
+    height: auto;
     width: 90%;
 
     font-size: 24px;
@@ -39,9 +39,23 @@
 
     align-items: center;
     justify-content: center;
+    overflow-y: hidden;
 }
 
-.board-detail-top-sub-box {
+.calendar-board-detail-main-text {
+    color: rgba(0, 0, 0, 0.7);
+
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 150%;
+    width: 90%;
+    min-height: 200px;
+
+    /* 줄바꿈 적용 */
+    white-space: pre-wrap;
+}
+
+.calendar-board-detail-top-sub-box {
     /* more 버튼의 상대적위치 지정을 위함 */
     position: relative;
 
@@ -50,7 +64,7 @@
     align-items: center;
 }
 
-.board-detail-issue-date-desc {
+.calendar-board-detail-issue-date-desc {
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -62,6 +76,13 @@
     padding: 5px;
 }
 
-.board-detail-issue-date {
+.calendar-board-detail-issue-date {
     font-family: GimhaeGaya;
+}
+
+.calendar-board-detail-top-sub-box {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }

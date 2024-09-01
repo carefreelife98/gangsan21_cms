@@ -29,6 +29,8 @@ public class CalendarListItem {
     public static class CalendarItem {
         String id;
         String title;
+        String content;
+        Boolean isSucceed;
         LocalDateTime start;
         LocalDateTime end;
         String url;
@@ -37,7 +39,9 @@ public class CalendarListItem {
         public CalendarItem(BoardListViewEntity boardListViewEntity) {
             this.id = boardListViewEntity.getBoardNumber().toString();
             this.title = boardListViewEntity.getTitle();
+            this.content = boardListViewEntity.getContent();
             this.start = boardListViewEntity.getStartDt();
+            this.isSucceed = boardListViewEntity.getIsSucceed();
             this.end = boardListViewEntity.getEndDt();
             this.url = getUrl(boardListViewEntity.getBoardNumber());
             this.editable = true; // true: 캘린더 상에서 마우스 드래그 / 클릭 등을 통한 이벤트 수정 가능.

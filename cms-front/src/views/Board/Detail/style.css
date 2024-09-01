@@ -31,6 +31,8 @@
     font-size: 32px;
     font-weight: 600;
     line-height: 140%;
+
+    overflow-y: hidden;
 }
 
 .board-detail-top-sub-box {
@@ -38,7 +40,8 @@
     position: relative;
 
     display: flex;
-    justify-content: space-between;
+    gap: 20px;
+    justify-content: space-around;
     align-items: center;
 }
 

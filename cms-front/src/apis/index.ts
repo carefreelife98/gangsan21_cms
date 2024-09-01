@@ -22,7 +22,7 @@ import {
     PatchBoardResponseDto,
     GetLatestBoardListResponseDto,
     GetTop3BoardListResponseDto,
-    GetSearchBoardListResponseDto, GetUserBoardListResponseDto
+    GetSearchBoardListResponseDto, GetUserBoardListResponseDto, PatchBoardSuccessToggleResponseDto
 } from "./response/board";
 import {GetPopularListResponseDto, GetRelationListResponseDto} from "./response/search";
 import {GetCalendarItemListResponseDto} from "./response/calendar";
@@ -102,6 +102,7 @@ const GET_COMMENT_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/bo
 const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
 
 const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
+const PATCH_BOARD_SUCCESS_TOGGLE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/success`;
 
 // 1. 공휴일 데이터가 localStorage 에 캐싱되어 있는지 확인하고 없으면 google calendar api 호출 및 캐시 저장.
 // 2. Google Calendar API: 대한민국 공휴일 데이터 추출
@@ -168,6 +169,8 @@ export const getCalendarItemListRequest = async (accessToken: string) => {
                 // 미니 view 사용 시 각 event 의 id 를 기준으로 나타내므로 적절한 id 가공이 필요. (지렸다)
                 id: (boardResult && 'calendarItemList' in boardResult) ? (index + 1 + boardResult.calendarItemList.length).toString() : index.toString(),
                 title: holiday.summary,
+                content: holiday.summary,
+                isSucceed: false,
                 start: holiday.start.date,
                 end: holiday.start.date,
                 url: '',
@@ -395,6 +398,20 @@ export const increaseViewCountRequest = async (boardNumber: number | string) => 
     const result = await axios.patch(INCREASE_VIEW_COUNT_URL(boardNumber))
         .then(response => {
             const responseBody: IncreaseViewCountResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const patchBoardSuccessToggleRequest = async (boardNumber: number | string, accessToken: string) => {
+    const result = await axios.patch(PATCH_BOARD_SUCCESS_TOGGLE_URL(boardNumber), {}, authorization(accessToken))
+        .then(response => {
+            const responseBody: PatchBoardSuccessToggleResponseDto = response.data;
             return responseBody;
         })
         .catch(error => {

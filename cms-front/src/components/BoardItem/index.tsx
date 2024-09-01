@@ -16,7 +16,7 @@ interface Props {
 export default function BoardItem({ boardListItem }: Props) {
 
     //           Properties           // : HTML Component 내에 들어갈 리소스 (boardListItem) 들을 받아와 삽입하여 노출.
-    const { boardNumber, title, content, startDt, endDt, boardTitleImage } = boardListItem
+    const { boardNumber, title, content, isSucceed, startDt, endDt, boardTitleImage } = boardListItem
     const { favoriteCount, commentCount, viewCount } = boardListItem
     const { writeDateTime, writerNickName, writerProfileImage } = boardListItem
 
@@ -44,8 +44,16 @@ export default function BoardItem({ boardListItem }: Props) {
                 </div>
                 <div className='board-list-item-middle'>
                     {(startDt || endDt) &&
-                        <div className='board-list-item-date-box'>
+                        <div className='board-list-item-util-box'>
                             <div className='board-list-item-date'>업무 기간: {dayjs(startDt).format('YY. MM. DD')} ~ {dayjs(endDt).format('YY. MM. DD')}</div>
+                            <div className='board-list-item-is-succeed'>상태:
+                                {
+                                isSucceed ?
+                                    <span className='board-success'>{'해결'}</span>
+                                    :
+                                    <span className='board-unsuccess'>{'진행 중'}</span>
+                                }
+                            </div>
                         </div>
                     }
                     <div className='board-list-item-title'>{title}</div>
