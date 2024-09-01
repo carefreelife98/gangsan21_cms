@@ -31,12 +31,11 @@ import {GetSettingResponseDto} from "./response/setting";
 import {PatchSettingRequestDto} from "./request/setting";
 import PatchSettingResponseDto from "./response/setting/patch-setting.response.dto";
 import GetHolidayItemListResponseDto from "./response/calendar/get-holiday-item-list.response.dto";
-import {er} from "@fullcalendar/core/internal-common";
 import CalendarItem from "../types/interface/calendar-item.interface";
 import CalenderEvent from "../types/interface/calender-event.interface";
 
-const DOMAIN = 'http://localhost:4000';
-// const DOMAIN = "http://43.201.51.14:4000";
+// const DOMAIN = 'http://localhost:4000';
+const DOMAIN = "http://43.201.51.14:4000";
 
 const API_DOMAIN = `${DOMAIN}/api/v1`;
 
