@@ -68,7 +68,6 @@ export default function TinyMceEditor({content, setContent}: State) {
         <Editor
             apiKey='kzfocixhz6xbaijk2n4t7phpfcm281nmq6riahkqq7adb7fv'
             id={'tinymce_editor'}
-            // initialValue={'본문을 작성해주세요.'}
             onEditorChange={handleEditorChange}
             init={{
                 height: 600,
@@ -80,22 +79,21 @@ export default function TinyMceEditor({content, setContent}: State) {
                 plugins: [
                     'lists',
                     'link',
-                    // 'image',
                     'charmap',
                     'preview',
                     'searchreplace',
                     'fullscreen',
-                    // 'media',
                     'table',
                     'code',
                     'help',
                     'emoticons',
                     'codesample',
                     'quickbars',
+                    'textcolor', // 텍스트 색상 관련 플러그인 (형광펜)
                 ],
-                toolbar: 'undo redo | blocks | ' +
-                    'bold italic forecolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                toolbar:
+                    'undo redo | blocks | bold italic backcolor | bold italic forecolor | ' +
+                    'alignleft aligncenter | alignright alignjustify | bullist numlist outdent indent | ' +
                     'lists table link charmap searchreplace | ' +
                     'emoticons fullscreen preview | ' +
                     'removeformat | help ',

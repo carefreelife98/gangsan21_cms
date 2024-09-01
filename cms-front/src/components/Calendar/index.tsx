@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
+import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import CalendarItem from '../../types/interface/calendar-item.interface';
 import { EventClickArg } from '@fullcalendar/core';
 import Modal from 'react-modal';
@@ -18,7 +19,8 @@ import {fileUploadRequest, postBoardRequest} from "../../apis";
 import {PostBoardRequestDto} from "../../apis/request/board";
 import {ResponseDto} from "../../apis/response";
 import {PostBoardResponseDto} from "../../apis/response/board";
-
+import CalendarMiniViewItem from "./CalendarMiniViewItem/CalendarMiniViewItem";
+import CalenderEvent from "../../types/interface/calender-event.interface";
 
 interface Props {
     calenderItemList: CalendarItem[];
@@ -32,10 +34,14 @@ export default function Calendar({ calenderItemList }: Props) {
     const [cookies, setCookies] = useCookies();
     // state: 로그인 유저 상태
     const {loginUser, setLoginUser, resetLoginUser} = useLoginUserStore();
-    // state: 모달 open 상태
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+    // state: 간편 업무 등록 모달 open 상태
+    const [boardWriteModalIsOpen, setBoardWriteModalIsOpen] = useState(false);
+    // state: 간편 업무 조회 모달 open 상태
+    const [boardDetailModalIsOpen, setBoardDetailModalIsOpen] = useState(false);
     // state: 캘린더 내에서 마우스 클릭 / 드래그 이벤트를 통한 날짜 선택 상태
-    const [selectedDate, setSelectedDate] = useState<{ start: string; end: string }>({ start: '', end: '' });
+    const [selectedDateToWrite, setSelectedDateToWrite] = useState<{ start: string; end: string }>({ start: '', end: '' });
+    // state: 캘린더 미니 뷰 이벤트 상태
+    const [selectedEvent, setSelectedEvent] = useState<CalenderEvent | null>(null);
 
     // function: 네비게이트 함수
     const navigate = useNavigate();
@@ -93,52 +99,83 @@ export default function Calendar({ calenderItemList }: Props) {
     };
 
     // event handler: 캘린더 내 날짜 선택/드래그 선택 시 업무 추가 모달 오픈
-    const handleSelectDate = (selectInfo: any) => {
-        setSelectedDate({ start: selectInfo.startStr, end: selectInfo.endStr });
-        setModalIsOpen(true);
+    const handleSelectDateToWrite = (selectInfo: any) => {
+        setSelectedDateToWrite({ start: selectInfo.startStr, end: selectInfo.endStr });
+        setBoardWriteModalIsOpen(true);
     };
 
-    // event handler: 캘린더 내 이벤트 클릭 시 해당 업무 게시물로 이동.
-    const handleEventClick = (info: EventClickArg) => {
+    // event handler: 캘린더 내 업무 클릭 시 간편 조회 모달 오픈
+    const handleSelectToDetail = (info: EventClickArg) => {
         info.jsEvent.preventDefault(); // don't let the browser navigate
 
-        if (info.event.url) {
-            window.open(info.event.url);
-        }
+        // Main 컴포넌트에서 넘어온 캘린더 아이템 리스트 에서 클릭 이벤트가 발생한 이벤트(업무) 추출.
+        calenderItemList.map((calendarItem, index) => {
+            calendarItem.events.map((item, index) => {
+                if (item.id === info.event.id) {
+                    setSelectedEvent(item);
+                }
+            });
+        });
+        setBoardDetailModalIsOpen(true);
+
+        // 해당 업무 상세 페이지 이동 로직 fade out.
+        // if (info.event.url) {window.open(info.event.url);}
     };
 
-    const closeModal = () => {
-        setModalIsOpen(false);
+    const closeWriteModal = () => {
+        setBoardWriteModalIsOpen(false);
+    };
+
+    const closeDetailModal = () => {
+        setBoardDetailModalIsOpen(false);
     };
 
     return (
         <>
             <FullCalendar
-                plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
+                plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, googleCalendarPlugin]}
+                // googleCalendarApiKey={process.env.REACT_APP_GOOGLE_API_KEY}
                 timeZone={'local'}
                 initialView='dayGridMonth'
-                headerToolbar={{ left: "prevYear,prev,next,nextYear today", center: "title", right: "dayGridMonth,timeGridWeek,timeGridDay" }}
+                headerToolbar={
+                    {
+                        left: "prevYear,prev,next,nextYear today",
+                        center: "title",
+                        right: "dayGridMonth,timeGridWeek,timeGridDay"
+                    }
+                }
                 dayMaxEventRows={true}
                 selectable={true}
-                select={handleSelectDate}
+                select={handleSelectDateToWrite}
                 eventSources={calenderItemList}
-                eventClick={handleEventClick}
-                locale='ko'
+                eventClick={handleSelectToDetail}
+                locale={'ko'}
             />
             <Modal
-                className='calender-modal-content'
-                overlayClassName='calender-modal-overlay'
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                contentLabel="Selected Date Modal"
+                className='calender-detail-modal-content'
+                overlayClassName='calender-detail-modal-overlay'
+                isOpen={boardDetailModalIsOpen}
+                onRequestClose={closeDetailModal}
             >
-                <form id={'calender-modal-form'} >
-                    <div className={'calender-modal-form-wrapper'}>
-                        <CalendarMiniBoard startDtByCal={selectedDate.start} endDtByCal={selectedDate.end}/>
+                <form id='calender-detail-modal-form'>
+                    <div className='calender-detail-modal-form-wrapper'>
+                        <CalendarMiniViewItem boardItem={selectedEvent}/>
+                    </div>
+                </form>
+            </Modal>
+            <Modal
+                className='calender-write-modal-content'
+                overlayClassName='calender-write-modal-overlay'
+                isOpen={boardWriteModalIsOpen}
+                onRequestClose={closeWriteModal}
+            >
+                <form id={'calender-write-modal-form'} >
+                    <div className={'calender-write-modal-form-wrapper'}>
+                        <CalendarMiniBoard startDtByCal={selectedDateToWrite.start} endDtByCal={selectedDateToWrite.end}/>
                         <div className='divider'/>
-                        <div className={'calender-modal-form-button-box'}>
+                        <div className={'calender-write-modal-form-button-box'}>
                             <UploadButton />
-                            <button className={'button-cancel'} form={'calender-modal-form'} type="button" onClick={closeModal}>{'취소'}</button>
+                            <button className={'button-cancel'} form={'calender-write-modal-form'} type="button" onClick={closeWriteModal}>{'취소'}</button>
                         </div>
                     </div>
                 </form>

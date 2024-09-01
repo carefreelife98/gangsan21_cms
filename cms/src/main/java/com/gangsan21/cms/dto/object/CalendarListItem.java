@@ -27,6 +27,7 @@ public class CalendarListItem {
 
     @Getter
     public static class CalendarItem {
+        String id;
         String title;
         LocalDateTime start;
         LocalDateTime end;
@@ -34,6 +35,7 @@ public class CalendarListItem {
         Boolean editable;
 
         public CalendarItem(BoardListViewEntity boardListViewEntity) {
+            this.id = boardListViewEntity.getBoardNumber().toString();
             this.title = boardListViewEntity.getTitle();
             this.start = boardListViewEntity.getStartDt();
             this.end = boardListViewEntity.getEndDt();

@@ -30,11 +30,18 @@ import {PatchNicknameRequestDto, PatchProfileImageRequestDto} from "./request/us
 import {GetSettingResponseDto} from "./response/setting";
 import {PatchSettingRequestDto} from "./request/setting";
 import PatchSettingResponseDto from "./response/setting/patch-setting.response.dto";
+import GetHolidayItemListResponseDto from "./response/calendar/get-holiday-item-list.response.dto";
+import {er} from "@fullcalendar/core/internal-common";
+import CalendarItem from "../types/interface/calendar-item.interface";
+import CalenderEvent from "../types/interface/calender-event.interface";
 
-// const DOMAIN = 'http://localhost:4000';
-const DOMAIN = "http://43.201.51.14:4000";
+const DOMAIN = 'http://localhost:4000';
+// const DOMAIN = "http://43.201.51.14:4000";
 
 const API_DOMAIN = `${DOMAIN}/api/v1`;
+
+const HOLIDAY_START_DATE = '2020-01-01T00:00:00Z';
+const HOLIDAY_END_DATE = '2028-01-01T00:00:00Z';
 
 const authorization = (accessToken: string) => {
     return { headers: {Authorization: `Bearer ${accessToken}`} };
@@ -75,6 +82,8 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
 };
 
 const GET_CALENDAR_ITEM_LIST_URL = () => `${API_DOMAIN}/calendar`;
+const GET_GOOGLE_CALENDAR_HOLIDAY_URL = (startDt?: string | number | null, endDt?: string | number | null) =>
+    `https://www.googleapis.com/calendar/v3/calendars/ko.south_korea.official%23holiday%40group.v.calendar.google.com/events?key=${process.env.REACT_APP_GOOGLE_API_KEY}&orderBy=startTime&singleEvents=true&timeMin=${startDt}&timeMax=${endDt}`;
 const SETTING_URL = () => `${API_DOMAIN}/setting`
 
 const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
@@ -94,8 +103,52 @@ const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/
 
 const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
 
+// 1. 공휴일 데이터가 localStorage 에 캐싱되어 있는지 확인하고 없으면 google calendar api 호출 및 캐시 저장.
+// 2. Google Calendar API: 대한민국 공휴일 데이터 추출
+// 3. 기존 업무 리스트 API: 전체 업무 리스트 추출
+// 4. 공휴일 데이터를 캘린더 아이템 객체로 변환 후 기존 업무 리스트 뒤에 append.
+// 5. 리스트 데이터 반환.
 export const getCalendarItemListRequest = async (accessToken: string) => {
-    const result = await axios.get(GET_CALENDAR_ITEM_LIST_URL(), authorization(accessToken))
+
+    // 캐시된 데이터를 localStorage 에서 확인하는 함수
+    function getCachedHolidayData(): GetHolidayItemListResponseDto | null {
+        const cachedData = localStorage.getItem('__holidayData');
+        if (cachedData) {
+            return JSON.parse(cachedData) as GetHolidayItemListResponseDto;
+        }
+        return null;
+    }
+
+    // 데이터를 localStorage 에 저장하는 함수
+    function cacheHolidayData(data: GetHolidayItemListResponseDto) {
+        localStorage.setItem('__holidayData', JSON.stringify(data));
+    }
+
+    // google calendar api 를 통한 대한민국 공휴일 리스트 가져옴
+    const getHolidayData = async () => {
+        // localStorage 에서 데이터 확인
+        let holidayResult = getCachedHolidayData();
+
+        // 만약 localStorage 에 데이터가 없다면, Axios 호출
+        if (!holidayResult) {
+            holidayResult = await axios.get(GET_GOOGLE_CALENDAR_HOLIDAY_URL(HOLIDAY_START_DATE, HOLIDAY_END_DATE))
+                .then((response) => {
+                    const responseBody: GetHolidayItemListResponseDto = response.data;
+                    // 데이터 가져온 후, localStorage 에 캐시
+                    cacheHolidayData(responseBody);
+                    return responseBody;
+                })
+                .catch(error => {
+                    // 에러 처리 (여기서는 null을 반환)
+                    return null;
+                });
+        }
+
+        return holidayResult;
+    };
+
+    // 캘린더 업무 리스트 가져옴.
+    const boardResult = await axios.get(GET_CALENDAR_ITEM_LIST_URL(), authorization(accessToken))
         .then(response => {
             const responseBody: GetCalendarItemListResponseDto = response.data;
             return responseBody;
@@ -105,7 +158,43 @@ export const getCalendarItemListRequest = async (accessToken: string) => {
             const responseBody: ResponseDto = error.response.data;
             return responseBody;
         });
-    return result;
+
+    // 구글 공휴일 캘린더 API 의 응답 (GetHolidayItemListResponseDto) 을 캘린더 객체 (CalendarItem) 로 변환. (이후 업무 캘린더 객체 리스트에 append 함)
+    function transformHolidayToCalendarItem(holidayList: GetHolidayItemListResponseDto | null): CalendarItem | null {
+        if (!holidayList) return null;
+        const transformedList: CalenderEvent[] = holidayList?.items.map((holiday, index) => {
+            const calendarItem: CalenderEvent = {
+                // 기존 업무 리스트 + 공휴일 리스트 순으로 최종 데이터 가공되므로 그에 따른 id 를 인덱싱.
+                // 미니 view 사용 시 각 event 의 id 를 기준으로 나타내므로 적절한 id 가공이 필요. (지렸다)
+                id: (boardResult && 'calendarItemList' in boardResult) ? (index + 1 + boardResult.calendarItemList.length).toString() : index.toString(),
+                title: holiday.summary,
+                start: holiday.start.date,
+                end: holiday.start.date,
+                url: '',
+                editable: false
+            }
+            return calendarItem;
+        });
+
+        const result: CalendarItem = {
+            events: transformedList,
+            color: '#FF6B6B',
+            textColor: 'white'
+        }
+
+        return result;
+    }
+
+    const holidayData = await getHolidayData();
+    const holidayCalendarItem = transformHolidayToCalendarItem(holidayData);
+    // boardResult 가 GetCalendarItemListResponseDto 타입인지 확인, ResponseDto 타입인 경우 BE Error 에러가 발생한 것이니 그대로 반환.
+    if (boardResult && 'calendarItemList' in boardResult) {
+        // google api 에러 없이 공휴일 정보를 가져왔을때 기존 캘린더 업무 리스트에 추가.
+        if (holidayCalendarItem) {
+            boardResult.calendarItemList.push(holidayCalendarItem);
+        }
+    }
+    return boardResult;
 };
 
 export const getSettingRequest = async (accessToken: string) => {

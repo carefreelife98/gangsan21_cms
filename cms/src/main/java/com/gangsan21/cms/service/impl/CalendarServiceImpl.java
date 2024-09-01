@@ -1,12 +1,10 @@
 package com.gangsan21.cms.service.impl;
 
-import com.gangsan21.cms.dto.response.ResponseDto;
 import com.gangsan21.cms.dto.response.calendar.GetCalendarItemListResponseDto;
 import com.gangsan21.cms.entity.BoardListViewEntity;
 import com.gangsan21.cms.repository.BoardListViewRepository;
 import com.gangsan21.cms.service.CalendarService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +32,6 @@ public class CalendarServiceImpl implements CalendarService {
 
             //TODO: type 별로 구분하여 리스트 추가 필요. (추가 컬럼..)
             boardEntitiesList.add(boardEntityList);
-
 
         } catch (Exception e) {
             e.printStackTrace();

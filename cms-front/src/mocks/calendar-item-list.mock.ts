@@ -6,6 +6,7 @@ const calendarItemListMock: CalendarItem[] =
         {
             events: [ // put the array in the `events` property
                 {
+                    id: '1',
                     title  : 'event1',
                     start  : '2024-08-03',
                     end: '',
@@ -13,6 +14,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '2',
                     title  : 'event2',
                     start  : '2024-08-05',
                     end    : '2024-08-07',
@@ -20,6 +22,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '3',
                     title  : 'event3',
                     start  : '2024-09-12',
                     end    : '2024-09-24',
@@ -27,6 +30,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '4',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
@@ -34,6 +38,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '5',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
@@ -41,6 +46,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '6',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
@@ -48,6 +54,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '7',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
@@ -55,6 +62,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '8',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
@@ -62,6 +70,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '9',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
@@ -69,6 +78,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '10',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
@@ -76,6 +86,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '11',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
@@ -90,6 +101,7 @@ const calendarItemListMock: CalendarItem[] =
         {
             events: [ // put the array in the `events` property
                 {
+                    id: '12',
                     title  : 'event1',
                     start: '2024-08-03',
                     end: '',
@@ -97,6 +109,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '13',
                     title  : 'event2',
                     start  : '2024-08-05',
                     end    : '2024-08-07',
@@ -104,6 +117,7 @@ const calendarItemListMock: CalendarItem[] =
                     editable: true
                 },
                 {
+                    id: '14',
                     title  : 'event3',
                     start  : '2024-08-09T12:30:00',
                     end: '',
