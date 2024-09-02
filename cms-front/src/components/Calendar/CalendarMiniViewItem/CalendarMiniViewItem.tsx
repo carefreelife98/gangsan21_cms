@@ -57,8 +57,8 @@ export default function CalendarMiniViewItem({boardItem}: Props) {
                     </div>
                 </div>
                 <div className='divider'></div>
-                <div className='calendar-board-detail-main-text'
-                     dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(boardItem.content)}}/>
+                <div className='calendar-board-detail-main-text' dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(boardItem.content)}}/>
+
             </div>
         </div>
     );

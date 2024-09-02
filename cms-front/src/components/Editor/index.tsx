@@ -66,6 +66,8 @@ export default function TinyMceEditor({content, setContent}: State) {
 
     return (
         <Editor
+            // onInit={(evt, editor) => editor.setContent(content)}
+            value={content}
             apiKey='kzfocixhz6xbaijk2n4t7phpfcm281nmq6riahkqq7adb7fv'
             id={'tinymce_editor'}
             onEditorChange={handleEditorChange}

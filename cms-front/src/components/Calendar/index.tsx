@@ -15,12 +15,24 @@ import {useCookies} from "react-cookie";
 import {AUTH_PATH, MAIN_PATH} from "../../constants";
 import {useNavigate} from "react-router-dom";
 import {useBoardStore, useLoginUserStore} from "../../stores";
-import {fileUploadRequest, getBoardRequest, patchBoardSuccessToggleRequest, postBoardRequest} from "../../apis";
+import {
+    fileUploadRequest,
+    getBoardRequest,
+    patchBoardRequest,
+    patchBoardSuccessToggleRequest,
+    postBoardRequest
+} from "../../apis";
 import {PostBoardRequestDto} from "../../apis/request/board";
 import {ResponseDto} from "../../apis/response";
-import {PatchBoardSuccessToggleResponseDto, PostBoardResponseDto} from "../../apis/response/board";
+import {
+    PatchBoardResponseDto,
+    PatchBoardSuccessToggleResponseDto,
+    PostBoardResponseDto
+} from "../../apis/response/board";
 import CalendarMiniViewItem from "./CalendarMiniViewItem/CalendarMiniViewItem";
 import CalenderEvent from "../../types/interface/calender-event.interface";
+import BoardUpdate from "../../views/Board/Update";
+import CalendarMiniBoardUpdate from "./CalendarMiniBoardUpdateItem/CalendarMiniBoardUpdateItem";
 
 interface Props {
     calenderItemList: CalendarItem[];
@@ -36,6 +48,8 @@ export default function Calendar({ calenderItemList }: Props) {
     const {loginUser, setLoginUser, resetLoginUser} = useLoginUserStore();
     // state: 간편 업무 등록 모달 open 상태
     const [boardWriteModalIsOpen, setBoardWriteModalIsOpen] = useState(false);
+    // state: 간편 업무 등록 모달 open 상태
+    const [boardUpdateModalIsOpen, setBoardUpdateModalIsOpen] = useState(false);
     // state: 간편 업무 조회 모달 open 상태
     const [boardDetailModalIsOpen, setBoardDetailModalIsOpen] = useState(false);
     // state: 캘린더 내에서 마우스 클릭 / 드래그 이벤트를 통한 날짜 선택 상태
@@ -113,6 +127,64 @@ export default function Calendar({ calenderItemList }: Props) {
         return <div className='disable-button' >{'업로드'}</div>;
     };
 
+    // component: 업로드 버튼 컴포넌트
+    const UpdateButton = () => {
+
+        // state: 게시물 상태
+        const {title, content, startDt, endDt, boardImageFileList, resetBoard} = useBoardStore();
+
+        // function: post board response 처리 함수
+        const patchBoardResponse = (responseBody: PatchBoardResponseDto | ResponseDto | null) => {
+            if (!responseBody) return;
+            const {code} = responseBody;
+
+            if (code === 'AF' || code === 'NU') navigate(AUTH_PATH());
+            if (code === 'VF') alert('제목과 내용은 필수 요소입니다.')
+            if (code === 'DBE') alert('데이터 베이스 오류입니다.')
+            if (code !== 'SU') return;
+
+            resetBoard();
+            if (!loginUser) return;
+            navigate(MAIN_PATH());
+        };
+
+        // event handler: 업로드 버튼 클릭 이벤트 처리 함수
+        const onPatchButtonClickHandler = async () => {
+            const accessToken = cookies.accessToken;
+            if (!accessToken) return;
+
+            if (!selectedEvent?.id) {
+                alert('해당 업무의 id 체크 과정에서 에러가 발생하였습니다. 새로 고침 후 다시 시도해주세요.');
+                return;
+            }
+
+            const boardImageList: string[] = [];
+
+            // 이미지 업로드 api 를 통해 각 이미지 파일을 업로드 한 후,
+            // 반환 값으로 저장된 url 값을 가져와 boardImageList 배열에 저장.
+            for (const file of boardImageFileList) {
+                const data = new FormData();
+                data.append('file', file);
+
+                const url = await fileUploadRequest(data);
+                if (url) boardImageList.push(url)
+            }
+
+            // 게시물 작성 상태인지 확인 (경로를 통해)
+            const requestBody: PostBoardRequestDto = {
+                title, content, startDt, endDt, boardImageList
+            };
+
+            patchBoardRequest(selectedEvent.id, requestBody, accessToken).then(patchBoardResponse);
+        };
+
+        if(title && content)
+            // render: 업로드 버튼 컴포넌트 렌더링
+            return <div className='black-button' onClick={onPatchButtonClickHandler}>{'수정'}</div>;
+        // render: 업로드 불가 버튼 컴포넌트 렌더링
+        return <div className='disable-button' >{'수정'}</div>;
+    };
+
     // event handler: 캘린더 내 날짜 선택/드래그 선택 시 업무 추가 모달 오픈
     const handleSelectDateToWrite = (selectInfo: any) => {
         setSelectedDateToWrite({ start: selectInfo.startStr, end: selectInfo.endStr });
@@ -155,8 +227,17 @@ export default function Calendar({ calenderItemList }: Props) {
         }
     };
 
+    const onUpdateButtonClickHandler = () => {
+        setBoardDetailModalIsOpen(false);
+        setBoardUpdateModalIsOpen(true);
+    };
+
     const closeWriteModal = () => {
         setBoardWriteModalIsOpen(false);
+    };
+
+    const closeUpdateModal = () => {
+        setBoardUpdateModalIsOpen(false);
     };
 
     const closeDetailModal = () => {
@@ -199,6 +280,7 @@ export default function Calendar({ calenderItemList }: Props) {
                                 :
                                 <div className='blue-button' onClick={onSuccessToggleButtonClickHandler}>{'해결'}</div>
                             }
+                            <div className='red-button' onClick={onUpdateButtonClickHandler}>{'업무 수정하기'}</div>
                             <div className='normal-button' onClick={onDetailButtonClickHandler}>{'업무 상세 보기'}</div>
                             <button className={'normal-button'} form={'calender-detail-modal-form'} type="button" onClick={closeDetailModal}>{'닫기'}</button>
                         </div>
@@ -219,6 +301,24 @@ export default function Calendar({ calenderItemList }: Props) {
                         <div className={'calender-write-modal-form-button-box'}>
                             <UploadButton />
                             <button className={'red-button'} form={'calender-write-modal-form'} type="button" onClick={closeWriteModal}>{'취소'}</button>
+                        </div>
+                    </div>
+                </form>
+            </Modal>
+            <Modal
+                className='calender-update-modal-content'
+                overlayClassName='calender-update-modal-overlay'
+                isOpen={boardUpdateModalIsOpen}
+                onRequestClose={closeUpdateModal}
+                style={{content: {width: '50%', height: '85%'}}}
+            >
+                <form id={'calender-update-modal-form'} >
+                    <div className={'calender-update-modal-form-wrapper'}>
+                        <CalendarMiniBoardUpdate boardNumber={selectedEvent?.id!!}/>
+                        <div className='divider'/>
+                        <div className={'calender-update-modal-form-button-box'}>
+                            <UpdateButton />
+                            <button className={'red-button'} form={'calender-update-modal-form'} type="button" onClick={closeUpdateModal}>{'취소'}</button>
                         </div>
                     </div>
                 </form>
