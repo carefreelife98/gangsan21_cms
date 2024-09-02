@@ -141,6 +141,7 @@ export default function CalendarMiniBoard({ startDtByCal, endDtByCal }: Calendar
         <div id='mini-board-write-wrapper'>
             <div className='mini-board-write-container'>
                 <h2 className='mini-board-write-main-title'>{'간편 업무 등록'}</h2>
+                <div className='divider'></div>
                 <div className='mini-board-write-box'>
                     <div className='mini-board-write-date-box'>
                         <div className='mini-board-write-date-desc'>{'업무 시작일: '}</div>
@@ -158,6 +159,7 @@ export default function CalendarMiniBoard({ startDtByCal, endDtByCal }: Calendar
                                onChange={onEndDtChangeHandler}
                         />
                     </div>
+                    <div className='divider'></div>
                     <div className='mini-board-write-title-box'>
                         <textarea ref={titleRef}
                                   className='mini-board-write-title-textarea'

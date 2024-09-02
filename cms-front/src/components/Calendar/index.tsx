@@ -181,6 +181,7 @@ export default function Calendar({ calenderItemList }: Props) {
                 select={handleSelectDateToWrite}
                 eventSources={calenderItemList}
                 eventClick={handleSelectToDetail}
+                // height={'100%'}
                 locale={'ko'}
             />
             <Modal
@@ -188,6 +189,7 @@ export default function Calendar({ calenderItemList }: Props) {
                 overlayClassName='calender-detail-modal-overlay'
                 isOpen={boardDetailModalIsOpen}
                 onRequestClose={closeDetailModal}
+                style={{content: {width: '50%', height: '70%'}}}
             >
                 <form id='calender-detail-modal-form'>
                     <div className='calender-detail-modal-form-wrapper'>
@@ -199,7 +201,7 @@ export default function Calendar({ calenderItemList }: Props) {
                                 <div className='blue-button' onClick={onSuccessToggleButtonClickHandler}>{'해결'}</div>
                             }
                             <div className='normal-button' onClick={onDetailButtonClickHandler}>{'업무 상세 보기'}</div>
-                            <button className={'normal-button'} form={'calender-detail-modal-form'} type="button" onClick={closeDetailModal}>{'취소'}</button>
+                            <button className={'normal-button'} form={'calender-detail-modal-form'} type="button" onClick={closeDetailModal}>{'닫기'}</button>
                         </div>
                     </div>
                 </form>
@@ -209,6 +211,7 @@ export default function Calendar({ calenderItemList }: Props) {
                 overlayClassName='calender-write-modal-overlay'
                 isOpen={boardWriteModalIsOpen}
                 onRequestClose={closeWriteModal}
+                style={{content: {width: '50%', height: '85%'}}}
             >
                 <form id={'calender-write-modal-form'} >
                     <div className={'calender-write-modal-form-wrapper'}>
@@ -216,7 +219,7 @@ export default function Calendar({ calenderItemList }: Props) {
                         <div className='divider'/>
                         <div className={'calender-write-modal-form-button-box'}>
                             <UploadButton />
-                            <button className={'button-cancel'} form={'calender-write-modal-form'} type="button" onClick={closeWriteModal}>{'취소'}</button>
+                            <button className={'red-button'} form={'calender-write-modal-form'} type="button" onClick={closeWriteModal}>{'취소'}</button>
                         </div>
                     </div>
                 </form>

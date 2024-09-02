@@ -56,7 +56,7 @@ export default function Main() {
 
         //          render: 메인 상단 화면 렌더링          //
         const [currentIndex, setCurrentIndex] = useState(0);
-        const itemsPerPage = 3;
+        const itemsPerPage = 6;
 
         const handlePrevClick = () => {
             setCurrentIndex((prevIndex) => {
