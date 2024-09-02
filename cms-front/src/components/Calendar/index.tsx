@@ -181,7 +181,6 @@ export default function Calendar({ calenderItemList }: Props) {
                 select={handleSelectDateToWrite}
                 eventSources={calenderItemList}
                 eventClick={handleSelectToDetail}
-                // height={'100%'}
                 locale={'ko'}
             />
             <Modal
