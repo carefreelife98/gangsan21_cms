@@ -34,8 +34,8 @@ import GetHolidayItemListResponseDto from "./response/calendar/get-holiday-item-
 import CalendarItem from "../types/interface/calendar-item.interface";
 import CalenderEvent from "../types/interface/calender-event.interface";
 
-// const DOMAIN = 'http://localhost:4000';
-const DOMAIN = "http://43.201.51.14:4000";
+const DOMAIN = 'http://localhost:4000';
+// const DOMAIN = "http://43.201.51.14:4000";
 
 const API_DOMAIN = `${DOMAIN}/api/v1`;
 

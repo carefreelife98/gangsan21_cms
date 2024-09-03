@@ -18,7 +18,8 @@ public class ScheduleController {
 
     @PostMapping("/on")
     public void on(HttpServletRequest request) {
-        String host = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+//        String host = request.getScheme() + "://" + request.getServerName(); // EC2 에는 3000 번 포트포워딩 해두었으므로 문제 x
+        String host = request.getScheme() + "://cms.gangsan21-ocr.site"; // EC2 에는 3000 번 포트포워딩 해두었으므로 문제 x
         schedulerService.startScheduler(host);
     }
 

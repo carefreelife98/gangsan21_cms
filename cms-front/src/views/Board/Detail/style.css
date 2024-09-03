@@ -1,5 +1,6 @@
 #board-detail-wrapper {
     padding: 40px 0;
+    min-height: 1500px;
 
     display: flex;
     justify-content: center;
@@ -7,7 +8,6 @@
 
 .board-detail-container {
     width: 996px;
-
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -149,6 +149,7 @@
 .board-detail-top-main {
     display: flex;
     flex-direction: column;
+    min-height: 1000px;
     gap: 20px;
 }
 
