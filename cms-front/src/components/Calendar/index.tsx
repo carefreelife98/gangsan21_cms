@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -6,9 +6,12 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import CalendarItem from '../../types/interface/calendar-item.interface';
-import { EventClickArg } from '@fullcalendar/core';
+import {EventClickArg} from '@fullcalendar/core';
 import Modal from 'react-modal';
 import CalendarMiniBoard from "./CalendarMiniBoardItem/CalendarMiniBoardItem";
+// tippy.js와 event 객체에 필요한 타입을 지정합니다.
+import tippy, { Instance } from 'tippy.js';
+
 
 import './style.css'
 import {useCookies} from "react-cookie";
@@ -17,7 +20,6 @@ import {useNavigate} from "react-router-dom";
 import {useBoardStore, useLoginUserStore} from "../../stores";
 import {
     fileUploadRequest,
-    getBoardRequest,
     patchBoardRequest,
     patchBoardSuccessToggleRequest,
     postBoardRequest
@@ -31,16 +33,15 @@ import {
 } from "../../apis/response/board";
 import CalendarMiniViewItem from "./CalendarMiniViewItem/CalendarMiniViewItem";
 import CalenderEvent from "../../types/interface/calender-event.interface";
-import BoardUpdate from "../../views/Board/Update";
 import CalendarMiniBoardUpdate from "./CalendarMiniBoardUpdateItem/CalendarMiniBoardUpdateItem";
 
-interface Props {
+interface CalendarItemProps {
     calenderItemList: CalendarItem[];
 }
 
 Modal.setAppElement('#root');
 
-export default function Calendar({ calenderItemList }: Props) {
+export default function Calendar({ calenderItemList }: CalendarItemProps) {
 
     // state: 쿠키 상태
     const [cookies, setCookies] = useCookies();
@@ -74,6 +75,16 @@ export default function Calendar({ calenderItemList }: Props) {
         }
         return;
     };
+
+    // function: 캘린더 내 Event 에 Mouse Hovering 시 발생하는 툴팁 처리 함수
+    function setupTooltip(eventElement: HTMLElement, eventTitle: string): Instance {
+        return tippy(eventElement, {
+            content: eventTitle,
+            placement: 'top-start', // tooltip 방향
+            theme: 'yellow',
+            arrow: true, // tooltip 말풍선 형태 출력 여부
+        });
+    }
 
     // component: 업로드 버튼 컴포넌트
     const UploadButton = () => {
@@ -249,6 +260,7 @@ export default function Calendar({ calenderItemList }: Props) {
             <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, googleCalendarPlugin]}
                 timeZone={'local'}
+                themeSystem={'united'}
                 initialView='dayGridMonth'
                 headerToolbar={
                     {
@@ -262,6 +274,7 @@ export default function Calendar({ calenderItemList }: Props) {
                 select={handleSelectDateToWrite}
                 eventSources={calenderItemList}
                 eventClick={handleSelectToDetail}
+                eventDidMount={(info) => setupTooltip(info.el, info.event.title)}
                 locale={'ko'}
             />
             <Modal
@@ -282,7 +295,8 @@ export default function Calendar({ calenderItemList }: Props) {
                             }
                             <div className='red-button' onClick={onUpdateButtonClickHandler}>{'업무 수정하기'}</div>
                             <div className='normal-button' onClick={onDetailButtonClickHandler}>{'업무 상세 보기'}</div>
-                            <button className={'normal-button'} form={'calender-detail-modal-form'} type="button" onClick={closeDetailModal}>{'닫기'}</button>
+                            <button className={'normal-button'} form={'calender-detail-modal-form'} type="button"
+                                    onClick={closeDetailModal}>{'닫기'}</button>
                         </div>
                     </div>
                 </form>
@@ -294,13 +308,15 @@ export default function Calendar({ calenderItemList }: Props) {
                 onRequestClose={closeWriteModal}
                 style={{content: {width: '50%', height: '85%'}}}
             >
-                <form id={'calender-write-modal-form'} >
+                <form id={'calender-write-modal-form'}>
                     <div className={'calender-write-modal-form-wrapper'}>
-                        <CalendarMiniBoard startDtByCal={selectedDateToWrite.start} endDtByCal={selectedDateToWrite.end}/>
+                        <CalendarMiniBoard startDtByCal={selectedDateToWrite.start}
+                                           endDtByCal={selectedDateToWrite.end}/>
                         <div className='divider'/>
                         <div className={'calender-write-modal-form-button-box'}>
-                            <UploadButton />
-                            <button className={'red-button'} form={'calender-write-modal-form'} type="button" onClick={closeWriteModal}>{'취소'}</button>
+                            <UploadButton/>
+                            <button className={'red-button'} form={'calender-write-modal-form'} type="button"
+                                    onClick={closeWriteModal}>{'취소'}</button>
                         </div>
                     </div>
                 </form>
@@ -312,13 +328,14 @@ export default function Calendar({ calenderItemList }: Props) {
                 onRequestClose={closeUpdateModal}
                 style={{content: {width: '50%', height: '85%'}}}
             >
-                <form id={'calender-update-modal-form'} >
+                <form id={'calender-update-modal-form'}>
                     <div className={'calender-update-modal-form-wrapper'}>
                         <CalendarMiniBoardUpdate boardNumber={selectedEvent?.id!!}/>
                         <div className='divider'/>
                         <div className={'calender-update-modal-form-button-box'}>
-                            <UpdateButton />
-                            <button className={'red-button'} form={'calender-update-modal-form'} type="button" onClick={closeUpdateModal}>{'취소'}</button>
+                            <UpdateButton/>
+                            <button className={'red-button'} form={'calender-update-modal-form'} type="button"
+                                    onClick={closeUpdateModal}>{'취소'}</button>
                         </div>
                     </div>
                 </form>
