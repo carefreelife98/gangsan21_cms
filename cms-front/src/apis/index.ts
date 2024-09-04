@@ -35,8 +35,8 @@ import CalendarItem from "../types/interface/calendar-item.interface";
 import CalenderEvent from "../types/interface/calender-event.interface";
 import {GetBoardImageUrlsResponseDto} from "./response/util";
 
-// const DOMAIN = 'http://localhost:4000';
-const DOMAIN = "http://43.201.51.14:4000";
+const DOMAIN = 'http://localhost:4000';
+// const DOMAIN = "http://43.201.51.14:4000";
 
 const API_DOMAIN = `${DOMAIN}/api/v1`;
 

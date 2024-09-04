@@ -5,6 +5,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
+import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import CalendarItem from '../../types/interface/calendar-item.interface';
 import {EventClickArg} from '@fullcalendar/core';
 import Modal from 'react-modal';
@@ -34,7 +35,6 @@ import {
 import CalendarMiniViewItem from "./CalendarMiniViewItem/CalendarMiniViewItem";
 import CalenderEvent from "../../types/interface/calender-event.interface";
 import CalendarMiniBoardUpdate from "./CalendarMiniBoardUpdateItem/CalendarMiniBoardUpdateItem";
-import {resizeImage} from "../../utils";
 
 interface CalendarItemProps {
     calenderItemList: CalendarItem[];
@@ -259,9 +259,9 @@ export default function Calendar({ calenderItemList }: CalendarItemProps) {
     return (
         <>
             <FullCalendar
-                plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, googleCalendarPlugin]}
+                plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, googleCalendarPlugin, bootstrap5Plugin]}
                 timeZone={'local'}
-                themeSystem={'united'}
+                // themeSystem={'bootstrap5'}
                 initialView='dayGridMonth'
                 headerToolbar={
                     {
@@ -270,7 +270,8 @@ export default function Calendar({ calenderItemList }: CalendarItemProps) {
                         right: "dayGridMonth,timeGridWeek,timeGridDay"
                     }
                 }
-                dayMaxEventRows={true}
+                weekends={true}
+                dayMaxEvents={false} // 각 날짜 별 이벤트 최대 개수 조절 (+more 버튼 노출 / 비노출)
                 selectable={true}
                 select={handleSelectDateToWrite}
                 eventSources={calenderItemList}

@@ -201,7 +201,7 @@
 }
 
 
-/* yellow 테마 제작 */
+/* yellow 툴팁 테마 */
 .tippy-box[data-theme~='yellow'] {
     font-family: GimhaeGaya;
     font-size: large;
@@ -216,4 +216,92 @@
     text-overflow:ellipsis;
 }
 
-/*.fc*/
+/* 헤더 툴바 버튼 스타일링 */
+.fc .fc-toolbar .fc-button {
+    margin: 10px;
+    color: black;
+    border: none;
+    background-color: #d3d3d3; /* Light Gray */
+}
+
+/* 헤더 툴바 버튼 hover 상태 스타일링 */
+.fc .fc-toolbar .fc-button:hover {
+    background-color: #a9a9a9; /* 다크 그레이로 변경 */
+    color: #ffffff; /* White */
+}
+
+/* 헤더 툴바 스타일링 */
+.fc-toolbar {
+    background-color: #708090; /* Slate Gray */
+    color: white; /* 텍스트 색상 */
+}
+
+/* 헤더 툴바 스타일링 */
+.fc-toolbar-title {
+    font-family: GimhaeGaya;
+    font-size: x-large;
+    font-weight: 800;
+}
+
+/* 주말 셀 (토요일과 일요일)의 배경 색상 변경 */
+.fc-day-sat, .fc-day-sun {
+    background-color: #ffe4e1;
+}
+
+/* 요일 헤더 셀의 색상 변경 */
+.fc .fc-col-header-cell {
+    background-color: #778899;
+    font-family: GimhaeGaya;
+    font-size: large;
+    color: white; /* 텍스트 색상 변경 */
+}
+
+/* 요일 헤더 셀의 글자 색상 변경 */
+.fc .fc-col-header-cell-cushion {
+    color: rgba(255, 255, 255, 1); /* Dark Slate Gray */
+}
+
+.fc-event-draggable {
+    overflow-y: visible;
+}
+
+/* 이벤트 컨텐츠 스타일링 */
+.fc-event {
+    margin-bottom: 2px; /* 이벤트 간 간격 추가 */
+    box-sizing: border-box; /* 패딩 및 테두리를 포함한 박스 모델 */
+}
+
+ /*셀 높이를 고정하고 스크롤을 허용*/
+.fc-daygrid-day-frame {
+     display: flex;
+     flex-direction: column;
+     height: 100px; /* 셀의 고정 높이, 필요에 따라 조정 */
+     /*overflow-y: auto; !* 이벤트가 넘칠 경우 세로 스크롤 생성 *!*/
+}
+
+ /*이벤트 목록 컨테이너에 스크롤을 적용 */
+.fc-daygrid-day-events {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 15px 15px;
+    margin: 5px;
+    flex-grow: 1;
+    overflow-y: auto; /* 이벤트가 많을 경우 스크롤 생성 */
+}
+
+/* 이벤트 목록의 높이를 셀 크기에 맞춤 */
+.fc-daygrid-day-frame .fc-daygrid-day-events {
+    max-height: 100%; /* 이벤트 컨테이너가 셀 높이를 초과하지 않도록 함 */
+}
+
+/* 각 day cell의 날짜 글자 색상 */
+.fc-daygrid-day-number {
+    color: #696969; /* Dim Gray */
+}
+
+/* 각 day cell의 이벤트 텍스트 색상 */
+.fc-event {
+    border-radius: 25px 25px;
+    color: black; /* Dim Gray */
+    background-color: rgba(69, 69, 69, 0.1);
+}
+
