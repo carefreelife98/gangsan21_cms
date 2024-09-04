@@ -17,6 +17,8 @@ public class ImageEntity {
     private Integer sequence;
 
     private Integer boardNumber;
+
+    @Column(columnDefinition = "TEXT")
     private String image;
 
     public ImageEntity(int boardNumber, String imageUrl) {

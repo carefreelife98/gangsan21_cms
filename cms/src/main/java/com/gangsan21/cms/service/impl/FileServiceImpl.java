@@ -1,10 +1,16 @@
 package com.gangsan21.cms.service.impl;
 
+import com.gangsan21.cms.dto.response.ResponseDto;
+import com.gangsan21.cms.dto.response.util.GetBoardImageUrlsResponseDto;
+import com.gangsan21.cms.entity.ImageEntity;
+import com.gangsan21.cms.repository.ImageRepository;
 import com.gangsan21.cms.service.FileService;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,17 +18,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
-//    @Value("{image-file.path")
     private String filePath;
 
     @Value("${image-file.url}")
     private String fileUrl;
+
+    private final ImageRepository imageRepository;
 
 
     @Override
@@ -62,6 +71,22 @@ public class FileServiceImpl implements FileService {
             return null;
         }
         return resource;
+    }
+
+    @Override
+    public ResponseEntity<? super GetBoardImageUrlsResponseDto> getImageUrlsByBoardNumber(Integer boardNumber, String userEmail) {
+
+        List<String> imageUrls;
+
+        try {
+
+            imageUrls = imageRepository.findByBoardNumber(boardNumber).stream().map(ImageEntity::getImage).collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetBoardImageUrlsResponseDto.success(imageUrls);
     }
 
     // file path 미리 정의.

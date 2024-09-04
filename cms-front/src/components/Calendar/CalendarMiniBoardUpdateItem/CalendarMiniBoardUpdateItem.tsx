@@ -9,6 +9,7 @@ import {ResponseDto} from "../../../apis/response";
 import {convertUrlsToFile} from "../../../utils";
 import {getBoardRequest} from "../../../apis";
 import TinyMceEditor from "../../Editor";
+import ResizeImageButton from "../../File";
 
 interface Props {
     boardNumber: string | number;
@@ -207,17 +208,23 @@ export default function CalendarMiniBoardUpdate({boardNumber}: Props) {
                         <TinyMceEditor content={content}
                                        setContent={setContent}
                         />
-                        <div className='icon-button' onClick={onImageUploadButtonClickHandler}>
-                            <div className='icon image-box-light-icon'></div>
+                        <div className='mini-board-update-image-upload-box'>
+                            {/*이미지만 올릴 수 있도록 지정*/}
+                            <input ref={imageInputRef}
+                                   type='file'
+                                   accept='image/*'
+                                   style={{display: 'none'}}
+                                   onChange={onImageChangeHandler}
+                            />
+                            {boardImageFileList.length !== 0 ?
+                                <ResizeImageButton />
+                                :
+                                <></>
+                            }
+                            <div className='icon-button' onClick={onImageUploadButtonClickHandler}>
+                                <div className='icon image-box-light-icon'></div>
+                            </div>
                         </div>
-
-                        {/*이미지만 올릴 수 있도록 지정*/}
-                        <input ref={imageInputRef}
-                               type='file'
-                               accept='image/*'
-                               style={{display: 'none'}}
-                               onChange={onImageChangeHandler}
-                        />
                     </div>
                     <div className='mini-calendar-board-update-images-box'>
                         {imageUrls.map((imageUrl, index) =>

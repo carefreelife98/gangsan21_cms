@@ -19,6 +19,8 @@ public class BoardListItem {
     private Boolean isSucceed;
     private LocalDateTime startDt;
     private LocalDateTime endDt;
+    private Integer imageWidth;
+    private Integer imageHeight;
     private String boardTitleImage;
     private Integer favoriteCount;
     private Integer commentCount;
@@ -35,6 +37,8 @@ public class BoardListItem {
         this.startDt = boardListViewEntity.getStartDt();
         this.endDt = boardListViewEntity.getEndDt();
         this.boardTitleImage = boardListViewEntity.getTitleImage();
+        this.imageWidth = boardListViewEntity.getImageWidth();
+        this.imageHeight = boardListViewEntity.getImageHeight();
         this.favoriteCount = boardListViewEntity.getFavoriteCount();
         this.commentCount = boardListViewEntity.getCommentCount();
         this.viewCount = boardListViewEntity.getViewCount();

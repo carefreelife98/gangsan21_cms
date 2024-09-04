@@ -59,9 +59,7 @@ interface State {
 export default function TinyMceEditor({content, setContent}: State) {
 
     const handleEditorChange = (editorContent: any, editor: any) => {
-        console.log("Content Before updated:" + content);
         setContent(editorContent);
-        console.log("Content After updated:" + content);
     };
 
     return (

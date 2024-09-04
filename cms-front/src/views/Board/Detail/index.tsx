@@ -153,7 +153,6 @@ export default function BoardDetail() {
         useEffect(() => {
             const accessToken = cookies.accessToken;
             if(!accessToken) {
-                console.log('cookie accessToken: ' + accessToken)
                 navigate(MAIN_PATH());
                 return;
             }
@@ -224,7 +223,7 @@ export default function BoardDetail() {
                     <div className='board-detail-main-text'
                          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(board.content)}}/>
                     {board.boardImageList.map((image, index) =>
-                        <img key={index} className='board-detail-main-image' src={image} alt={'게시물 상세 이미지'}/>)}
+                        <img key={index} className='board-detail-main-image' src={image} alt={'게시물 상세 이미지'} style={{width: board.imageWidth, height: board.imageHeight}}/>)}
                 </div>
             </div>
         );

@@ -1,4 +1,4 @@
-package com.gangsan21.cms.dto.response.board;
+package com.gangsan21.cms.dto.response.util;
 
 import com.gangsan21.cms.common.ResponseCode;
 import com.gangsan21.cms.common.ResponseMessage;
@@ -7,25 +7,25 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-@Getter
-public class PutFavoriteResponseDto extends ResponseDto {
+import java.util.List;
 
-    private PutFavoriteResponseDto() {
+@Getter
+public class GetBoardImageUrlsResponseDto extends ResponseDto {
+
+    private List<String> imageUrls;
+
+    private GetBoardImageUrlsResponseDto(List<String> urls) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+        this.imageUrls = urls;
     }
 
-    public static ResponseEntity<PutFavoriteResponseDto> success() {
-        PutFavoriteResponseDto result = new PutFavoriteResponseDto();
+    public static ResponseEntity<GetBoardImageUrlsResponseDto> success(List<String> imageUrls) {
+        GetBoardImageUrlsResponseDto result = new GetBoardImageUrlsResponseDto(imageUrls);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    public static ResponseEntity<ResponseDto> notExistBoard() {
+    public static ResponseEntity<ResponseDto> notExistsBoard() {
         ResponseDto result = new ResponseDto(ResponseCode.NOT_EXITSTED_BOARD, ResponseMessage.NOT_EXISTED_BOARD);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-    }
-
-    public static ResponseEntity<ResponseDto> notExistUser() {
-        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_USER, ResponseMessage.NOT_EXISTED_USER);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
     }
 }

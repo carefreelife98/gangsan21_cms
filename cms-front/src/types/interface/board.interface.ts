@@ -6,6 +6,8 @@ export default interface Board {
     startDt: string;
     endDt: string;
     boardImageList: string[];
+    imageWidth: number;
+    imageHeight: number;
     writeDateTime: string;
     writerEmail: string;
     writerNickName: string;

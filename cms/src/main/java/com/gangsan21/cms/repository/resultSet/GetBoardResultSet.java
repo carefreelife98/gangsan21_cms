@@ -15,6 +15,10 @@ public interface GetBoardResultSet {
 
     LocalDateTime getEndDt();
 
+    Integer getImageWidth();
+
+    Integer getImageHeight();
+
     LocalDateTime getWriteDateTime();
 
     String getWriterEmail();

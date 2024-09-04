@@ -9,6 +9,8 @@ const boardMock: Board = {
     startDt: dayjs().format('YYYY. MM. DD. HH:mm'),
     endDt: dayjs().format('YYYY. MM. DD. HH:mm'),
     boardImageList: ['https://carefreelife98.github.io/assets/images/about.jpg', 'https://newsimg.sedaily.com/2019/10/07/1VPFIGA6MW_1.jpg'],
+    imageWidth: 300,
+    imageHeight: 500,
     writeDateTime: new Date().toDateString(),
     writerEmail: 'carefreelife@qoo10.com',
     writerNickName: 'CarefreeLife98',

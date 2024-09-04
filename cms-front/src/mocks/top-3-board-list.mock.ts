@@ -9,6 +9,8 @@ const top3BoardListMock: BoardListItem[] = [
         "isSucceed": true,
         "startDt": dayjs().format('YYYY. MM. DD. HH:mm'),
         "endDt": dayjs().format('YYYY. MM. DD. HH:mm'),
+        "imageWidth": 300,
+        "imageHeight": 500,
         "boardTitleImage": "https://picsum.photos/152/152",
         "favoriteCount": 0,
         "commentCount": 0,

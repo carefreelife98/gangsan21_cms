@@ -6,6 +6,7 @@ import {MAIN_PATH} from "../../../constants";
 import './style.css'
 import dayjs from "dayjs";
 import TinyMceEditor from "../../Editor";
+import ResizeImageButton from "../../File";
 
 interface CalendarMiniBoardProps {
     startDtByCal: string;
@@ -53,15 +54,6 @@ export default function CalendarMiniBoard({ startDtByCal, endDtByCal }: Calendar
         if(!titleRef.current) return;
         titleRef.current.style.height = 'auto';
         titleRef.current.style.height = `${titleRef.current.scrollHeight}px`;
-    };
-
-    // event handler: 내용 변경 이벤트 처리
-    const onContentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        const {value} = event.target;
-        setContent(value);
-        if(!contentRef.current) return;
-        contentRef.current.style.height = 'auto';
-        contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
     };
 
     // event handler: 업무 시작일 설정 변경 이벤트 처리
@@ -174,23 +166,28 @@ export default function CalendarMiniBoard({ startDtByCal, endDtByCal }: Calendar
                         <TinyMceEditor content={content}
                                        setContent={setContent}
                         />
-                        <div className='icon-button' onClick={onImageUploadButtonClickHandler}>
-                            <div className='icon image-box-light-icon'></div>
+                        <div className='mini-board-write-image-upload-box'>
+                            {/*이미지만 올릴 수 있도록 지정*/}
+                            <input ref={imageInputRef}
+                                   type='file'
+                                   accept='image/*'
+                                   style={{display: 'none'}}
+                                   onChange={onImageChangeHandler}
+                            />
+                            {boardImageFileList.length !== 0 ?
+                                <ResizeImageButton />
+                                :
+                                <></>
+                            }
+                            <div className='icon-button' onClick={onImageUploadButtonClickHandler}>
+                                <div className='icon image-box-light-icon'></div>
+                            </div>
                         </div>
-
-                        {/*이미지만 올릴 수 있도록 지정*/}
-                        <input ref={imageInputRef}
-                               type='file'
-                               accept='image/*'
-                               style={{display: 'none'}}
-                               onChange={onImageChangeHandler}
-                        />
                     </div>
                     <div className='mini-board-write-images-box'>
                         {imageUrls.map((imageUrl, index) =>
                             <div key={index} className='mini-board-write-image-box'>
-                                <img className='mini-board-write-image'
-                                     src={imageUrl}/>
+                                <img className='mini-board-write-image' src={imageUrl}/>
                                 <div className='icon-button image-close'
                                      onClick={() => onImageCloseButtonClickHandler(index)}>
                                     <div className='icon close-icon'></div>

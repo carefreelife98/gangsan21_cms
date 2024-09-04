@@ -34,6 +34,12 @@ public class BoardEntity {
 
     private Boolean isSucceed;
 
+    @Column(columnDefinition = "INTEGER")
+    private Integer imageWidth;
+
+    @Column(columnDefinition = "INTEGER")
+    private Integer imageHeight;
+
     private LocalDateTime writeDateTime;
     private Integer favoriteCount;
     private Integer commentCount;
@@ -48,6 +54,8 @@ public class BoardEntity {
         this.content = dto.getContent();
         this.startDt = dto.getStartDt();
         this.endDt = dto.getEndDt();
+        this.imageHeight = dto.getImageHeight();
+        this.imageWidth = dto.getImageWidth();
         this.writeDateTime = writeDateTime;
         this.favoriteCount = 0;
         this.commentCount = 0;
@@ -61,6 +69,8 @@ public class BoardEntity {
         this.content = dto.getContent();
         this.startDt = dto.getStartDt();
         this.endDt = dto.getEndDt();
+        this.imageHeight = dto.getImageHeight();
+        this.imageWidth = dto.getImageWidth();
     }
 
     public void succeedStatusToggle() {

@@ -157,7 +157,7 @@ export default function Header() {
         // state: 게시물 번호 path variable 상태
         const {boardNumber} = useParams();
         // state: 게시물 상태
-        const { title, content, startDt, endDt, boardImageFileList, resetBoard } = useBoardStore();
+        const { title, content, startDt, endDt, boardImageFileList, imageWidth, imageHeight, resetBoard } = useBoardStore();
 
         // function: post board response 처리 함수
         const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
@@ -210,13 +210,13 @@ export default function Header() {
             const isBoardWritePage = pathname === BOARD_PATH() + '/' + BOARD_WRITE_PATH();
             if (isBoardWritePage) {
                 const requestBody: PostBoardRequestDto = {
-                    title, content, startDt, endDt, boardImageList
+                    title, content, startDt, endDt, boardImageList, imageWidth, imageHeight
                 };
                 postBoardRequest(requestBody, accessToken).then(postBoardResponse);
             } else {
                 if(!boardNumber) return;
                 const requestBody: PatchBoardRequestDto = {
-                    title, content, startDt, endDt, boardImageList
+                    title, content, startDt, endDt, boardImageList, imageWidth, imageHeight
                 };
                 patchBoardRequest(boardNumber, requestBody, accessToken).then(patchBoardResponse);
             }
@@ -224,7 +224,6 @@ export default function Header() {
         };
 
         if (title && content) {
-            console.log('Title: ' + title + ' Content: ' + content.toString());
             // render: 업로드 버튼 컴포넌트 렌더링
             return <div className='black-button' onClick={onUploadButtonClickHandler}>{'업로드'}</div>;
         }

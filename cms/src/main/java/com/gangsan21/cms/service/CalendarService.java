@@ -6,5 +6,4 @@ import org.springframework.http.ResponseEntity;
 public interface CalendarService {
 
     ResponseEntity<? super GetCalendarItemListResponseDto> getCalendarItemList(String email);
-
 }

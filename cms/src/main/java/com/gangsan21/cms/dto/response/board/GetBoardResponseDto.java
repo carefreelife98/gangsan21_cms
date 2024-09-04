@@ -23,6 +23,8 @@ public class GetBoardResponseDto extends ResponseDto {
     private LocalDateTime startDt;
     private LocalDateTime endDt;
     private List<String> boardImageList;
+    private Integer imageWidth;
+    private Integer imageHeight;
     private LocalDateTime writeDateTime;
     private String writerEmail;
     private String writerNickName;
@@ -40,14 +42,16 @@ public class GetBoardResponseDto extends ResponseDto {
         this.boardNumber = resultSet.getBoardNumber();
         this.title = resultSet.getTitle();
         this.content = resultSet.getContent();
-        this.isSucceed = resultSet.getIsSucceed();
         this.startDt = resultSet.getStartDt();
         this.endDt = resultSet.getEndDt();
+        this.imageWidth = resultSet.getImageWidth();
+        this.imageHeight = resultSet.getImageHeight();
         this.boardImageList = boardImageList;
         this.writeDateTime = resultSet.getWriteDateTime();
         this.writerEmail = resultSet.getWriterEmail();
         this.writerNickName = resultSet.getWriterNickName();
         this.writerProfileImage = resultSet.getWriterProfileImage();
+        this.isSucceed = resultSet.getIsSucceed();
     }
 
     public static ResponseEntity<GetBoardResponseDto> success(GetBoardResultSet resultSet, List<ImageEntity> imageEntityList) {
@@ -56,7 +60,7 @@ public class GetBoardResponseDto extends ResponseDto {
     }
 
     public static ResponseEntity<ResponseDto> notExistBoard() {
-        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXITSTED_BOARD, ResponseMessage.NOT_EXTSTED_BOARD);
+        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXITSTED_BOARD, ResponseMessage.NOT_EXISTED_BOARD);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 }

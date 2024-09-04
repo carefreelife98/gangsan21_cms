@@ -3,6 +3,8 @@ export default interface CalenderEvent {
     title: string;
     content: string;
     isSucceed: boolean;
+    imageWidth: number;
+    imageHeight: number;
     start: string;
     end: string;
     url: string;

@@ -2,7 +2,6 @@ package com.gangsan21.cms.dto.request.board;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,4 +25,10 @@ public class PatchBoardRequestDto {
 
     @NotNull
     private List<String> boardImageList;
+
+    @NotNull
+    private Integer imageWidth;
+
+    @NotNull
+    private Integer imageHeight;
 }

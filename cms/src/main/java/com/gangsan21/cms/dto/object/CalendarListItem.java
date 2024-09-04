@@ -31,6 +31,8 @@ public class CalendarListItem {
         String title;
         String content;
         Boolean isSucceed;
+        Integer imageWidth;
+        Integer imageHeight;
         LocalDateTime start;
         LocalDateTime end;
         String url;
@@ -42,6 +44,8 @@ public class CalendarListItem {
             this.content = boardListViewEntity.getContent();
             this.start = boardListViewEntity.getStartDt();
             this.isSucceed = boardListViewEntity.getIsSucceed();
+            this.imageWidth = boardListViewEntity.getImageWidth();
+            this.imageHeight = boardListViewEntity.getImageHeight();
             this.end = boardListViewEntity.getEndDt();
             this.url = getUrl(boardListViewEntity.getBoardNumber());
             this.editable = true; // true: 캘린더 상에서 마우스 드래그 / 클릭 등을 통한 이벤트 수정 가능.

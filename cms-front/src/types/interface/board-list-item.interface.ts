@@ -5,6 +5,8 @@ export default interface BoardListItem {
     isSucceed: boolean;
     startDt: string;
     endDt: string;
+    imageWidth: number;
+    imageHeight: number;
     boardTitleImage: string | null;
     favoriteCount: number;
     commentCount: number;

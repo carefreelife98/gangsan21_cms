@@ -27,6 +27,8 @@ public class BoardListViewEntity {
     private Boolean isSucceed;
     private LocalDateTime startDt;
     private LocalDateTime endDt;
+    private Integer imageWidth;
+    private Integer imageHeight;
     private LocalDateTime writeDateTime;
     private Integer favoriteCount;
     private Integer commentCount;

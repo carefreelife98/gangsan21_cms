@@ -19,3 +19,42 @@ export const convertUrlsToFile = async (urls: string[]) => {
     }
     return files;
 };
+
+interface ImgSize {
+    width: number;
+    height: number;
+}
+export const resizeImage = async (url: string, target: ImgSize): Promise<string> => {
+    const img = new Image();
+    img.src = url;
+
+    return new Promise((res, rej) => {
+        try {
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                const resizingCtx = canvas.getContext("2d")!;
+
+                canvas.width = target.width;
+                canvas.height = target.height;
+
+                resizingCtx.drawImage(
+                    img,
+                    0,
+                    0,
+                    img.width,
+                    img.height,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                const url = canvas.toDataURL("image/jpg");
+
+                res(url);
+            };
+        } catch (e) {
+            rej(e);
+        }
+    });
+};

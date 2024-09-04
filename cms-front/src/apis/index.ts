@@ -33,9 +33,10 @@ import PatchSettingResponseDto from "./response/setting/patch-setting.response.d
 import GetHolidayItemListResponseDto from "./response/calendar/get-holiday-item-list.response.dto";
 import CalendarItem from "../types/interface/calendar-item.interface";
 import CalenderEvent from "../types/interface/calender-event.interface";
+import {GetBoardImageUrlsResponseDto} from "./response/util";
 
-const DOMAIN = 'http://localhost:4000';
-// const DOMAIN = "http://43.201.51.14:4000";
+// const DOMAIN = 'http://localhost:4000';
+const DOMAIN = "http://43.201.51.14:4000";
 
 const API_DOMAIN = `${DOMAIN}/api/v1`;
 
@@ -170,6 +171,8 @@ export const getCalendarItemListRequest = async (accessToken: string) => {
                 title: holiday.summary,
                 content: holiday.summary,
                 isSucceed: false,
+                imageWidth: 0,
+                imageHeight: 0,
                 start: holiday.start.date,
                 end: holiday.start.date,
                 url: '',
@@ -515,6 +518,7 @@ export const patchProfileImageRequest = async (accessToken: string, requestBody:
 
 const FILE_DOMAIN = `${DOMAIN}/file`;
 const FILE_UPLOAD_URL = () => `${FILE_DOMAIN}/upload`;
+const GET_BOARD_IMAGE_URLS = (boardNumber: string | number) => `${FILE_DOMAIN}/urls/${boardNumber}`;
 const multipartFormData = { headers: { 'Content-Type': 'multipart/form-data' }}
 
 export const fileUploadRequest = async (data: FormData) => {
@@ -525,6 +529,20 @@ export const fileUploadRequest = async (data: FormData) => {
         })
         .catch(error => {
             return null;
+        });
+    return result;
+};
+
+export const getBoardImageUrlsRequest = async (accessToken: string, boardNumber: string | number) => {
+    const result = await axios.get(GET_BOARD_IMAGE_URLS(boardNumber), authorization(accessToken))
+        .then(response => {
+            const responseBody: GetBoardImageUrlsResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            if(!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
         });
     return result;
 };

@@ -4,4 +4,6 @@ export default interface PostBoardRequestDto {
     startDt: string;
     endDt: string;
     boardImageList: string[];
+    imageWidth: number;
+    imageHeight: number;
 }

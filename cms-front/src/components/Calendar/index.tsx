@@ -34,6 +34,7 @@ import {
 import CalendarMiniViewItem from "./CalendarMiniViewItem/CalendarMiniViewItem";
 import CalenderEvent from "../../types/interface/calender-event.interface";
 import CalendarMiniBoardUpdate from "./CalendarMiniBoardUpdateItem/CalendarMiniBoardUpdateItem";
+import {resizeImage} from "../../utils";
 
 interface CalendarItemProps {
     calenderItemList: CalendarItem[];
@@ -90,7 +91,7 @@ export default function Calendar({ calenderItemList }: CalendarItemProps) {
     const UploadButton = () => {
 
         // state: 게시물 상태
-        const {title, content, startDt, endDt, boardImageFileList, resetBoard} = useBoardStore();
+        const {title, content, startDt, endDt, boardImageFileList, imageWidth, imageHeight, resetBoard} = useBoardStore();
 
         // function: post board response 처리 함수
         const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
@@ -126,7 +127,7 @@ export default function Calendar({ calenderItemList }: CalendarItemProps) {
 
             // 게시물 작성 상태인지 확인 (경로를 통해)
             const requestBody: PostBoardRequestDto = {
-                title, content, startDt, endDt, boardImageList
+                title, content, startDt, endDt, boardImageList, imageWidth, imageHeight
             };
             postBoardRequest(requestBody, accessToken).then(postBoardResponse);
         };
@@ -142,7 +143,7 @@ export default function Calendar({ calenderItemList }: CalendarItemProps) {
     const UpdateButton = () => {
 
         // state: 게시물 상태
-        const {title, content, startDt, endDt, boardImageFileList, resetBoard} = useBoardStore();
+        const {title, content, startDt, endDt, boardImageFileList, imageWidth, imageHeight, resetBoard} = useBoardStore();
 
         // function: post board response 처리 함수
         const patchBoardResponse = (responseBody: PatchBoardResponseDto | ResponseDto | null) => {
@@ -183,7 +184,7 @@ export default function Calendar({ calenderItemList }: CalendarItemProps) {
 
             // 게시물 작성 상태인지 확인 (경로를 통해)
             const requestBody: PostBoardRequestDto = {
-                title, content, startDt, endDt, boardImageList
+                title, content, startDt, endDt, boardImageList, imageWidth, imageHeight
             };
 
             patchBoardRequest(selectedEvent.id, requestBody, accessToken).then(patchBoardResponse);
