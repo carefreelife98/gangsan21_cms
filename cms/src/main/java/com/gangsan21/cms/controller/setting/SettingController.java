@@ -46,7 +46,8 @@ public class SettingController {
 
         settingService.saveSetting(userDetails.getEmail(), patchAlarmDto.getCron());
         schedulerService.stopScheduler();
-        schedulerService.startScheduler(request.getRequestURL().toString());
+        String host = "http://cms.gangsan21-ocr.site";
+        schedulerService.startScheduler(host);
 
         return PatchSettingResponseDto.success();
     }
