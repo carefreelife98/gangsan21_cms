@@ -6,10 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.crypto.Cipher;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Getter
 @NoArgsConstructor
@@ -30,7 +28,7 @@ public class CommentEntity {
     public CommentEntity(PostCommentRequestDto dto, Integer boardNumber, String email) {
 
         String localDateTimeStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-        LocalDateTime now = LocalDateTime.parse(localDateTimeStr);
+        LocalDateTime now = LocalDateTime.parse(localDateTimeStr).plusHours(9L);
 
         this.content = dto.getContent();
         this.writeDateTime = now;
